@@ -1,10 +1,23 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import * as Errors from './error';
-import * as Uploads from './uploads';
 import { type Agent } from './_shims/index';
 import * as Core from './core';
+import * as Errors from './error';
+import * as Uploads from './uploads';
 import * as API from './resources/index';
+import { Audio, AudioCreateParams, AudioCreateResponse } from './resources/audio';
+import { CharacterCreateParams, CharacterCreateResponse, Characters } from './resources/characters';
+import { PortraitCreateParams, PortraitCreateResponse, Portraits } from './resources/portraits';
+import {
+  AvatarProjectItem,
+  ProjectDeleteResponse,
+  ProjectListResponse,
+  ProjectSharingParams,
+  ProjectSharingResponse,
+  Projects,
+} from './resources/projects';
+import { PingResponse } from './resources/top-level';
+import { VoiceListResponse, Voices } from './resources/voices';
 
 export interface ClientOptions {
   /**
@@ -168,51 +181,62 @@ export class Hedra extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-export const {
-  HedraError,
-  APIError,
-  APIConnectionError,
-  APIConnectionTimeoutError,
-  APIUserAbortError,
-  NotFoundError,
-  ConflictError,
-  RateLimitError,
-  BadRequestError,
-  AuthenticationError,
-  InternalServerError,
-  PermissionDeniedError,
-  UnprocessableEntityError,
-} = Errors;
+export const HedraError = Errors.HedraError;
+export const APIError = Errors.APIError;
+export const APIConnectionError = Errors.APIConnectionError;
+export const APIConnectionTimeoutError = Errors.APIConnectionTimeoutError;
+export const APIUserAbortError = Errors.APIUserAbortError;
+export const NotFoundError = Errors.NotFoundError;
+export const ConflictError = Errors.ConflictError;
+export const RateLimitError = Errors.RateLimitError;
+export const BadRequestError = Errors.BadRequestError;
+export const AuthenticationError = Errors.AuthenticationError;
+export const InternalServerError = Errors.InternalServerError;
+export const PermissionDeniedError = Errors.PermissionDeniedError;
+export const UnprocessableEntityError = Errors.UnprocessableEntityError;
 
 export import toFile = Uploads.toFile;
 export import fileFromPath = Uploads.fileFromPath;
 
-export namespace Hedra {
-  export import RequestOptions = Core.RequestOptions;
+Hedra.Voices = Voices;
+Hedra.Audio = Audio;
+Hedra.Portraits = Portraits;
+Hedra.Characters = Characters;
+Hedra.Projects = Projects;
 
-  export import PingResponse = API.PingResponse;
+export declare namespace Hedra {
+  export type RequestOptions = Core.RequestOptions;
 
-  export import Voices = API.Voices;
-  export import VoiceListResponse = API.VoiceListResponse;
+  export { type PingResponse as PingResponse };
 
-  export import Audio = API.Audio;
-  export import AudioCreateResponse = API.AudioCreateResponse;
-  export import AudioCreateParams = API.AudioCreateParams;
+  export { Voices as Voices, type VoiceListResponse as VoiceListResponse };
 
-  export import Portraits = API.Portraits;
-  export import PortraitCreateResponse = API.PortraitCreateResponse;
-  export import PortraitCreateParams = API.PortraitCreateParams;
+  export {
+    Audio as Audio,
+    type AudioCreateResponse as AudioCreateResponse,
+    type AudioCreateParams as AudioCreateParams,
+  };
 
-  export import Characters = API.Characters;
-  export import CharacterCreateResponse = API.CharacterCreateResponse;
-  export import CharacterCreateParams = API.CharacterCreateParams;
+  export {
+    Portraits as Portraits,
+    type PortraitCreateResponse as PortraitCreateResponse,
+    type PortraitCreateParams as PortraitCreateParams,
+  };
 
-  export import Projects = API.Projects;
-  export import AvatarProjectItem = API.AvatarProjectItem;
-  export import ProjectListResponse = API.ProjectListResponse;
-  export import ProjectDeleteResponse = API.ProjectDeleteResponse;
-  export import ProjectSharingResponse = API.ProjectSharingResponse;
-  export import ProjectSharingParams = API.ProjectSharingParams;
+  export {
+    Characters as Characters,
+    type CharacterCreateResponse as CharacterCreateResponse,
+    type CharacterCreateParams as CharacterCreateParams,
+  };
+
+  export {
+    Projects as Projects,
+    type AvatarProjectItem as AvatarProjectItem,
+    type ProjectListResponse as ProjectListResponse,
+    type ProjectDeleteResponse as ProjectDeleteResponse,
+    type ProjectSharingResponse as ProjectSharingResponse,
+    type ProjectSharingParams as ProjectSharingParams,
+  };
 }
 
 export default Hedra;

@@ -2,7 +2,6 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as PortraitsAPI from './portraits';
 
 export class Portraits extends APIResource {
   /**
@@ -36,7 +35,9 @@ export interface PortraitCreateParams {
   aspect_ratio?: string;
 }
 
-export namespace Portraits {
-  export import PortraitCreateResponse = PortraitsAPI.PortraitCreateResponse;
-  export import PortraitCreateParams = PortraitsAPI.PortraitCreateParams;
+export declare namespace Portraits {
+  export {
+    type PortraitCreateResponse as PortraitCreateResponse,
+    type PortraitCreateParams as PortraitCreateParams,
+  };
 }

@@ -11,7 +11,7 @@
     "paths": {
       "hedra/_shims/auto/*": ["src/_shims/auto/*-node"],
       "hedra/*": ["src/*"],
-      "hedra": ["src/index.ts"],
+      "hedra": ["src/index.ts"]
     },
     "noEmit": true,
 

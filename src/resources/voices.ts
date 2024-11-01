@@ -2,7 +2,6 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as VoicesAPI from './voices';
 
 export class Voices extends APIResource {
   /**
@@ -41,6 +40,6 @@ export namespace VoiceListResponse {
   }
 }
 
-export namespace Voices {
-  export import VoiceListResponse = VoicesAPI.VoiceListResponse;
+export declare namespace Voices {
+  export { type VoiceListResponse as VoiceListResponse };
 }

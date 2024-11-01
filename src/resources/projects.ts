@@ -3,7 +3,6 @@
 import { APIResource } from '../resource';
 import { isRequestOptions } from '../core';
 import * as Core from '../core';
-import * as ProjectsAPI from './projects';
 
 export class Projects extends APIResource {
   /**
@@ -99,10 +98,12 @@ export interface ProjectSharingParams {
   shared?: boolean;
 }
 
-export namespace Projects {
-  export import AvatarProjectItem = ProjectsAPI.AvatarProjectItem;
-  export import ProjectListResponse = ProjectsAPI.ProjectListResponse;
-  export import ProjectDeleteResponse = ProjectsAPI.ProjectDeleteResponse;
-  export import ProjectSharingResponse = ProjectsAPI.ProjectSharingResponse;
-  export import ProjectSharingParams = ProjectsAPI.ProjectSharingParams;
+export declare namespace Projects {
+  export {
+    type AvatarProjectItem as AvatarProjectItem,
+    type ProjectListResponse as ProjectListResponse,
+    type ProjectDeleteResponse as ProjectDeleteResponse,
+    type ProjectSharingResponse as ProjectSharingResponse,
+    type ProjectSharingParams as ProjectSharingParams,
+  };
 }
