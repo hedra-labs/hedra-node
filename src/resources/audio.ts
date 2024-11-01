@@ -2,7 +2,6 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as AudioAPI from './audio';
 
 export class Audio extends APIResource {
   /**
@@ -21,7 +20,6 @@ export interface AudioCreateParams {
   file: Core.Uploadable;
 }
 
-export namespace Audio {
-  export import AudioCreateResponse = AudioAPI.AudioCreateResponse;
-  export import AudioCreateParams = AudioAPI.AudioCreateParams;
+export declare namespace Audio {
+  export { type AudioCreateResponse as AudioCreateResponse, type AudioCreateParams as AudioCreateParams };
 }

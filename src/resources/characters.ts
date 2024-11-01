@@ -2,7 +2,6 @@
 
 import { APIResource } from '../resource';
 import * as Core from '../core';
-import * as CharactersAPI from './characters';
 
 export class Characters extends APIResource {
   /**
@@ -68,7 +67,9 @@ export namespace CharacterCreateParams {
   }
 }
 
-export namespace Characters {
-  export import CharacterCreateResponse = CharactersAPI.CharacterCreateResponse;
-  export import CharacterCreateParams = CharactersAPI.CharacterCreateParams;
+export declare namespace Characters {
+  export {
+    type CharacterCreateResponse as CharacterCreateResponse,
+    type CharacterCreateParams as CharacterCreateParams,
+  };
 }
