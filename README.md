@@ -25,7 +25,9 @@ The full API of this library can be found in [api.md](api.md).
 ```js
 import Hedra from 'hedra';
 
-const client = new Hedra();
+const client = new Hedra({
+  apiKey: process.env['X_API_KEY'], // This is the default and can be omitted
+});
 
 async function main() {
   const character = await client.characters.create();
@@ -44,7 +46,9 @@ This library includes TypeScript definitions for all request params and response
 ```ts
 import Hedra from 'hedra';
 
-const client = new Hedra();
+const client = new Hedra({
+  apiKey: process.env['X_API_KEY'], // This is the default and can be omitted
+});
 
 async function main() {
   const character: Hedra.CharacterCreateResponse = await client.characters.create();
