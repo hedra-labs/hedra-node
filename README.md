@@ -23,7 +23,7 @@ The full API of this library can be found in [api.md](api.md).
 import Hedra from 'hedra-node';
 
 const client = new Hedra({
-  apiKey: process.env['X_API_KEY'], // This is the default and can be omitted
+  apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
 });
 
 async function main() {
@@ -44,7 +44,7 @@ This library includes TypeScript definitions for all request params and response
 import Hedra from 'hedra-node';
 
 const client = new Hedra({
-  apiKey: process.env['X_API_KEY'], // This is the default and can be omitted
+  apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
 });
 
 async function main() {
