@@ -1,21 +1,18 @@
 # Hedra Node API Library
 
-[![NPM version](https://img.shields.io/npm/v/hedra.svg)](https://npmjs.org/package/hedra) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/hedra)
+[![NPM version](https://img.shields.io/npm/v/hedra-node.svg)](https://npmjs.org/package/hedra-node) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/hedra-node)
 
 This library provides convenient access to the Hedra REST API from server-side TypeScript or JavaScript.
 
-The REST API documentation can be found on [docs.hedra.com](https://docs.hedra.com). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [hedra.com](https://hedra.com/docs). The full API of this library can be found in [api.md](api.md).
 
 It is generated with [Stainless](https://www.stainlessapi.com/).
 
 ## Installation
 
 ```sh
-npm install git+ssh://git@github.com:stainless-sdks/hedra-node.git
+npm install hedra-node
 ```
-
-> [!NOTE]
-> Once this package is [published to npm](https://app.stainlessapi.com/docs/guides/publish), this will become: `npm install hedra`
 
 ## Usage
 
@@ -23,7 +20,7 @@ The full API of this library can be found in [api.md](api.md).
 
 <!-- prettier-ignore -->
 ```js
-import Hedra from 'hedra';
+import Hedra from 'hedra-node';
 
 const client = new Hedra({
   apiKey: process.env['X_API_KEY'], // This is the default and can be omitted
@@ -44,7 +41,7 @@ This library includes TypeScript definitions for all request params and response
 
 <!-- prettier-ignore -->
 ```ts
-import Hedra from 'hedra';
+import Hedra from 'hedra-node';
 
 const client = new Hedra({
   apiKey: process.env['X_API_KEY'], // This is the default and can be omitted
@@ -213,12 +210,12 @@ add the following import before your first import `from "Hedra"`:
 ```ts
 // Tell TypeScript and the package to use the global web fetch instead of node-fetch.
 // Note, despite the name, this does not add any polyfills, but expects them to be provided if needed.
-import 'hedra/shims/web';
-import Hedra from 'hedra';
+import 'hedra-node/shims/web';
+import Hedra from 'hedra-node';
 ```
 
-To do the inverse, add `import "hedra/shims/node"` (which does import polyfills).
-This can also be useful if you are getting the wrong TypeScript types for `Response` ([more details](https://github.com/stainless-sdks/hedra-node/tree/main/src/_shims#readme)).
+To do the inverse, add `import "hedra-node/shims/node"` (which does import polyfills).
+This can also be useful if you are getting the wrong TypeScript types for `Response` ([more details](https://github.com/hedra-labs/hedra-node/tree/main/src/_shims#readme)).
 
 ### Logging and middleware
 
@@ -227,7 +224,7 @@ which can be used to inspect or alter the `Request` or `Response` before/after e
 
 ```ts
 import { fetch } from 'undici'; // as one example
-import Hedra from 'hedra';
+import Hedra from 'hedra-node';
 
 const client = new Hedra({
   fetch: async (url: RequestInfo, init?: RequestInit): Promise<Response> => {
@@ -274,7 +271,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/hedra-node/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/hedra-labs/hedra-node/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 

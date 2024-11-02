@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "hedra/*": ["dist/src/*"],
-      "hedra": ["dist/src/index.ts"],
+      "hedra-node/*": ["dist/src/*"],
+      "hedra-node": ["dist/src/index.ts"],
     },
     "noEmit": false,
     "declaration": true,

@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Hedra from 'hedra';
-import { APIUserAbortError } from 'hedra';
-import { Headers } from 'hedra/core';
+import Hedra from 'hedra-node';
+import { APIUserAbortError } from 'hedra-node';
+import { Headers } from 'hedra-node/core';
 import defaultFetch, { Response, type RequestInit, type RequestInfo } from 'node-fetch';
 
 describe('instantiate client', () => {
@@ -151,13 +151,13 @@ describe('instantiate client', () => {
     test('empty env variable', () => {
       process.env['HEDRA_BASE_URL'] = ''; // empty
       const client = new Hedra({ apiKey: 'My API Key' });
-      expect(client.baseURL).toEqual('/api');
+      expect(client.baseURL).toEqual('https://mercury.dev.dream-ai.com/api');
     });
 
     test('blank env variable', () => {
       process.env['HEDRA_BASE_URL'] = '  '; // blank
       const client = new Hedra({ apiKey: 'My API Key' });
-      expect(client.baseURL).toEqual('/api');
+      expect(client.baseURL).toEqual('https://mercury.dev.dream-ai.com/api');
     });
   });
 
