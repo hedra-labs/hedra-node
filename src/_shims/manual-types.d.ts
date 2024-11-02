@@ -4,8 +4,8 @@
 /**
  * Types will get added to this namespace when you import one of the following:
  *
- *   import 'hedra/shims/node'
- *   import 'hedra/shims/web'
+ *   import 'hedra-node/shims/node'
+ *   import 'hedra-node/shims/web'
  *
  * Importing more than one will cause type and runtime errors.
  */

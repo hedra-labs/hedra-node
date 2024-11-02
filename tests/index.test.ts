@@ -1,8 +1,8 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Hedra from 'hedra';
-import { APIUserAbortError } from 'hedra';
-import { Headers } from 'hedra/core';
+import Hedra from 'hedra-node';
+import { APIUserAbortError } from 'hedra-node';
+import { Headers } from 'hedra-node/core';
 import defaultFetch, { Response, type RequestInit, type RequestInfo } from 'node-fetch';
 
 describe('instantiate client', () => {

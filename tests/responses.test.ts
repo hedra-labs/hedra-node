@@ -1,5 +1,5 @@
-import { createResponseHeaders } from 'hedra/core';
-import { Headers } from 'hedra/_shims/index';
+import { createResponseHeaders } from 'hedra-node/core';
+import { Headers } from 'hedra-node/_shims/index';
 
 describe('response parsing', () => {
   // TODO: test unicode characters

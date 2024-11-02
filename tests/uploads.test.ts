@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { toFile, type ResponseLike } from 'hedra/uploads';
-import { File } from 'hedra/_shims/index';
+import { toFile, type ResponseLike } from 'hedra-node/uploads';
+import { File } from 'hedra-node/_shims/index';
 
 class MyClass {
   name: string = 'foo';
