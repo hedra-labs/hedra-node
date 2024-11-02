@@ -1,6 +1,6 @@
 {
   "name": "hedra-node",
-  "version": "0.0.1-alpha.0",
+  "version": "0.1.2",
   "description": "The official TypeScript library for the Hedra API",
   "author": "Hedra <support@hedra.com>",
   "types": "dist/index.d.ts",
