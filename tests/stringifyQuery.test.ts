@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { Hedra } from 'hedra';
+import { Hedra } from 'hedra-node';
 
 const { stringifyQuery } = Hedra.prototype as any;
 

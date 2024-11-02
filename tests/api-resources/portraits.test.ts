@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Hedra, { toFile } from 'hedra';
+import Hedra, { toFile } from 'hedra-node';
 import { Response } from 'node-fetch';
 
 const client = new Hedra({

@@ -9,9 +9,9 @@
     "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
-      "hedra/_shims/auto/*": ["src/_shims/auto/*-node"],
-      "hedra/*": ["src/*"],
-      "hedra": ["src/index.ts"]
+      "hedra-node/_shims/auto/*": ["src/_shims/auto/*-node"],
+      "hedra-node/*": ["src/*"],
+      "hedra-node": ["src/index.ts"]
     },
     "noEmit": true,
 

@@ -1,12 +1,12 @@
 {
-  "name": "hedra",
+  "name": "hedra-node",
   "version": "0.0.1-alpha.0",
   "description": "The official TypeScript library for the Hedra API",
   "author": "Hedra <dev-feedback@hedra.com>",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
-  "repository": "github:stainless-sdks/hedra-node",
+  "repository": "github:hedra-labs/hedra-node",
   "license": "Apache-2.0",
   "packageManager": "yarn@1.22.22",
   "files": [
@@ -60,8 +60,8 @@
     "./shims/web.mjs"
   ],
   "imports": {
-    "hedra": ".",
-    "hedra/*": "./src/*"
+    "hedra-node": ".",
+    "hedra-node/*": "./src/*"
   },
   "exports": {
     "./_shims/auto/*": {

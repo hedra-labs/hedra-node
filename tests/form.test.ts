@@ -1,6 +1,6 @@
-import { multipartFormRequestOptions, createForm } from 'hedra/core';
-import { Blob } from 'hedra/_shims/index';
-import { toFile } from 'hedra';
+import { multipartFormRequestOptions, createForm } from 'hedra-node/core';
+import { Blob } from 'hedra-node/_shims/index';
+import { toFile } from 'hedra-node';
 
 describe('form data validation', () => {
   test('valid values do not error', async () => {

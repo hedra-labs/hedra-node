@@ -42,11 +42,13 @@ export let isFsReadStream: Shims['isFsReadStream'] | undefined = undefined;
 export function setShims(shims: Shims, options: { auto: boolean } = { auto: false }) {
   if (auto) {
     throw new Error(
-      `you must \`import 'hedra/shims/${shims.kind}'\` before importing anything else from hedra`,
+      `you must \`import 'hedra-node/shims/${shims.kind}'\` before importing anything else from hedra-node`,
     );
   }
   if (kind) {
-    throw new Error(`can't \`import 'hedra/shims/${shims.kind}'\` after \`import 'hedra/shims/${kind}'\``);
+    throw new Error(
+      `can't \`import 'hedra-node/shims/${shims.kind}'\` after \`import 'hedra-node/shims/${kind}'\``,
+    );
   }
   auto = options.auto;
   kind = shims.kind;
