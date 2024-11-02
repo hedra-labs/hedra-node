@@ -20,7 +20,7 @@ or products provided by Hedra please follow the respective company's security re
 
 ### Hedra Terms and Policies
 
-Please contact dev-feedback@hedra.com for any questions or concerns regarding security of our services.
+Please contact support@hedra.com for any questions or concerns regarding security of our services.
 
 ---
 
