@@ -93,7 +93,7 @@ export class Hedra extends Core.APIClient {
   /**
    * API Client for interfacing with the Hedra API.
    *
-   * @param {string | undefined} [opts.apiKey=process.env['X_API_KEY'] ?? undefined]
+   * @param {string | undefined} [opts.apiKey=process.env['HEDRA_API_KEY'] ?? undefined]
    * @param {string} [opts.baseURL=process.env['HEDRA_BASE_URL'] ?? https://mercury.dev.dream-ai.com/api] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
@@ -104,12 +104,12 @@ export class Hedra extends Core.APIClient {
    */
   constructor({
     baseURL = Core.readEnv('HEDRA_BASE_URL'),
-    apiKey = Core.readEnv('X_API_KEY'),
+    apiKey = Core.readEnv('HEDRA_API_KEY'),
     ...opts
   }: ClientOptions = {}) {
     if (apiKey === undefined) {
       throw new Errors.HedraError(
-        "The X_API_KEY environment variable is missing or empty; either provide it, or instantiate the Hedra client with an apiKey option, like new Hedra({ apiKey: 'My API Key' }).",
+        "The HEDRA_API_KEY environment variable is missing or empty; either provide it, or instantiate the Hedra client with an apiKey option, like new Hedra({ apiKey: 'My API Key' }).",
       );
     }
 

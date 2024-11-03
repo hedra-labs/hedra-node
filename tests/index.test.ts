@@ -172,14 +172,14 @@ describe('instantiate client', () => {
 
   test('with environment variable arguments', () => {
     // set options via env var
-    process.env['X_API_KEY'] = 'My API Key';
+    process.env['HEDRA_API_KEY'] = 'My API Key';
     const client = new Hedra();
     expect(client.apiKey).toBe('My API Key');
   });
 
   test('with overriden environment variable arguments', () => {
     // set options via env var
-    process.env['X_API_KEY'] = 'another My API Key';
+    process.env['HEDRA_API_KEY'] = 'another My API Key';
     const client = new Hedra({ apiKey: 'My API Key' });
     expect(client.apiKey).toBe('My API Key');
   });
