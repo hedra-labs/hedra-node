@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (2024-11-03)
+
+Full Changelog: [v0.1.2...v0.2.0](https://github.com/hedra-labs/hedra-node/compare/v0.1.2...v0.2.0)
+
+### Features
+
+* **api:** update via SDK Studio ([#5](https://github.com/hedra-labs/hedra-node/issues/5)) ([79c06ec](https://github.com/hedra-labs/hedra-node/commit/79c06ec4f11dd789eb17c360a04dca674a3d11fd))
+
 ## 0.1.2 (2024-11-02)
 
 Full Changelog: [v0.0.1-alpha.0...v0.1.2](https://github.com/hedra-labs/hedra-node/compare/v0.0.1-alpha.0...v0.1.2)
