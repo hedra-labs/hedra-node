@@ -181,31 +181,11 @@ export class Hedra extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-export {
-  HedraError,
-  APIError,
-  APIConnectionError,
-  APIConnectionTimeoutError,
-  APIUserAbortError,
-  NotFoundError,
-  ConflictError,
-  RateLimitError,
-  BadRequestError,
-  AuthenticationError,
-  InternalServerError,
-  PermissionDeniedError,
-  UnprocessableEntityError,
-} from './error';
-
-export import toFile = Uploads.toFile;
-export import fileFromPath = Uploads.fileFromPath;
-
 Hedra.Voices = Voices;
 Hedra.Audio = Audio;
 Hedra.Portraits = Portraits;
 Hedra.Characters = Characters;
 Hedra.Projects = Projects;
-
 export declare namespace Hedra {
   export type RequestOptions = Core.RequestOptions;
 
@@ -240,5 +220,22 @@ export declare namespace Hedra {
     type ProjectSharingParams as ProjectSharingParams,
   };
 }
+
+export { toFile, fileFromPath } from 'hedra-node/uploads';
+export {
+  HedraError,
+  APIError,
+  APIConnectionError,
+  APIConnectionTimeoutError,
+  APIUserAbortError,
+  NotFoundError,
+  ConflictError,
+  RateLimitError,
+  BadRequestError,
+  AuthenticationError,
+  InternalServerError,
+  PermissionDeniedError,
+  UnprocessableEntityError,
+} from 'hedra-node/error';
 
 export default Hedra;
