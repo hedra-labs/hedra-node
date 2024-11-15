@@ -221,7 +221,7 @@ export declare namespace Hedra {
   };
 }
 
-export { toFile, fileFromPath } from 'hedra-node/uploads';
+export { toFile, fileFromPath } from './uploads';
 export {
   HedraError,
   APIError,
@@ -236,6 +236,6 @@ export {
   InternalServerError,
   PermissionDeniedError,
   UnprocessableEntityError,
-} from 'hedra-node/error';
+} from './error';
 
 export default Hedra;
