@@ -21,7 +21,7 @@ export interface CharacterCreateResponse {
 
 export interface CharacterCreateParams {
   /**
-   * URL of audio uploaded using the /v1/audio endpoint
+   * Desired aspect ratio for the generated video
    */
   aspectRatio?: '1:1' | '16:9' | '9:16';
 
@@ -31,7 +31,7 @@ export interface CharacterCreateParams {
   audioSource?: 'tts' | 'audio';
 
   /**
-   * URL of image uploaded via /v1/portrait
+   * URL of image uploaded via /v1/portrait or base64-encoded image
    */
   avatarImage?: string | null;
 

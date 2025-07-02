@@ -6,7 +6,7 @@ This library provides convenient access to the Hedra REST API from server-side T
 
 The REST API documentation can be found on [hedra.com](https://hedra.com/docs). The full API of this library can be found in [api.md](api.md).
 
-It is generated with [Stainless](https://www.stainlessapi.com/).
+It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
@@ -26,13 +26,9 @@ const client = new Hedra({
   apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
 });
 
-async function main() {
-  const character = await client.characters.create();
+const character = await client.characters.create();
 
-  console.log(character.jobId);
-}
-
-main();
+console.log(character.jobId);
 ```
 
 ### Request & Response types
@@ -47,14 +43,40 @@ const client = new Hedra({
   apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
 });
 
-async function main() {
-  const character: Hedra.CharacterCreateResponse = await client.characters.create();
-}
-
-main();
+const character: Hedra.CharacterCreateResponse = await client.characters.create();
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
+
+## File uploads
+
+Request parameters that correspond to file uploads can be passed in many different forms:
+
+- `File` (or an object with the same structure)
+- a `fetch` `Response` (or an object with the same structure)
+- an `fs.ReadStream`
+- the return value of our `toFile` helper
+
+```ts
+import fs from 'fs';
+import fetch from 'node-fetch';
+import Hedra, { toFile } from 'hedra-node';
+
+const client = new Hedra();
+
+// If you have access to Node `fs` we recommend using `fs.createReadStream()`:
+await client.audio.create({ file: fs.createReadStream('/path/to/file') });
+
+// Or if you have the web `File` API you can pass a `File` instance:
+await client.audio.create({ file: new File(['my bytes'], 'file') });
+
+// You can also pass a `fetch` `Response`:
+await client.audio.create({ file: await fetch('https://somesite/file') });
+
+// Finally, if none of the above are convenient, you can use our `toFile` helper:
+await client.audio.create({ file: await toFile(Buffer.from('my bytes'), 'file') });
+await client.audio.create({ file: await toFile(new Uint8Array([0, 1, 2]), 'file') });
+```
 
 ## Handling errors
 
@@ -64,22 +86,18 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-async function main() {
-  const character = await client.characters.create().catch(async (err) => {
-    if (err instanceof Hedra.APIError) {
-      console.log(err.status); // 400
-      console.log(err.name); // BadRequestError
-      console.log(err.headers); // {server: 'nginx', ...}
-    } else {
-      throw err;
-    }
-  });
-}
-
-main();
+const character = await client.characters.create().catch(async (err) => {
+  if (err instanceof Hedra.APIError) {
+    console.log(err.status); // 400
+    console.log(err.name); // BadRequestError
+    console.log(err.headers); // {server: 'nginx', ...}
+  } else {
+    throw err;
+  }
+});
 ```
 
-Error codes are as followed:
+Error codes are as follows:
 
 | Status Code | Error Type                 |
 | ----------- | -------------------------- |
@@ -266,7 +284,7 @@ await client.characters.create({
 This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions, though certain backwards-incompatible changes may be released as minor versions:
 
 1. Changes that only affect static types, without breaking runtime behavior.
-2. Changes to library internals which are technically public but not intended or documented for external use. _(Please open a GitHub issue to let us know if you are relying on such internals)_.
+2. Changes to library internals which are technically public but not intended or documented for external use. _(Please open a GitHub issue to let us know if you are relying on such internals.)_
 3. Changes that we do not expect to impact the vast majority of users in practice.
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.

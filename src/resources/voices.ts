@@ -26,7 +26,7 @@ export namespace VoiceListResponse {
 
     description?: string | null;
 
-    labels?: Record<string, string> | null;
+    labels?: { [key: string]: string } | null;
 
     name?: string | null;
 
