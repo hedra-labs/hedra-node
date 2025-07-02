@@ -121,6 +121,7 @@ export class Hedra extends Core.APIClient {
 
     super({
       baseURL: options.baseURL!,
+      baseURLOverridden: baseURL ? baseURL !== 'https://mercury.dev.dream-ai.com/api' : false,
       timeout: options.timeout ?? 60000 /* 1 minute */,
       httpAgent: options.httpAgent,
       maxRetries: options.maxRetries,
@@ -137,6 +138,13 @@ export class Hedra extends Core.APIClient {
   portraits: API.Portraits = new API.Portraits(this);
   characters: API.Characters = new API.Characters(this);
   projects: API.Projects = new API.Projects(this);
+
+  /**
+   * Check whether the base URL is set to its default.
+   */
+  #baseURLOverridden(): boolean {
+    return this.baseURL !== 'https://mercury.dev.dream-ai.com/api';
+  }
 
   /**
    * Ping

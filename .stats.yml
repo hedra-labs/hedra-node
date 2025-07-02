@@ -1,2 +1,4 @@
 configured_endpoints: 9
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/hedra%2Fhedra-56bf6cfb87b58f9e186df9a1550db6458db895f334588eb2d48a2b953b2251a6.yml
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/hedra%2Fhedra-92b2207b5a71c179d175db4c41fb6be960f22ae85d6aa3d9bbc99c2f4aa2f7a2.yml
+openapi_spec_hash: ac73c191334ff4f8fc49b3c0560f483b
+config_hash: 0838205a52d06414169d1768ac718c41

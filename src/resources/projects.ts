@@ -71,7 +71,7 @@ export interface AvatarProjectItem {
 
   stage?: string | null;
 
-  status?: string | null;
+  status?: 'Queued' | 'InProgress' | 'Completed' | 'Failed' | null;
 
   text?: string | null;
 
