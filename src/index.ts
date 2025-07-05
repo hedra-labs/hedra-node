@@ -1,11 +1,42 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { type Agent } from './_shims/index';
+import * as qs from './internal/qs';
 import * as Core from './core';
 import * as Errors from './error';
 import * as Uploads from './uploads';
+import * as API from './resources/index';
 import * as TopLevelAPI from './resources/top-level';
-import { GenerationsParams, GenerationsResponse } from './resources/top-level';
+import {
+  GenerateImageRequest,
+  GenerateIsolatedAudioRequest,
+  GenerateSpeechToSpeechRequest,
+  GenerateTextToSpeechRequest,
+  GenerateVoiceCloneRequest,
+  GeneratedVideoInputs,
+  GenerationsParams,
+  GenerationsResponse,
+} from './resources/top-level';
+import {
+  Asset,
+  AssetCreateParams,
+  AssetCreateResponse,
+  AssetListParams,
+  AssetListResponse,
+  AssetType,
+  AssetUploadParams,
+  Assets,
+  GeneratedVideo,
+} from './resources/assets';
+import { Billing, BillingListCreditsResponse } from './resources/billing';
+import {
+  Client,
+  ClientListGenerationsParams,
+  ClientListGenerationsResponse,
+  ClientRetrieveGenerationStatusResponse,
+  GenerationStatus,
+} from './resources/client';
+import { ModelListResponse, Models } from './resources/models';
 
 export interface ClientOptions {
   /**
@@ -123,6 +154,11 @@ export class Hedra extends Core.APIClient {
     this.apiKey = apiKey;
   }
 
+  models: API.Models = new API.Models(this);
+  assets: API.Assets = new API.Assets(this);
+  client: API.Client = new API.Client(this);
+  billing: API.Billing = new API.Billing(this);
+
   /**
    * Check whether the base URL is set to its default.
    */
@@ -155,6 +191,10 @@ export class Hedra extends Core.APIClient {
     return { 'X-API-Key': this.apiKey };
   }
 
+  protected override stringifyQuery(query: Record<string, unknown>): string {
+    return qs.stringify(query, { arrayFormat: 'comma' });
+  }
+
   static Hedra = this;
   static DEFAULT_TIMEOUT = 60000; // 1 minute
 
@@ -176,10 +216,47 @@ export class Hedra extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
+Hedra.Models = Models;
+Hedra.Assets = Assets;
+Hedra.Client = Client;
+Hedra.Billing = Billing;
 export declare namespace Hedra {
   export type RequestOptions = Core.RequestOptions;
 
-  export { type GenerationsResponse as GenerationsResponse, type GenerationsParams as GenerationsParams };
+  export {
+    type GenerateImageRequest as GenerateImageRequest,
+    type GenerateIsolatedAudioRequest as GenerateIsolatedAudioRequest,
+    type GenerateSpeechToSpeechRequest as GenerateSpeechToSpeechRequest,
+    type GenerateTextToSpeechRequest as GenerateTextToSpeechRequest,
+    type GenerateVoiceCloneRequest as GenerateVoiceCloneRequest,
+    type GeneratedVideoInputs as GeneratedVideoInputs,
+    type GenerationsResponse as GenerationsResponse,
+    type GenerationsParams as GenerationsParams,
+  };
+
+  export { Models as Models, type ModelListResponse as ModelListResponse };
+
+  export {
+    Assets as Assets,
+    type Asset as Asset,
+    type AssetType as AssetType,
+    type GeneratedVideo as GeneratedVideo,
+    type AssetCreateResponse as AssetCreateResponse,
+    type AssetListResponse as AssetListResponse,
+    type AssetCreateParams as AssetCreateParams,
+    type AssetListParams as AssetListParams,
+    type AssetUploadParams as AssetUploadParams,
+  };
+
+  export {
+    Client as Client,
+    type GenerationStatus as GenerationStatus,
+    type ClientListGenerationsResponse as ClientListGenerationsResponse,
+    type ClientRetrieveGenerationStatusResponse as ClientRetrieveGenerationStatusResponse,
+    type ClientListGenerationsParams as ClientListGenerationsParams,
+  };
+
+  export { Billing as Billing, type BillingListCreditsResponse as BillingListCreditsResponse };
 }
 
 export { toFile, fileFromPath } from './uploads';

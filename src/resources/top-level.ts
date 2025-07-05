@@ -1,5 +1,136 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+import * as TopLevelAPI from './top-level';
+
+export interface GenerateImageRequest {
+  /**
+   * The model to use.
+   */
+  ai_model_id: string;
+
+  /**
+   * The text prompt for image generation or image editing.
+   */
+  text_prompt: string;
+
+  /**
+   * The aspect ratio to use.
+   */
+  aspect_ratio?: string | null;
+
+  /**
+   * The resolution to use formatted like '540p', '1080p', '1440p (2K QHD)', etc.
+   */
+  resolution?: string | null;
+
+  /**
+   * The id of the Image asset to use as the start keyframe.
+   */
+  start_keyframe_id?: string | null;
+
+  type?: 'image';
+}
+
+export interface GenerateIsolatedAudioRequest {
+  /**
+   * The id of the model to use for audio isolation.
+   */
+  ai_model_id: string;
+
+  /**
+   * The id of the audio asset requiring sound isolation.
+   */
+  audio_id: string;
+
+  type?: 'audio_isolation';
+}
+
+export interface GenerateSpeechToSpeechRequest {
+  /**
+   * The id of the model to use for audio isolation.
+   */
+  ai_model_id: string;
+
+  /**
+   * The id of the audio asset requiring sound isolation.
+   */
+  audio_id: string;
+
+  /**
+   * The id of the Voice to use.
+   */
+  voice_id: string;
+
+  type?: 'speech_to_speech';
+}
+
+export interface GenerateTextToSpeechRequest {
+  /**
+   * The text to convert to speech.
+   */
+  text: string;
+
+  /**
+   * The id of the Voice to use.
+   */
+  voice_id: string;
+
+  /**
+   * Speed should be between 0.7 and 1.2, where 0.7 is the slowest and 1.2 is the
+   * fastest. This varies the speed of the generated speech.
+   */
+  speed?: number;
+
+  /**
+   * Stability should be between 0-1, where 0 is the most stable and 1 is the most
+   * unstable. This varies the consistency between your outputs.
+   */
+  stability?: number;
+
+  type?: 'text_to_speech';
+}
+
+export interface GenerateVoiceCloneRequest {
+  /**
+   * The id of the Audio asset to use as the basis for the clone.
+   */
+  audio_id: string;
+
+  /**
+   * The name of the new voice. Required by ElevenLabs to create a new voice.
+   */
+  name: string;
+
+  type?: 'voice_clone';
+}
+
+export interface GeneratedVideoInputs {
+  /**
+   * Prompt for video generation.
+   */
+  text_prompt: string;
+
+  /**
+   * Aspect ratio for the video.
+   */
+  aspect_ratio?: string | null;
+
+  /**
+   * Normalized coordinates for primary speaker position (Character3 only)
+   */
+  bounding_box_target?: Array<unknown> | null;
+
+  /**
+   * Duration of the video in milliseconds.
+   */
+  duration_ms?: number | null;
+
+  /**
+   * Resolution for the video.
+   */
+  resolution?: string | null;
+}
+
 export type GenerationsResponse =
   | GenerationsResponse.GenerateVideoResponse
   | GenerationsResponse.GenerateTextToSpeechResponse
@@ -24,7 +155,7 @@ export namespace GenerationsResponse {
     /**
      * Inputs for generating the video.
      */
-    generated_video_inputs: GenerateVideoResponse.GeneratedVideoInputs;
+    generated_video_inputs: TopLevelAPI.GeneratedVideoInputs;
 
     /**
      * ID of the model to use for the generation.
@@ -42,38 +173,6 @@ export namespace GenerationsResponse {
     start_keyframe_id?: string | null;
 
     type?: 'video';
-  }
-
-  export namespace GenerateVideoResponse {
-    /**
-     * Inputs for generating the video.
-     */
-    export interface GeneratedVideoInputs {
-      /**
-       * Prompt for video generation.
-       */
-      text_prompt: string;
-
-      /**
-       * Aspect ratio for the video.
-       */
-      aspect_ratio?: string | null;
-
-      /**
-       * Normalized coordinates for primary speaker position (Character3 only)
-       */
-      bounding_box_target?: Array<unknown> | null;
-
-      /**
-       * Duration of the video in milliseconds.
-       */
-      duration_ms?: number | null;
-
-      /**
-       * Resolution for the video.
-       */
-      resolution?: string | null;
-    }
   }
 
   export interface GenerateTextToSpeechResponse {
@@ -286,7 +385,7 @@ export declare namespace GenerationsParams {
     /**
      * Inputs for generating the video.
      */
-    generated_video_inputs: GenerateVideoRequestInput.GeneratedVideoInputs;
+    generated_video_inputs: GeneratedVideoInputs;
 
     /**
      * ID of the model to use for the generation.
@@ -304,38 +403,6 @@ export declare namespace GenerationsParams {
     start_keyframe_id?: string | null;
 
     type?: 'video';
-  }
-
-  export namespace GenerateVideoRequestInput {
-    /**
-     * Inputs for generating the video.
-     */
-    export interface GeneratedVideoInputs {
-      /**
-       * Prompt for video generation.
-       */
-      text_prompt: string;
-
-      /**
-       * Aspect ratio for the video.
-       */
-      aspect_ratio?: string | null;
-
-      /**
-       * Normalized coordinates for primary speaker position (Character3 only)
-       */
-      bounding_box_target?: Array<unknown> | null;
-
-      /**
-       * Duration of the video in milliseconds.
-       */
-      duration_ms?: number | null;
-
-      /**
-       * Resolution for the video.
-       */
-      resolution?: string | null;
-    }
   }
 
   export interface GenerateTextToSpeechRequest {
@@ -442,5 +509,14 @@ export declare namespace GenerationsParams {
 }
 
 export declare namespace TopLevel {
-  export { type GenerationsResponse as GenerationsResponse, type GenerationsParams as GenerationsParams };
+  export {
+    type GenerateImageRequest as GenerateImageRequest,
+    type GenerateIsolatedAudioRequest as GenerateIsolatedAudioRequest,
+    type GenerateSpeechToSpeechRequest as GenerateSpeechToSpeechRequest,
+    type GenerateTextToSpeechRequest as GenerateTextToSpeechRequest,
+    type GenerateVoiceCloneRequest as GenerateVoiceCloneRequest,
+    type GeneratedVideoInputs as GeneratedVideoInputs,
+    type GenerationsResponse as GenerationsResponse,
+    type GenerationsParams as GenerationsParams,
+  };
 }
