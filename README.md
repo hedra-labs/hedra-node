@@ -26,9 +26,12 @@ const client = new Hedra({
   apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
 });
 
-const character = await client.characters.create();
-
-console.log(character.jobId);
+const response = await client.generations({
+  generated_video_inputs: { text_prompt: 'text_prompt' },
+  ai_model_id: 'd1dd37a3-e39a-4854-a298-6510289f9cf2',
+  audio_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+  start_keyframe_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+});
 ```
 
 ### Request & Response types
@@ -43,40 +46,16 @@ const client = new Hedra({
   apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
 });
 
-const character: Hedra.CharacterCreateResponse = await client.characters.create();
+const params: Hedra.GenerationsParams = {
+  generated_video_inputs: { text_prompt: 'text_prompt' },
+  ai_model_id: 'd1dd37a3-e39a-4854-a298-6510289f9cf2',
+  audio_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+  start_keyframe_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+};
+const response: Hedra.GenerationsResponse = await client.generations(params);
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
-
-## File uploads
-
-Request parameters that correspond to file uploads can be passed in many different forms:
-
-- `File` (or an object with the same structure)
-- a `fetch` `Response` (or an object with the same structure)
-- an `fs.ReadStream`
-- the return value of our `toFile` helper
-
-```ts
-import fs from 'fs';
-import fetch from 'node-fetch';
-import Hedra, { toFile } from 'hedra-node';
-
-const client = new Hedra();
-
-// If you have access to Node `fs` we recommend using `fs.createReadStream()`:
-await client.audio.create({ file: fs.createReadStream('/path/to/file') });
-
-// Or if you have the web `File` API you can pass a `File` instance:
-await client.audio.create({ file: new File(['my bytes'], 'file') });
-
-// You can also pass a `fetch` `Response`:
-await client.audio.create({ file: await fetch('https://somesite/file') });
-
-// Finally, if none of the above are convenient, you can use our `toFile` helper:
-await client.audio.create({ file: await toFile(Buffer.from('my bytes'), 'file') });
-await client.audio.create({ file: await toFile(new Uint8Array([0, 1, 2]), 'file') });
-```
 
 ## Handling errors
 
@@ -86,15 +65,22 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const character = await client.characters.create().catch(async (err) => {
-  if (err instanceof Hedra.APIError) {
-    console.log(err.status); // 400
-    console.log(err.name); // BadRequestError
-    console.log(err.headers); // {server: 'nginx', ...}
-  } else {
-    throw err;
-  }
-});
+const response = await client
+  .generations({
+    generated_video_inputs: { text_prompt: 'text_prompt' },
+    ai_model_id: 'd1dd37a3-e39a-4854-a298-6510289f9cf2',
+    audio_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+    start_keyframe_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+  })
+  .catch(async (err) => {
+    if (err instanceof Hedra.APIError) {
+      console.log(err.status); // 400
+      console.log(err.name); // BadRequestError
+      console.log(err.headers); // {server: 'nginx', ...}
+    } else {
+      throw err;
+    }
+  });
 ```
 
 Error codes are as follows:
@@ -126,7 +112,7 @@ const client = new Hedra({
 });
 
 // Or, configure per-request:
-await client.characters.create({
+await client.generations({ generated_video_inputs: { text_prompt: 'text_prompt' }, ai_model_id: 'd1dd37a3-e39a-4854-a298-6510289f9cf2', audio_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a', start_keyframe_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a' }, {
   maxRetries: 5,
 });
 ```
@@ -143,7 +129,7 @@ const client = new Hedra({
 });
 
 // Override per-request:
-await client.characters.create({
+await client.generations({ generated_video_inputs: { text_prompt: 'text_prompt' }, ai_model_id: 'd1dd37a3-e39a-4854-a298-6510289f9cf2', audio_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a', start_keyframe_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a' }, {
   timeout: 5 * 1000,
 });
 ```
@@ -164,13 +150,27 @@ You can also use the `.withResponse()` method to get the raw `Response` along wi
 ```ts
 const client = new Hedra();
 
-const response = await client.characters.create().asResponse();
+const response = await client
+  .generations({
+    generated_video_inputs: { text_prompt: 'text_prompt' },
+    ai_model_id: 'd1dd37a3-e39a-4854-a298-6510289f9cf2',
+    audio_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+    start_keyframe_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+  })
+  .asResponse();
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: character, response: raw } = await client.characters.create().withResponse();
+const { data: response, response: raw } = await client
+  .generations({
+    generated_video_inputs: { text_prompt: 'text_prompt' },
+    ai_model_id: 'd1dd37a3-e39a-4854-a298-6510289f9cf2',
+    audio_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+    start_keyframe_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+  })
+  .withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(character.jobId);
+console.log(response);
 ```
 
 ### Making custom/undocumented requests
@@ -274,9 +274,17 @@ const client = new Hedra({
 });
 
 // Override per-request:
-await client.characters.create({
-  httpAgent: new http.Agent({ keepAlive: false }),
-});
+await client.generations(
+  {
+    generated_video_inputs: { text_prompt: 'text_prompt' },
+    ai_model_id: 'd1dd37a3-e39a-4854-a298-6510289f9cf2',
+    audio_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+    start_keyframe_id: '3c90c3cc-0d44-4b50-8888-8dd25736052a',
+  },
+  {
+    httpAgent: new http.Agent({ keepAlive: false }),
+  },
+);
 ```
 
 ## Semantic versioning

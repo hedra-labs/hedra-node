@@ -9,8 +9,8 @@ const client = new Hedra({
 });
 
 describe('top level methods', () => {
-  test('ping', async () => {
-    const responsePromise = client.ping();
+  test('generations: only required params', async () => {
+    const responsePromise = client.generations({ generated_video_inputs: { text_prompt: 'text_prompt' } });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,8 +20,19 @@ describe('top level methods', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('ping: request options instead of params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.ping({ path: '/_stainless_unknown_path' })).rejects.toThrow(Hedra.NotFoundError);
+  test('generations: required and optional params', async () => {
+    const response = await client.generations({
+      generated_video_inputs: {
+        text_prompt: 'text_prompt',
+        aspect_ratio: 'aspect_ratio',
+        bounding_box_target: [{}, {}],
+        duration_ms: 0,
+        resolution: 'resolution',
+      },
+      ai_model_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+      audio_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+      start_keyframe_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+      type: 'video',
+    });
   });
 });
