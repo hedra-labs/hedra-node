@@ -173,13 +173,13 @@ describe('instantiate client', () => {
     test('empty env variable', () => {
       process.env['HEDRA_BASE_URL'] = ''; // empty
       const client = new Hedra({ apiKey: 'My API Key' });
-      expect(client.baseURL).toEqual('https://mercury.dev.dream-ai.com/api');
+      expect(client.baseURL).toEqual('https://api.hedra.com/web-app/Public');
     });
 
     test('blank env variable', () => {
       process.env['HEDRA_BASE_URL'] = '  '; // blank
       const client = new Hedra({ apiKey: 'My API Key' });
-      expect(client.baseURL).toEqual('https://mercury.dev.dream-ai.com/api');
+      expect(client.baseURL).toEqual('https://api.hedra.com/web-app/Public');
     });
 
     test('in request options', () => {

@@ -4,20 +4,8 @@ import { type Agent } from './_shims/index';
 import * as Core from './core';
 import * as Errors from './error';
 import * as Uploads from './uploads';
-import * as API from './resources/index';
-import { Audio, AudioCreateParams, AudioCreateResponse } from './resources/audio';
-import { CharacterCreateParams, CharacterCreateResponse, Characters } from './resources/characters';
-import { PortraitCreateParams, PortraitCreateResponse, Portraits } from './resources/portraits';
-import {
-  AvatarProjectItem,
-  ProjectDeleteResponse,
-  ProjectListResponse,
-  ProjectSharingParams,
-  ProjectSharingResponse,
-  Projects,
-} from './resources/projects';
-import { PingResponse } from './resources/top-level';
-import { VoiceListResponse, Voices } from './resources/voices';
+import * as TopLevelAPI from './resources/top-level';
+import { GenerationsParams, GenerationsResponse } from './resources/top-level';
 
 export interface ClientOptions {
   /**
@@ -96,7 +84,7 @@ export class Hedra extends Core.APIClient {
    * API Client for interfacing with the Hedra API.
    *
    * @param {string | undefined} [opts.apiKey=process.env['HEDRA_API_KEY'] ?? undefined]
-   * @param {string} [opts.baseURL=process.env['HEDRA_BASE_URL'] ?? https://mercury.dev.dream-ai.com/api] - Override the default base URL for the API.
+   * @param {string} [opts.baseURL=process.env['HEDRA_BASE_URL'] ?? https://api.hedra.com/web-app/Public] - Override the default base URL for the API.
    * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
    * @param {number} [opts.httpAgent] - An HTTP agent used to manage HTTP(s) connections.
    * @param {Core.Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
@@ -118,12 +106,12 @@ export class Hedra extends Core.APIClient {
     const options: ClientOptions = {
       apiKey,
       ...opts,
-      baseURL: baseURL || `https://mercury.dev.dream-ai.com/api`,
+      baseURL: baseURL || `https://api.hedra.com/web-app/Public`,
     };
 
     super({
       baseURL: options.baseURL!,
-      baseURLOverridden: baseURL ? baseURL !== 'https://mercury.dev.dream-ai.com/api' : false,
+      baseURLOverridden: baseURL ? baseURL !== 'https://api.hedra.com/web-app/Public' : false,
       timeout: options.timeout ?? 60000 /* 1 minute */,
       httpAgent: options.httpAgent,
       maxRetries: options.maxRetries,
@@ -135,24 +123,21 @@ export class Hedra extends Core.APIClient {
     this.apiKey = apiKey;
   }
 
-  voices: API.Voices = new API.Voices(this);
-  audio: API.Audio = new API.Audio(this);
-  portraits: API.Portraits = new API.Portraits(this);
-  characters: API.Characters = new API.Characters(this);
-  projects: API.Projects = new API.Projects(this);
-
   /**
    * Check whether the base URL is set to its default.
    */
   #baseURLOverridden(): boolean {
-    return this.baseURL !== 'https://mercury.dev.dream-ai.com/api';
+    return this.baseURL !== 'https://api.hedra.com/web-app/Public';
   }
 
   /**
-   * Ping
+   * Generate Asset
    */
-  ping(options?: Core.RequestOptions): Core.APIPromise<unknown> {
-    return this.get('/ping', options);
+  generations(
+    body: TopLevelAPI.GenerationsParams,
+    options?: Core.RequestOptions,
+  ): Core.APIPromise<TopLevelAPI.GenerationsResponse> {
+    return this.post('/generations', { body, ...options });
   }
 
   protected override defaultQuery(): Core.DefaultQuery | undefined {
@@ -191,44 +176,10 @@ export class Hedra extends Core.APIClient {
   static fileFromPath = Uploads.fileFromPath;
 }
 
-Hedra.Voices = Voices;
-Hedra.Audio = Audio;
-Hedra.Portraits = Portraits;
-Hedra.Characters = Characters;
-Hedra.Projects = Projects;
 export declare namespace Hedra {
   export type RequestOptions = Core.RequestOptions;
 
-  export { type PingResponse as PingResponse };
-
-  export { Voices as Voices, type VoiceListResponse as VoiceListResponse };
-
-  export {
-    Audio as Audio,
-    type AudioCreateResponse as AudioCreateResponse,
-    type AudioCreateParams as AudioCreateParams,
-  };
-
-  export {
-    Portraits as Portraits,
-    type PortraitCreateResponse as PortraitCreateResponse,
-    type PortraitCreateParams as PortraitCreateParams,
-  };
-
-  export {
-    Characters as Characters,
-    type CharacterCreateResponse as CharacterCreateResponse,
-    type CharacterCreateParams as CharacterCreateParams,
-  };
-
-  export {
-    Projects as Projects,
-    type AvatarProjectItem as AvatarProjectItem,
-    type ProjectListResponse as ProjectListResponse,
-    type ProjectDeleteResponse as ProjectDeleteResponse,
-    type ProjectSharingResponse as ProjectSharingResponse,
-    type ProjectSharingParams as ProjectSharingParams,
-  };
+  export { type GenerationsResponse as GenerationsResponse, type GenerationsParams as GenerationsParams };
 }
 
 export { toFile, fileFromPath } from './uploads';
