@@ -1,288 +1,346 @@
-# Hedra Node API Library
+# Hedra TypeScript Library
 
-[![NPM version](https://img.shields.io/npm/v/hedra-node.svg)](https://npmjs.org/package/hedra-node) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/hedra-node)
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=Hedra%2FTypeScript)
+[![npm shield](https://img.shields.io/npm/v/)](https://www.npmjs.com/package/)
 
-This library provides convenient access to the Hedra REST API from server-side TypeScript or JavaScript.
+The Hedra TypeScript library provides convenient access to the Hedra APIs from TypeScript.
 
-The REST API documentation can be found on [hedra.com](https://hedra.com/docs). The full API of this library can be found in [api.md](api.md).
+## Table of Contents
 
-It is generated with [Stainless](https://www.stainlessapi.com/).
+- [Installation](#installation)
+- [Reference](#reference)
+- [Usage](#usage)
+- [Environments](#environments)
+- [Request and Response Types](#request-and-response-types)
+- [Exception Handling](#exception-handling)
+- [File Uploads](#file-uploads)
+- [Advanced](#advanced)
+  - [Additional Headers](#additional-headers)
+  - [Additional Query String Parameters](#additional-query-string-parameters)
+  - [Retries](#retries)
+  - [Timeouts](#timeouts)
+  - [Aborting Requests](#aborting-requests)
+  - [Access Raw Response Data](#access-raw-response-data)
+  - [Logging](#logging)
+  - [Custom Fetch](#custom-fetch)
+  - [Runtime Compatibility](#runtime-compatibility)
+- [Contributing](#contributing)
 
 ## Installation
 
 ```sh
-npm install hedra-node
+npm i -s 
 ```
+
+## Reference
+
+A full reference for this library is available [here](./reference.md).
 
 ## Usage
 
-The full API of this library can be found in [api.md](api.md).
+Instantiate and use the client with the following:
 
-<!-- prettier-ignore -->
-```js
-import Hedra from 'hedra-node';
+```typescript
+import { HedraClient } from "hedra-node";
 
-const client = new Hedra({
-  apiKey: process.env['X_API_KEY'], // This is the default and can be omitted
+const client = new HedraClient({ apiKey: "YOUR_API_KEY" });
+await client.createAsset({
+    name: "name",
+    type: "text"
 });
-
-async function main() {
-  const character = await client.characters.create();
-
-  console.log(character.jobId);
-}
-
-main();
 ```
 
-### Request & Response types
+## Environments
 
-This library includes TypeScript definitions for all request params and response fields. You may import and use them like so:
+This SDK allows you to configure different environments for API requests.
 
-<!-- prettier-ignore -->
-```ts
-import Hedra from 'hedra-node';
+```typescript
+import { HedraClient, HedraEnvironment } from "hedra-node";
 
-const client = new Hedra({
-  apiKey: process.env['X_API_KEY'], // This is the default and can be omitted
+const client = new HedraClient({
+    environment: HedraEnvironment.Default,
 });
-
-async function main() {
-  const character: Hedra.CharacterCreateResponse = await client.characters.create();
-}
-
-main();
 ```
 
-Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
+## Request and Response Types
 
-## Handling errors
+The SDK exports all request and response types as TypeScript interfaces. Simply import them with the
+following namespace:
 
-When the library is unable to connect to the API,
-or if the API returns a non-success status code (i.e., 4xx or 5xx response),
-a subclass of `APIError` will be thrown:
+```typescript
+import { Hedra } from "hedra-node";
 
-<!-- prettier-ignore -->
-```ts
-async function main() {
-  const character = await client.characters.create().catch(async (err) => {
-    if (err instanceof Hedra.APIError) {
-      console.log(err.status); // 400
-      console.log(err.name); // BadRequestError
-      console.log(err.headers); // {server: 'nginx', ...}
-    } else {
-      throw err;
+const request: Hedra.ListModelsRequest = {
+    ...
+};
+```
+
+## Exception Handling
+
+When the API returns a non-success status code (4xx or 5xx response), a subclass of the following error
+will be thrown.
+
+```typescript
+import { HedraError } from "hedra-node";
+
+try {
+    await client.createAsset(...);
+} catch (err) {
+    if (err instanceof HedraError) {
+        console.log(err.statusCode);
+        console.log(err.message);
+        console.log(err.body);
+        console.log(err.rawResponse);
     }
-  });
 }
-
-main();
 ```
 
-Error codes are as followed:
+## File Uploads
 
-| Status Code | Error Type                 |
-| ----------- | -------------------------- |
-| 400         | `BadRequestError`          |
-| 401         | `AuthenticationError`      |
-| 403         | `PermissionDeniedError`    |
-| 404         | `NotFoundError`            |
-| 422         | `UnprocessableEntityError` |
-| 429         | `RateLimitError`           |
-| >=500       | `InternalServerError`      |
-| N/A         | `APIConnectionError`       |
+You can upload files using the client:
+
+```typescript
+import { createReadStream } from "fs";
+import { HedraClient } from "hedra-node";
+import * as fs from "fs";
+
+const client = new HedraClient({ apiKey: "YOUR_API_KEY" });
+await client.uploadAsset({
+    file: fs.createReadStream("/path/to/your/file"),
+    id: "id"
+});
+```
+The client accepts a variety of types for file upload parameters:
+* Stream types: `fs.ReadStream`, `stream.Readable`, and `ReadableStream`
+* Buffered types: `Buffer`, `Blob`, `File`, `ArrayBuffer`, `ArrayBufferView`, and `Uint8Array`
+
+### Metadata
+
+You can configure metadata when uploading a file:
+```typescript
+const file: Uploadable.WithMetadata = {
+    data: createReadStream("path/to/file"),
+    filename: "my-file",       // optional
+    contentType: "audio/mpeg", // optional
+    contentLength: 1949,       // optional
+};
+```
+
+Alternatively, you can upload a file directly from a file path:
+```typescript
+const file : Uploadable.FromPath = {
+    path: "path/to/file",
+    filename: "my-file",        // optional
+    contentType: "audio/mpeg",  // optional
+    contentLength: 1949,        // optional
+};
+```
+
+The metadata is used to set the `Content-Length`, `Content-Type`, and `Content-Disposition` headers. If not provided, the client will attempt to determine them automatically.
+For example, `fs.ReadStream` has a `path` property which the SDK uses to retrieve the file size from the filesystem without loading it into memory.
+
+
+## Advanced
+
+### Additional Headers
+
+If you would like to send additional headers as part of the request, use the `headers` request option.
+
+```typescript
+import { HedraClient } from "hedra-node";
+
+const client = new HedraClient({
+    ...
+    headers: {
+        'X-Custom-Header': 'custom value'
+    }
+});
+
+const response = await client.createAsset(..., {
+    headers: {
+        'X-Custom-Header': 'custom value'
+    }
+});
+```
+
+### Additional Query String Parameters
+
+If you would like to send additional query string parameters as part of the request, use the `queryParams` request option.
+
+```typescript
+const response = await client.createAsset(..., {
+    queryParams: {
+        'customQueryParamKey': 'custom query param value'
+    }
+});
+```
 
 ### Retries
 
-Certain errors will be automatically retried 2 times by default, with a short exponential backoff.
-Connection errors (for example, due to a network connectivity problem), 408 Request Timeout, 409 Conflict,
-429 Rate Limit, and >=500 Internal errors will all be retried by default.
+The SDK is instrumented with automatic retries with exponential backoff. A request will be retried as long
+as the request is deemed retryable and the number of retry attempts has not grown larger than the configured
+retry limit (default: 2).
 
-You can use the `maxRetries` option to configure or disable this:
+Which status codes are retried depends on the `retryStatusCodes` generator configuration:
 
-<!-- prettier-ignore -->
-```js
-// Configure the default for all requests:
-const client = new Hedra({
-  maxRetries: 0, // default is 2
-});
+**`legacy`** (current default): retries on
+- [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
+- [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
+- [5XX](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses) (All server errors, including 500)
 
-// Or, configure per-request:
-await client.characters.create({
-  maxRetries: 5,
+**`recommended`**: retries on
+- [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
+- [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
+- [502](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502) (Bad Gateway)
+- [503](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503) (Service Unavailable)
+- [504](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/504) (Gateway Timeout)
+
+Use the `maxRetries` request option to configure this behavior.
+
+```typescript
+const response = await client.createAsset(..., {
+    maxRetries: 0 // override maxRetries at the request level
 });
 ```
 
 ### Timeouts
 
-Requests time out after 1 minute by default. You can configure this with a `timeout` option:
+The SDK defaults to a 60 second timeout. Use the `timeoutInSeconds` option to configure this behavior.
 
-<!-- prettier-ignore -->
-```ts
-// Configure the default for all requests:
-const client = new Hedra({
-  timeout: 20 * 1000, // 20 seconds (default is 1 minute)
-});
-
-// Override per-request:
-await client.characters.create({
-  timeout: 5 * 1000,
+```typescript
+const response = await client.createAsset(..., {
+    timeoutInSeconds: 30 // override timeout to 30s
 });
 ```
 
-On timeout, an `APIConnectionTimeoutError` is thrown.
+### Aborting Requests
 
-Note that requests which time out will be [retried twice by default](#retries).
+The SDK allows users to abort requests at any point by passing in an abort signal.
 
-## Advanced Usage
-
-### Accessing raw Response data (e.g., headers)
-
-The "raw" `Response` returned by `fetch()` can be accessed through the `.asResponse()` method on the `APIPromise` type that all methods return.
-
-You can also use the `.withResponse()` method to get the raw `Response` along with the parsed data.
-
-<!-- prettier-ignore -->
-```ts
-const client = new Hedra();
-
-const response = await client.characters.create().asResponse();
-console.log(response.headers.get('X-My-Header'));
-console.log(response.statusText); // access the underlying Response object
-
-const { data: character, response: raw } = await client.characters.create().withResponse();
-console.log(raw.headers.get('X-My-Header'));
-console.log(character.jobId);
+```typescript
+const controller = new AbortController();
+const response = await client.createAsset(..., {
+    abortSignal: controller.signal
+});
+controller.abort(); // aborts the request
 ```
 
-### Making custom/undocumented requests
+### Access Raw Response Data
 
-This library is typed for convenient access to the documented API. If you need to access undocumented
-endpoints, params, or response properties, the library can still be used.
+The SDK provides access to raw response data, including headers, through the `.withRawResponse()` method.
+The `.withRawResponse()` method returns a promise that results to an object with a `data` and a `rawResponse` property.
 
-#### Undocumented endpoints
+```typescript
+const { data, rawResponse } = await client.createAsset(...).withRawResponse();
 
-To make requests to undocumented endpoints, you can use `client.get`, `client.post`, and other HTTP verbs.
-Options on the client, such as retries, will be respected when making these requests.
+console.log(data);
+console.log(rawResponse.headers['X-My-Header']);
+```
 
-```ts
-await client.post('/some/path', {
-  body: { some_prop: 'foo' },
-  query: { some_query_arg: 'bar' },
+### Logging
+
+The SDK supports logging. You can configure the logger by passing in a `logging` object to the client options.
+
+```typescript
+import { HedraClient, logging } from "hedra-node";
+
+const client = new HedraClient({
+    ...
+    logging: {
+        level: logging.LogLevel.Debug, // defaults to logging.LogLevel.Info
+        logger: new logging.ConsoleLogger(), // defaults to ConsoleLogger
+        silent: false, // defaults to true, set to false to enable logging
+    }
 });
 ```
+The `logging` object can have the following properties:
+- `level`: The log level to use. Defaults to `logging.LogLevel.Info`.
+- `logger`: The logger to use. Defaults to a `logging.ConsoleLogger`.
+- `silent`: Whether to silence the logger. Defaults to `true`.
 
-#### Undocumented request params
+The `level` property can be one of the following values:
+- `logging.LogLevel.Debug`
+- `logging.LogLevel.Info`
+- `logging.LogLevel.Warn`
+- `logging.LogLevel.Error`
 
-To make requests using undocumented parameters, you may use `// @ts-expect-error` on the undocumented
-parameter. This library doesn't validate at runtime that the request matches the type, so any extra values you
-send will be sent as-is.
+To provide a custom logger, you can pass in an object that implements the `logging.ILogger` interface.
 
+<details>
+<summary>Custom logger examples</summary>
+
+Here's an example using the popular `winston` logging library.
 ```ts
-client.foo.create({
-  foo: 'my_param',
-  bar: 12,
-  // @ts-expect-error baz is not yet public
-  baz: 'undocumented option',
-});
+import winston from 'winston';
+
+const winstonLogger = winston.createLogger({...});
+
+const logger: logging.ILogger = {
+    debug: (msg, ...args) => winstonLogger.debug(msg, ...args),
+    info: (msg, ...args) => winstonLogger.info(msg, ...args),
+    warn: (msg, ...args) => winstonLogger.warn(msg, ...args),
+    error: (msg, ...args) => winstonLogger.error(msg, ...args),
+};
 ```
 
-For requests with the `GET` verb, any extra params will be in the query, all other requests will send the
-extra param in the body.
-
-If you want to explicitly send an extra argument, you can do so with the `query`, `body`, and `headers` request
-options.
-
-#### Undocumented response properties
-
-To access undocumented response properties, you may access the response object with `// @ts-expect-error` on
-the response object, or cast the response object to the requisite type. Like the request params, we do not
-validate or strip extra properties from the response from the API.
-
-### Customizing the fetch client
-
-By default, this library uses `node-fetch` in Node, and expects a global `fetch` function in other environments.
-
-If you would prefer to use a global, web-standards-compliant `fetch` function even in a Node environment,
-(for example, if you are running Node with `--experimental-fetch` or using NextJS which polyfills with `undici`),
-add the following import before your first import `from "Hedra"`:
+Here's an example using the popular `pino` logging library.
 
 ```ts
-// Tell TypeScript and the package to use the global web fetch instead of node-fetch.
-// Note, despite the name, this does not add any polyfills, but expects them to be provided if needed.
-import 'hedra-node/shims/web';
-import Hedra from 'hedra-node';
+import pino from 'pino';
+
+const pinoLogger = pino({...});
+
+const logger: logging.ILogger = {
+  debug: (msg, ...args) => pinoLogger.debug(args, msg),
+  info: (msg, ...args) => pinoLogger.info(args, msg),
+  warn: (msg, ...args) => pinoLogger.warn(args, msg),
+  error: (msg, ...args) => pinoLogger.error(args, msg),
+};
 ```
+</details>
 
-To do the inverse, add `import "hedra-node/shims/node"` (which does import polyfills).
-This can also be useful if you are getting the wrong TypeScript types for `Response` ([more details](https://github.com/hedra-labs/hedra-node/tree/main/src/_shims#readme)).
 
-### Logging and middleware
+### Custom Fetch
 
-You may also provide a custom `fetch` function when instantiating the client,
-which can be used to inspect or alter the `Request` or `Response` before/after each request:
+The SDK provides a low-level `fetch` method for making custom HTTP requests while still
+benefiting from SDK-level configuration like authentication, retries, timeouts, and logging.
+This is useful for calling API endpoints not yet supported in the SDK.
 
-```ts
-import { fetch } from 'undici'; // as one example
-import Hedra from 'hedra-node';
-
-const client = new Hedra({
-  fetch: async (url: RequestInfo, init?: RequestInit): Promise<Response> => {
-    console.log('About to make a request', url, init);
-    const response = await fetch(url, init);
-    console.log('Got response', response);
-    return response;
-  },
-});
-```
-
-Note that if given a `DEBUG=true` environment variable, this library will log all requests and responses automatically.
-This is intended for debugging purposes only and may change in the future without notice.
-
-### Configuring an HTTP(S) Agent (e.g., for proxies)
-
-By default, this library uses a stable agent for all http/https requests to reuse TCP connections, eliminating many TCP & TLS handshakes and shaving around 100ms off most requests.
-
-If you would like to disable or customize this behavior, for example to use the API behind a proxy, you can pass an `httpAgent` which is used for all requests (be they http or https), for example:
-
-<!-- prettier-ignore -->
-```ts
-import http from 'http';
-import { HttpsProxyAgent } from 'https-proxy-agent';
-
-// Configure the default for all requests:
-const client = new Hedra({
-  httpAgent: new HttpsProxyAgent(process.env.PROXY_URL),
+```typescript
+const response = await client.fetch("/v1/custom/endpoint", {
+    method: "GET",
+}, {
+    timeoutInSeconds: 30,
+    maxRetries: 3,
+    headers: {
+        "X-Custom-Header": "custom-value",
+    },
 });
 
-// Override per-request:
-await client.characters.create({
-  httpAgent: new http.Agent({ keepAlive: false }),
-});
+const data = await response.json();
 ```
 
-## Semantic versioning
+### Runtime Compatibility
 
-This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions, though certain backwards-incompatible changes may be released as minor versions:
 
-1. Changes that only affect static types, without breaking runtime behavior.
-2. Changes to library internals which are technically public but not intended or documented for external use. _(Please open a GitHub issue to let us know if you are relying on such internals)_.
-3. Changes that we do not expect to impact the vast majority of users in practice.
+The SDK works in the following runtimes:
 
-We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/hedra-labs/hedra-node/issues) with questions, bugs, or suggestions.
 
-## Requirements
+- Node.js 18+
+- Vercel
+- Cloudflare Workers
+- Deno v1.25+
+- Bun 1.0+
+- React Native
 
-TypeScript >= 4.5 is supported.
-
-The following runtimes are supported:
-
-Note that React Native is not supported at this time.
-
-If you are interested in other runtime environments, please open or upvote an issue on GitHub.
 
 ## Contributing
 
-See [the contributing documentation](./CONTRIBUTING.md).
+While we value open-source contributions to this SDK, this library is generated programmatically.
+Additions made directly to this library would have to be moved over to our generation code,
+otherwise they would be overwritten upon the next generated release. Feel free to open a PR as
+a proof of concept, but know that we will not be able to merge it as-is. We suggest opening
+an issue first to discuss with us!
+
+On the other hand, contributions to the README are always very welcome!

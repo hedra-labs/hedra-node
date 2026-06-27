@@ -1,66 +1,46 @@
-name: CI
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-      - next
+name: ci
+
+on: [push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  lint:
-    name: lint
+  compile:
     runs-on: ubuntu-latest
-    
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v6
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      - name: Set up node
+        uses: actions/setup-node@v6
 
-      - name: Bootstrap
-        run: ./scripts/bootstrap
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
-      - name: Check types
-        run: ./scripts/lint
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-  build:
-    name: build
-    runs-on: ubuntu-latest
-    
+      - name: Compile
+        run: pnpm build
 
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Bootstrap
-        run: ./scripts/bootstrap
-
-      - name: Check build
-        run: ./scripts/build
   test:
-    name: test
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v6
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      - name: Set up node
+        uses: actions/setup-node@v6
+                
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
-      - name: Bootstrap
-        run: ./scripts/bootstrap
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Run tests
-        run: ./scripts/test
-
+      - name: Test
+        run: pnpm test
