@@ -10,3 +10,9 @@ README.md
 # Hand-maintained docs / history
 LICENSE
 CHANGELOG.md
+
+# SDK version constant (bumped by hand at release time)
+src/version.ts
+
+# CI + publishing are hand-maintained (Fern doesn't manage workflows here)
+.github/
