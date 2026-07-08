@@ -16,3 +16,7 @@ src/version.ts
 
 # CI + publishing are hand-maintained (Fern doesn't manage workflows here)
 .github/
+
+# Lint config is scoped to hand-maintained files (generated code is excluded);
+# Fern's default biome.json would undo that scoping.
+biome.json
