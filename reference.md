@@ -1,119 +1,955 @@
 # Reference
-
-Compact reference for `hedra-node` (API v3). Hand-maintained: local `fern generate`
-does not emit this file — update it alongside the API surface. All methods return
-`core.HttpResponsePromise<T>` (await it for `T`, or call `.withRawResponse()`), and
-accept an optional trailing `requestOptions`.
-
 ## Queue
+<details><summary><code>client.queue.<a href="/src/api/resources/queue/client/Client.ts">submit</a>(model, { ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
 
-### `client.queue.submit(model, request) -> Hedra.SubmitResponse`
+#### 🔌 Usage
 
-`POST /queue/{model}` — submit a generation job.
+<dl>
+<dd>
+
+<dl>
+<dd>
 
 ```typescript
-const ack = await client.queue.submit("kling-o3-pro", {
-    input: { prompt: "a fox sprinting across fresh snow", aspect_ratio: "16:9" },
-    webhook: "https://example.com/hook", // optional
-    idempotency_key: "my-key",           // optional
-    priority: "normal",                  // optional
-});
+await client.queue.submit("model");
+
 ```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**model:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `QueueClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
 
 ## Requests
+<details><summary><code>client.requests.<a href="/src/api/resources/requests/client/Client.ts">list</a>({ ...params }) -> core.Page&lt;Hedra.RequestSummary, Hedra.RequestListResponse&gt;</code></summary>
+<dl>
+<dd>
 
-### `client.requests.list(request?) -> core.Page<Hedra.RequestSummary>`
+#### 🔌 Usage
 
-`GET /requests` — list past requests; cursor-paginated, async-iterable.
+<dl>
+<dd>
+
+<dl>
+<dd>
 
 ```typescript
-const page = await client.requests.list({ limit: 50 });
-for await (const req of page) console.log(req.request_id, req.status);
+const pageableResponse = await client.requests.list();
+for await (const item of pageableResponse) {
+    console.log(item);
+}
+
+// Or you can manually iterate page-by-page
+let page = await client.requests.list();
+while (page.hasNextPage()) {
+    page = page.getNextPage();
+}
+
+// You can also access the underlying response
+const response = page.response;
+
 ```
+</dd>
+</dl>
+</dd>
+</dl>
 
-### `client.requests.get(request_id) -> Hedra.ResultResponse`
+#### ⚙️ Parameters
 
-`GET /requests/{request_id}` — fetch the result envelope (`outputs`, `error`, `metrics`).
+<dl>
+<dd>
 
-### `client.requests.getStatus(request_id, request?) -> Hedra.StatusResponse`
+<dl>
+<dd>
 
-`GET /requests/{request_id}/status` — poll progress; pass `{ logs: true }` for logs.
+**request:** `Hedra.ListRequestsRequest` 
+    
+</dd>
+</dl>
 
-### `client.requests.stream(request_id, request?) -> unknown`
+<dl>
+<dd>
 
-`GET /requests/{request_id}/stream` — Server-Sent Events progress stream; pass
-`{ last_event_id }` to resume.
+**requestOptions:** `RequestsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.requests.<a href="/src/api/resources/requests/client/Client.ts">get</a>(request_id, { ...params }) -> Hedra.ResultResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.requests.get("request_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request_id:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.GetRequestsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `RequestsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.requests.<a href="/src/api/resources/requests/client/Client.ts">getStatus</a>(request_id, { ...params }) -> Hedra.StatusResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.requests.getStatus("request_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request_id:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.GetStatusRequestsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `RequestsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.requests.<a href="/src/api/resources/requests/client/Client.ts">stream</a>(request_id, { ...params }) -> unknown</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.requests.stream("request_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request_id:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.StreamRequestsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `RequestsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
 
 ## Models
+<details><summary><code>client.models.<a href="/src/api/resources/models/client/Client.ts">list</a>({ ...params }) -> Hedra.ModelListResponse</code></summary>
+<dl>
+<dd>
 
-### `client.models.list(request?) -> Hedra.ModelListResponse`
+#### 🔌 Usage
 
-`GET /models` — the model catalog; filter with `{ type: "video" }`.
+<dl>
+<dd>
 
-### `client.models.get(model) -> Hedra.ModelDetail`
-
-`GET /models/{model}` — family or variant detail (`input_schema`, `routing`, `variants`).
-
-### `client.models.listVoices(model) -> Hedra.VoiceListResponse`
-
-`GET /models/{model}/voices` — TTS voice catalog for a model.
-
-### `client.models.getOpenapi(model) -> Record<string, unknown>`
-
-`GET /models/{model}/openapi.json` — per-model OpenAPI spec.
-
-### `client.models.estimate(model, request?) -> Hedra.EstimateResponse`
-
-`POST /models/{model}/estimate` — cost/ETA for an input without queuing.
+<dl>
+<dd>
 
 ```typescript
-const est = await client.models.estimate("kling-o3-pro", {
-    input: { prompt: "a fox" },
-});
+await client.models.list();
+
 ```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.ListModelsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `ModelsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.models.<a href="/src/api/resources/models/client/Client.ts">get</a>(model, { ...params }) -> Hedra.ModelDetail</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.models.get("model");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**model:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.GetModelsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `ModelsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.models.<a href="/src/api/resources/models/client/Client.ts">listVoices</a>(model, { ...params }) -> Hedra.VoiceListResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Voices this model accepts — scoped to the model's voice provider.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.models.listVoices("model");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**model:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.ListVoicesModelsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `ModelsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.models.<a href="/src/api/resources/models/client/Client.ts">getOpenapi</a>(model, { ...params }) -> Record&lt;string, unknown&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+A standalone one-operation OpenAPI spec for this model's submit call.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.models.getOpenapi("model");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**model:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.GetOpenapiModelsRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `ModelsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.models.<a href="/src/api/resources/models/client/Client.ts">estimate</a>(model, { ...params }) -> Hedra.EstimateResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.models.estimate("model");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**model:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.EstimateRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `ModelsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
 
 ## Keys
+<details><summary><code>client.keys.<a href="/src/api/resources/keys/client/Client.ts">list</a>({ ...params }) -> Hedra.KeyListResponse</code></summary>
+<dl>
+<dd>
 
-### `client.keys.create(request?) -> Hedra.KeyCreateResponse`
+#### 🔌 Usage
 
-`POST /keys` — mint an API key (`name`, `scopes`, `kind`, `workspace_id`, `expires_at`).
-The secret is returned once.
+<dl>
+<dd>
 
-### `client.keys.list() -> Hedra.KeyListResponse`
-
-`GET /keys` — list keys (no secrets).
-
-### `client.keys.rotate(key_id) -> Hedra.KeyRotateResponse`
-
-`POST /keys/{key_id}/rotate` — rotate a key's secret.
-
-### `client.keys.revoke(key_id) -> void`
-
-`DELETE /keys/{key_id}` — revoke a key.
-
-## Tokens
-
-### `client.tokens.create(request?) -> Hedra.TokenCreateResponse`
-
-`POST /tokens` — mint an ephemeral browser token (inherits the minting key's scopes).
-
-## Files
-
-### `client.files.upload(request) -> Hedra.FileUploadResponse`
-
-`POST /files` — upload a file for reference inputs (`image_url` / `audio_url` /
-`video_url` accept the returned URL).
+<dl>
+<dd>
 
 ```typescript
-import * as fs from "fs";
+await client.keys.list();
 
-const uploaded = await client.files.upload({
-    file: fs.createReadStream("/path/to/image.png"),
-});
 ```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.ListKeysRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `KeysClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.keys.<a href="/src/api/resources/keys/client/Client.ts">create</a>({ ...params }) -> Hedra.KeyCreateResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.keys.create();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.KeyCreateRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `KeysClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.keys.<a href="/src/api/resources/keys/client/Client.ts">rotate</a>(key_id, { ...params }) -> Hedra.KeyRotateResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.keys.rotate("key_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**key_id:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.KeyRotateRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `KeysClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.keys.<a href="/src/api/resources/keys/client/Client.ts">revoke</a>(key_id, { ...params }) -> void</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.keys.revoke("key_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**key_id:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.RevokeKeysRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `KeysClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Tokens
+<details><summary><code>client.tokens.<a href="/src/api/resources/tokens/client/Client.ts">create</a>({ ...params }) -> Hedra.TokenCreateResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.tokens.create();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.TokenCreateRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `TokensClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Files
+<details><summary><code>client.files.<a href="/src/api/resources/files/client/Client.ts">upload</a>({ ...params }) -> Hedra.FileUploadResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.files.upload({
+    file: fs.createReadStream("/path/to/your/file")
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.BodyUploadFileFilesPost` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `FilesClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
 
 ## Webhooks
+<details><summary><code>client.webhooks.<a href="/src/api/resources/webhooks/client/Client.ts">getPublicKey</a>() -> Hedra.WebhookPublicKey</code></summary>
+<dl>
+<dd>
 
-### `client.webhooks.getPublicKey() -> Hedra.WebhookPublicKey`
+#### 🔌 Usage
 
-`GET /webhooks/public-key` — the ed25519 public key for verifying webhook signatures.
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.webhooks.getPublicKey();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `WebhooksClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
