@@ -1,441 +1,119 @@
 # Reference
-<details><summary><code>client.<a href="/src/Client.ts">listModels</a>({ ...params }) -> Hedra.AiModel[]</code></summary>
-<dl>
-<dd>
 
-#### 🔌 Usage
+Compact reference for `hedra-node` (API v3). Hand-maintained: local `fern generate`
+does not emit this file — update it alongside the API surface. All methods return
+`core.HttpResponsePromise<T>` (await it for `T`, or call `.withRawResponse()`), and
+accept an optional trailing `requestOptions`.
 
-<dl>
-<dd>
+## Queue
 
-<dl>
-<dd>
+### `client.queue.submit(model, request) -> Hedra.SubmitResponse`
 
-```typescript
-await client.listModels();
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.ListModelsRequest` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `HedraClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.<a href="/src/Client.ts">listVoices</a>() -> Hedra.Asset[]</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
+`POST /queue/{model}` — submit a generation job.
 
 ```typescript
-await client.listVoices();
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**requestOptions:** `HedraClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.<a href="/src/Client.ts">listAssets</a>({ ...params }) -> Hedra.Asset[]</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.listAssets({
-    type: "text"
+const ack = await client.queue.submit("kling-o3-pro", {
+    input: { prompt: "a fox sprinting across fresh snow", aspect_ratio: "16:9" },
+    webhook: "https://example.com/hook", // optional
+    idempotency_key: "my-key",           // optional
+    priority: "normal",                  // optional
 });
-
 ```
-</dd>
-</dl>
-</dd>
-</dl>
 
-#### ⚙️ Parameters
+## Requests
 
-<dl>
-<dd>
+### `client.requests.list(request?) -> core.Page<Hedra.RequestSummary>`
 
-<dl>
-<dd>
-
-**request:** `Hedra.ListAssetsRequest` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `HedraClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.<a href="/src/Client.ts">createAsset</a>({ ...params }) -> Hedra.CreateAssetResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
+`GET /requests` — list past requests; cursor-paginated, async-iterable.
 
 ```typescript
-await client.createAsset({
-    name: "name",
-    type: "text"
+const page = await client.requests.list({ limit: 50 });
+for await (const req of page) console.log(req.request_id, req.status);
+```
+
+### `client.requests.get(request_id) -> Hedra.ResultResponse`
+
+`GET /requests/{request_id}` — fetch the result envelope (`outputs`, `error`, `metrics`).
+
+### `client.requests.getStatus(request_id, request?) -> Hedra.StatusResponse`
+
+`GET /requests/{request_id}/status` — poll progress; pass `{ logs: true }` for logs.
+
+### `client.requests.stream(request_id, request?) -> unknown`
+
+`GET /requests/{request_id}/stream` — Server-Sent Events progress stream; pass
+`{ last_event_id }` to resume.
+
+## Models
+
+### `client.models.list(request?) -> Hedra.ModelListResponse`
+
+`GET /models` — the model catalog; filter with `{ type: "video" }`.
+
+### `client.models.get(model) -> Hedra.ModelDetail`
+
+`GET /models/{model}` — family or variant detail (`input_schema`, `routing`, `variants`).
+
+### `client.models.listVoices(model) -> Hedra.VoiceListResponse`
+
+`GET /models/{model}/voices` — TTS voice catalog for a model.
+
+### `client.models.getOpenapi(model) -> Record<string, unknown>`
+
+`GET /models/{model}/openapi.json` — per-model OpenAPI spec.
+
+### `client.models.estimate(model, request?) -> Hedra.EstimateResponse`
+
+`POST /models/{model}/estimate` — cost/ETA for an input without queuing.
+
+```typescript
+const est = await client.models.estimate("kling-o3-pro", {
+    input: { prompt: "a fox" },
 });
-
 ```
-</dd>
-</dl>
-</dd>
-</dl>
 
-#### ⚙️ Parameters
+## Keys
 
-<dl>
-<dd>
+### `client.keys.create(request?) -> Hedra.KeyCreateResponse`
 
-<dl>
-<dd>
+`POST /keys` — mint an API key (`name`, `scopes`, `kind`, `workspace_id`, `expires_at`).
+The secret is returned once.
 
-**request:** `Hedra.CreateAssetRequest` 
-    
-</dd>
-</dl>
+### `client.keys.list() -> Hedra.KeyListResponse`
 
-<dl>
-<dd>
+`GET /keys` — list keys (no secrets).
 
-**requestOptions:** `HedraClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
+### `client.keys.rotate(key_id) -> Hedra.KeyRotateResponse`
 
+`POST /keys/{key_id}/rotate` — rotate a key's secret.
 
-</dd>
-</dl>
-</details>
+### `client.keys.revoke(key_id) -> void`
 
-<details><summary><code>client.<a href="/src/Client.ts">uploadAsset</a>({ ...params }) -> Hedra.Asset</code></summary>
-<dl>
-<dd>
+`DELETE /keys/{key_id}` — revoke a key.
 
-#### 🔌 Usage
+## Tokens
 
-<dl>
-<dd>
+### `client.tokens.create(request?) -> Hedra.TokenCreateResponse`
 
-<dl>
-<dd>
+`POST /tokens` — mint an ephemeral browser token (inherits the minting key's scopes).
+
+## Files
+
+### `client.files.upload(request) -> Hedra.FileUploadResponse`
+
+`POST /files` — upload a file for reference inputs (`image_url` / `audio_url` /
+`video_url` accept the returned URL).
 
 ```typescript
-await client.uploadAsset({
-    file: fs.createReadStream("/path/to/your/file"),
-    id: "id"
+import * as fs from "fs";
+
+const uploaded = await client.files.upload({
+    file: fs.createReadStream("/path/to/image.png"),
 });
-
 ```
-</dd>
-</dl>
-</dd>
-</dl>
 
-#### ⚙️ Parameters
+## Webhooks
 
-<dl>
-<dd>
+### `client.webhooks.getPublicKey() -> Hedra.WebhookPublicKey`
 
-<dl>
-<dd>
-
-**request:** `Hedra.BodyUploadAssetPublicAssetsIdUploadPost` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `HedraClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.<a href="/src/Client.ts">listGenerations</a>({ ...params }) -> Hedra.PagedResponseGeneration</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.listGenerations();
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.ListGenerationsRequest` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `HedraClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.<a href="/src/Client.ts">generateAsset</a>({ ...params }) -> Hedra.GenerateAssetResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.generateAsset({
-    type: "video",
-    generated_video_inputs: {
-        text_prompt: "text_prompt"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.GenerateAssetRequest` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `HedraClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.<a href="/src/Client.ts">getStatus</a>({ ...params }) -> Hedra.GenerationStatusResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.getStatus({
-    generation_id: "generation_id"
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.GetStatusRequest` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `HedraClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.<a href="/src/Client.ts">getCredits</a>() -> Hedra.CreditBalance</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.getCredits();
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**requestOptions:** `HedraClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
+`GET /webhooks/public-key` — the ed25519 public key for verifying webhook signatures.

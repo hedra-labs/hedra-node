@@ -12,6 +12,7 @@ The Hedra TypeScript library provides convenient access to the Hedra APIs from T
 - [Usage](#usage)
 - [Environments](#environments)
 - [Request and Response Types](#request-and-response-types)
+- [Pagination](#pagination)
 - [Exception Handling](#exception-handling)
 - [File Uploads](#file-uploads)
 - [Advanced](#advanced)
@@ -29,7 +30,7 @@ The Hedra TypeScript library provides convenient access to the Hedra APIs from T
 ## Installation
 
 ```sh
-npm i -s 
+npm i -s hedra-node
 ```
 
 ## Reference
@@ -44,11 +45,22 @@ Instantiate and use the client with the following:
 import { HedraClient } from "hedra-node";
 
 const client = new HedraClient({ apiKey: "YOUR_API_KEY" });
-await client.createAsset({
-    name: "name",
-    type: "text"
+
+const submitted = await client.queue.submit("kling-o3-pro", {
+    input: {
+        prompt: "a fox sprinting across fresh snow",
+        aspect_ratio: "16:9",
+    },
 });
+
+// Poll until terminal, then fetch the result envelope (outputs, metrics)
+const status = await client.requests.getStatus(submitted.request_id);
+const result = await client.requests.get(submitted.request_id);
 ```
+
+The client authenticates with `Authorization: Bearer <api key>`; an API key is the
+`<key_id>:<secret>` credential from the Hedra console. When `apiKey` is not passed,
+it is read from the `HEDRA_API_KEY` environment variable.
 
 ## Environments
 
@@ -58,7 +70,7 @@ This SDK allows you to configure different environments for API requests.
 import { HedraClient, HedraEnvironment } from "hedra-node";
 
 const client = new HedraClient({
-    environment: HedraEnvironment.Default,
+    environment: HedraEnvironment.Staging, // default: HedraEnvironment.Production
 });
 ```
 
@@ -70,9 +82,21 @@ following namespace:
 ```typescript
 import { Hedra } from "hedra-node";
 
-const request: Hedra.ListModelsRequest = {
+const request: Hedra.SubmitRequest = {
     ...
 };
+```
+
+## Pagination
+
+`client.requests.list(...)` returns a `Page` that can be iterated asynchronously; it
+fetches cursor pages lazily as you iterate:
+
+```typescript
+const page = await client.requests.list({ limit: 50 });
+for await (const request of page) {
+    console.log(request.request_id, request.status);
+}
 ```
 
 ## Exception Handling
@@ -84,7 +108,7 @@ will be thrown.
 import { HedraError } from "hedra-node";
 
 try {
-    await client.createAsset(...);
+    await client.queue.submit(...);
 } catch (err) {
     if (err instanceof HedraError) {
         console.log(err.statusCode);
@@ -105,9 +129,8 @@ import { HedraClient } from "hedra-node";
 import * as fs from "fs";
 
 const client = new HedraClient({ apiKey: "YOUR_API_KEY" });
-await client.uploadAsset({
+await client.files.upload({
     file: fs.createReadStream("/path/to/your/file"),
-    id: "id"
 });
 ```
 The client accepts a variety of types for file upload parameters:
@@ -156,7 +179,7 @@ const client = new HedraClient({
     }
 });
 
-const response = await client.createAsset(..., {
+const response = await client.queue.submit(..., {
     headers: {
         'X-Custom-Header': 'custom value'
     }
@@ -168,7 +191,7 @@ const response = await client.createAsset(..., {
 If you would like to send additional query string parameters as part of the request, use the `queryParams` request option.
 
 ```typescript
-const response = await client.createAsset(..., {
+const response = await client.queue.submit(..., {
     queryParams: {
         'customQueryParamKey': 'custom query param value'
     }
@@ -198,7 +221,7 @@ Which status codes are retried depends on the `retryStatusCodes` generator confi
 Use the `maxRetries` request option to configure this behavior.
 
 ```typescript
-const response = await client.createAsset(..., {
+const response = await client.queue.submit(..., {
     maxRetries: 0 // override maxRetries at the request level
 });
 ```
@@ -208,7 +231,7 @@ const response = await client.createAsset(..., {
 The SDK defaults to a 60 second timeout. Use the `timeoutInSeconds` option to configure this behavior.
 
 ```typescript
-const response = await client.createAsset(..., {
+const response = await client.queue.submit(..., {
     timeoutInSeconds: 30 // override timeout to 30s
 });
 ```
@@ -219,7 +242,7 @@ The SDK allows users to abort requests at any point by passing in an abort signa
 
 ```typescript
 const controller = new AbortController();
-const response = await client.createAsset(..., {
+const response = await client.queue.submit(..., {
     abortSignal: controller.signal
 });
 controller.abort(); // aborts the request
@@ -231,7 +254,7 @@ The SDK provides access to raw response data, including headers, through the `.w
 The `.withRawResponse()` method returns a promise that results to an object with a `data` and a `rawResponse` property.
 
 ```typescript
-const { data, rawResponse } = await client.createAsset(...).withRawResponse();
+const { data, rawResponse } = await client.queue.submit(...).withRawResponse();
 
 console.log(data);
 console.log(rawResponse.headers['X-My-Header']);

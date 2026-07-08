@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 (2026-07-08)
+
+### Features
+
+* **api:** retarget the SDK at Hedra API v3 (`https://api.hedra.com/v3`). Resource-grouped
+  client (`client.queue`, `client.requests`, `client.models`, `client.keys`,
+  `client.tokens`, `client.files`, `client.webhooks`) replaces the flat 0.2.x methods.
+  **Breaking.**
+* **auth:** standard `Authorization: Bearer <key_id>:<secret>` replaces the `X-API-Key`
+  header. `HEDRA_API_KEY` env fallback unchanged.
+* **pagination:** `client.requests.list()` returns an async-iterable cursor `Page`.
+* **streaming:** `client.requests.stream()` follows a request's progress over SSE.
+* **environments:** `HedraEnvironment.Production` (default) and `HedraEnvironment.Staging`.
+
 ## 0.1.2 (2024-11-02)
 
 Full Changelog: [v0.0.1-alpha.0...v0.1.2](https://github.com/hedra-labs/hedra-node/compare/v0.0.1-alpha.0...v0.1.2)
