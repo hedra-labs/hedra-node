@@ -21,7 +21,12 @@
             "!!*.log",
             "!!**/*.log",
             "!!**/.DS_Store",
-            "!!**/Thumbs.db"
+            "!!**/Thumbs.db",
+            "!!tests/setup.ts",
+            "!!src",
+            "!!tests/unit",
+            "!!tests/mock-server",
+            "!!scripts"
         ]
     },
     "formatter": {

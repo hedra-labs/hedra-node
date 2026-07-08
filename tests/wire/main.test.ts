@@ -76,13 +76,7 @@ describe("HedraClient", () => {
             error: null,
         };
 
-        server
-            .mockEndpoint()
-            .get("/requests/req_123")
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
+        server.mockEndpoint().get("/requests/req_123").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
 
         const response = await client.requests.get("req_123");
         expect(response).toEqual(rawResponseBody);
