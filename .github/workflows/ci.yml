@@ -26,6 +26,9 @@ jobs:
       - name: Compile
         run: pnpm build
 
+      - name: Lint (hand-maintained files)
+        run: pnpm check
+
   test:
     runs-on: ubuntu-latest
 
