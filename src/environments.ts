@@ -2,7 +2,6 @@
 
 export const HedraEnvironment = {
     Production: "https://api.hedra.com/v3",
-    Staging: "https://api.staging.hedra.com/v3",
 } as const;
 
-export type HedraEnvironment = typeof HedraEnvironment.Production | typeof HedraEnvironment.Staging;
+export type HedraEnvironment = typeof HedraEnvironment.Production;

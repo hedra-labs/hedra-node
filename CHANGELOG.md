@@ -12,7 +12,6 @@
   header. `HEDRA_API_KEY` env fallback unchanged.
 * **pagination:** `client.requests.list()` returns an async-iterable cursor `Page`.
 * **streaming:** `client.requests.stream()` follows a request's progress over SSE.
-* **environments:** `HedraEnvironment.Production` (default) and `HedraEnvironment.Staging`.
 
 ## 0.1.2 (2024-11-02)
 

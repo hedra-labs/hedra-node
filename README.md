@@ -10,7 +10,7 @@ The Hedra TypeScript library provides convenient access to the Hedra APIs from T
 - [Installation](#installation)
 - [Reference](#reference)
 - [Usage](#usage)
-- [Environments](#environments)
+- [Custom base URL](#custom-base-url)
 - [Request and Response Types](#request-and-response-types)
 - [Pagination](#pagination)
 - [Exception Handling](#exception-handling)
@@ -62,15 +62,16 @@ The client authenticates with `Authorization: Bearer <api key>`; an API key is t
 `<key_id>:<secret>` credential from the Hedra console. When `apiKey` is not passed,
 it is read from the `HEDRA_API_KEY` environment variable.
 
-## Environments
+## Custom base URL
 
-This SDK allows you to configure different environments for API requests.
+The client targets `https://api.hedra.com/v3`. Pass a URL as `environment` to point
+elsewhere (e.g. a mock server in tests):
 
 ```typescript
-import { HedraClient, HedraEnvironment } from "hedra-node";
+import { HedraClient } from "hedra-node";
 
 const client = new HedraClient({
-    environment: HedraEnvironment.Staging, // default: HedraEnvironment.Production
+    environment: "http://localhost:8000/v3",
 });
 ```
 
