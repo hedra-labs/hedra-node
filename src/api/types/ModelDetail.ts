@@ -4,12 +4,10 @@ import type * as Hedra from "../index.js";
 
 export interface ModelDetail {
     id: string;
-    kind: string;
-    modality: string;
+    modality: Hedra.Modality;
     name?: (string | null) | undefined;
     description?: (string | null) | undefined;
+    logo_url?: (string | null) | undefined;
     input_schema?: Record<string, unknown> | undefined;
     output_schema?: Record<string, unknown> | undefined;
-    routing?: (Hedra.ModelRoute[] | null) | undefined;
-    variants?: (Hedra.ModelVariant[] | null) | undefined;
 }

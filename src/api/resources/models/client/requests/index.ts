@@ -1,5 +1,6 @@
 export type { EstimateRequest } from "./EstimateRequest.js";
-export type { GetModelsRequest } from "./GetModelsRequest.js";
-export type { GetOpenapiModelsRequest } from "./GetOpenapiModelsRequest.js";
-export type { ListModelsRequest } from "./ListModelsRequest.js";
-export type { ListVoicesModelsRequest } from "./ListVoicesModelsRequest.js";
+export type { ModelsGetOpenapiRequest } from "./ModelsGetOpenapiRequest.js";
+export type { ModelsGetRequest } from "./ModelsGetRequest.js";
+export type { ModelsListModelJobsRequest } from "./ModelsListModelJobsRequest.js";
+export type { ModelsListRequest } from "./ModelsListRequest.js";
+export type { ModelsListVoicesRequest } from "./ModelsListVoicesRequest.js";

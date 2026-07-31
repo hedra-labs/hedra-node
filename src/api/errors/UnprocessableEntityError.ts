@@ -5,7 +5,7 @@ import * as errors from "../../errors/index.js";
 import type * as Hedra from "../index.js";
 
 export class UnprocessableEntityError extends errors.HedraError {
-    constructor(body: Hedra.HttpValidationError, rawResponse?: core.RawResponse) {
+    constructor(body: Hedra.ErrorResponse, rawResponse?: core.RawResponse) {
         super({
             message: "UnprocessableEntityError",
             statusCode: 422,

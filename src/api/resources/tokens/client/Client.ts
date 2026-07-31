@@ -30,7 +30,6 @@ export class TokensClient {
      * @throws {@link Hedra.UnauthorizedError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
      *
@@ -90,11 +89,6 @@ export class TokensClient {
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
                     throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.HttpValidationError,
-                        _response.rawResponse,
-                    );
                 case 429:
                     throw new Hedra.TooManyRequestsError(
                         _response.error.body as Hedra.ErrorResponse,

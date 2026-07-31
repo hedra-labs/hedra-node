@@ -3,8 +3,9 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Top-level error body: ``{"error": {...}}``.
+ * Top-level error body: ``{"error": {...}}`` plus a debug id.
  */
 export interface ErrorResponse {
     error: Hedra.ErrorEnvelope;
+    trace_id?: (string | null) | undefined;
 }

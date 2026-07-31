@@ -2,10 +2,27 @@
 
 import type * as Hedra from "../index.js";
 
+/**
+ * The lightweight poll envelope, also the SSE ``status`` frame and the MCP
+ * progress notification payload.
+ *
+ * The two log fields are poll-only by construction, like ``cost`` on
+ * the result envelope: they are populated when — and only when — a
+ * ``GET /v3/jobs/{job_id}/status`` caller supplies a ``logs_after`` cursor, and
+ * they exclude when ``None``, so the frame the stream transports build from a
+ * Redis payload with no DB session is byte-identical to a log-free envelope.
+ * That was ENG-9693's reason for having no ``logs`` field at all; the stream
+ * now carries lifecycle rows as their own ``event: log`` frames instead of
+ * inside this one (ENG-9694), and MCP progress notifications stay status-only.
+ */
 export interface StatusResponse {
-    request_id: string;
-    status: Hedra.RequestStatus;
+    job_id: string;
+    status: Hedra.JobStatus;
+    /** Fraction of the job completed, from 0 to 1 (not a percentage). Null when the job has not reported progress yet. */
     progress?: (number | null) | undefined;
     estimated_completion_at?: (string | null) | undefined;
-    logs?: Hedra.StatusLog[] | undefined;
+    /** Lifecycle events newer than the `logs_after` cursor, oldest first. Present only when `logs_after` is supplied; absent from SSE status frames and MCP progress notifications. */
+    logs?: (Hedra.JobLogItem[] | null) | undefined;
+    /** Cursor to send as `logs_after` on the next poll. Absent when this poll delivered no new events — keep using the cursor you sent. */
+    logs_next_cursor?: (string | null) | undefined;
 }

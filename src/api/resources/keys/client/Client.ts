@@ -23,14 +23,13 @@ export class KeysClient {
     }
 
     /**
-     * @param {Hedra.ListKeysRequest} request
+     * @param {Hedra.KeysListRequest} request
      * @param {KeysClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
      *
@@ -38,14 +37,14 @@ export class KeysClient {
      *     await client.keys.list()
      */
     public list(
-        request: Hedra.ListKeysRequest = {},
+        request: Hedra.KeysListRequest = {},
         requestOptions?: KeysClient.RequestOptions,
     ): core.HttpResponsePromise<Hedra.KeyListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
-        request: Hedra.ListKeysRequest = {},
+        request: Hedra.KeysListRequest = {},
         requestOptions?: KeysClient.RequestOptions,
     ): Promise<core.WithRawResponse<Hedra.KeyListResponse>> {
         const { workspace_id: workspaceId } = request;
@@ -95,11 +94,6 @@ export class KeysClient {
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
                     throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.HttpValidationError,
-                        _response.rawResponse,
-                    );
                 case 429:
                     throw new Hedra.TooManyRequestsError(
                         _response.error.body as Hedra.ErrorResponse,
@@ -130,7 +124,6 @@ export class KeysClient {
      * @throws {@link Hedra.UnauthorizedError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
      *
@@ -190,11 +183,6 @@ export class KeysClient {
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
                     throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.HttpValidationError,
-                        _response.rawResponse,
-                    );
                 case 429:
                     throw new Hedra.TooManyRequestsError(
                         _response.error.body as Hedra.ErrorResponse,
@@ -226,7 +214,6 @@ export class KeysClient {
      * @throws {@link Hedra.UnauthorizedError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
      *
@@ -288,11 +275,6 @@ export class KeysClient {
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
                     throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.HttpValidationError,
-                        _response.rawResponse,
-                    );
                 case 429:
                     throw new Hedra.TooManyRequestsError(
                         _response.error.body as Hedra.ErrorResponse,
@@ -317,14 +299,13 @@ export class KeysClient {
 
     /**
      * @param {string} key_id
-     * @param {Hedra.RevokeKeysRequest} request
+     * @param {Hedra.KeysRevokeRequest} request
      * @param {KeysClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
      *
@@ -333,7 +314,7 @@ export class KeysClient {
      */
     public revoke(
         key_id: string,
-        request: Hedra.RevokeKeysRequest = {},
+        request: Hedra.KeysRevokeRequest = {},
         requestOptions?: KeysClient.RequestOptions,
     ): core.HttpResponsePromise<void> {
         return core.HttpResponsePromise.fromPromise(this.__revoke(key_id, request, requestOptions));
@@ -341,7 +322,7 @@ export class KeysClient {
 
     private async __revoke(
         key_id: string,
-        _request: Hedra.RevokeKeysRequest = {},
+        _request: Hedra.KeysRevokeRequest = {},
         requestOptions?: KeysClient.RequestOptions,
     ): Promise<core.WithRawResponse<void>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
@@ -383,11 +364,6 @@ export class KeysClient {
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
                     throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.HttpValidationError,
-                        _response.rawResponse,
-                    );
                 case 429:
                     throw new Hedra.TooManyRequestsError(
                         _response.error.body as Hedra.ErrorResponse,

@@ -3,6 +3,7 @@
 import type * as Hedra from "../index.js";
 
 export interface VoiceListResponse {
-    data?: Hedra.VoiceSummary[] | undefined;
-    next_cursor?: (string | null) | undefined;
+    data: Hedra.VoiceSummary[];
+    /** Opaque cursor for the next page, or null when this response completes the list. Always present. Endpoints that serve the whole collection at once always return null. */
+    next_cursor: string | null;
 }

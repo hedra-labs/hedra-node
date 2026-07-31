@@ -3,11 +3,21 @@
 import type * as Hedra from "../index.js";
 
 export interface ResultResponse {
-    request_id: string;
+    job_id: string;
     model: string;
-    status: Hedra.RequestStatus;
+    /** The quality level this job ran at; present only for models that offer quality levels. */
+    quality?: (string | null) | undefined;
+    status: Hedra.JobStatus;
+    /** The prompt this job ran with. When `enhance_prompt` was set, this is the rewritten prompt the model received rather than the one submitted. Absent on models that take no prompt. */
+    prompt?: (string | null) | undefined;
     outputs?: Hedra.OutputItem[] | undefined;
+    /** Timing for this job; present on completed jobs only. */
     metrics?: (Hedra.Metrics | null) | undefined;
     error?: (Hedra.ErrorEnvelope | null) | undefined;
-    logs?: Hedra.StatusLog[] | undefined;
+    /** The most recent lifecycle events for this job, oldest first. Capped; GET /v3/jobs/{job_id}/logs serves the full paginated history. Absent from webhook payloads. */
+    logs?: (Hedra.JobLogItem[] | null) | undefined;
+    /** Net cost of this job; 0 when fully refunded; absent until charged. Absent from webhook payloads. */
+    cost?: (number | null) | undefined;
+    /** ISO-4217 currency code for `cost`. Present exactly when `cost` is. */
+    currency?: (string | null) | undefined;
 }
