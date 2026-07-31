@@ -7,4 +7,7 @@ export interface ErrorEnvelope {
     message: string;
     retryable?: boolean | undefined;
     retry_after?: (number | null) | undefined;
+    param?: (string | null) | undefined;
+    details?: (Hedra.FieldError[] | null) | undefined;
+    replaced_by?: (string | null) | undefined;
 }

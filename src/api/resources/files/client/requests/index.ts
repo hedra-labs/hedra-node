@@ -1,1 +1,1 @@
-export type { BodyUploadFileFilesPost } from "./BodyUploadFileFilesPost.js";
+export type { FilesUploadRequest } from "./FilesUploadRequest.js";

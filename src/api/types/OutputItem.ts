@@ -3,10 +3,16 @@
 import type * as Hedra from "../index.js";
 
 /**
- * One per-modality output. `outputs` is always an array, even for one.
+ * One item of a job's `outputs[]` (`GET /v3/jobs/{job_id}`). `outputs` is
+ * always an array, even for a single output.
+ *
+ * Every key is always present. The ones a modality carries no value for
+ * serialize as null — an image output reports `duration_ms: null` and
+ * `fps: null`, an audio output `width: null` — so the shape is one object
+ * rather than one per modality.
  */
 export interface OutputItem {
-    status?: Hedra.RequestStatus | undefined;
+    status?: Hedra.OutputStatus | undefined;
     url?: (string | null) | undefined;
     content_type?: (string | null) | undefined;
     width?: (number | null) | undefined;

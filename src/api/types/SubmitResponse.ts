@@ -3,10 +3,14 @@
 import type * as Hedra from "../index.js";
 
 export interface SubmitResponse {
-    request_id: string;
+    /** This job's id (`job_<uuid>`). The job's output asset carries the same UUID, so once the job completes, replacing the `job_` prefix with `asset_` yields the `asset_id` to reference its output in a later submit's media inputs. */
+    job_id: string;
     model: string;
-    status: Hedra.RequestStatus;
+    status: Hedra.JobStatus;
+    /** Path of this job's status monitor: poll GET /v3/jobs/{job_id}/status for status, progress, and an estimate. */
     status_url: string;
-    response_url: string;
+    /** Path of the job resource itself: GET /v3/jobs/{job_id} returns the result envelope, including the outputs once it completes. Also the value of this response's `Location` header. */
+    result_url: string;
+    /** ISO-8601 instant this job is estimated to finish. Null when no estimate exists for the model yet; poll GET /v3/jobs/{job_id}/status for a refreshed one. */
     estimated_completion_at?: (string | null) | undefined;
 }

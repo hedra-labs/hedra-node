@@ -4,15 +4,16 @@
  * Least-privilege grants carried by v3 API keys.
  *
  * Stored as text[] on api_keys; NULL scopes means full access (legacy keys).
- * Scopes without a live v3 surface yet (webhooks/usage) are accepted at
- * key creation for forward compatibility and enforced when those surfaces ship.
+ * Scopes are stored as text so new least-privilege surfaces can be introduced
+ * without a database-enum migration.
  */
 export const ApiKeyScope = {
-    GenerationsWrite: "generations:write",
-    RequestsRead: "requests:read",
+    JobsRead: "jobs:read",
+    JobsWrite: "jobs:write",
     ModelsRead: "models:read",
     FilesWrite: "files:write",
     WebhooksManage: "webhooks:manage",
+    LogDrainsManage: "log_drains:manage",
     UsageRead: "usage:read",
     KeysManage: "keys:manage",
 } as const;

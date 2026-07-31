@@ -4,6 +4,7 @@
  * One voice a model accepts; `id` goes into ``input.voice_id`` on submit.
  */
 export interface VoiceSummary {
+    /** The voice's id (`voice_<uuid>`); pass it as `input.voice_id` on submit. */
     id: string;
     name?: (string | null) | undefined;
     preview_url?: (string | null) | undefined;

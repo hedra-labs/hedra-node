@@ -26,13 +26,12 @@ export class ModelsClient {
     }
 
     /**
-     * @param {Hedra.ListModelsRequest} request
+     * @param {Hedra.ModelsListRequest} request
      * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
      *
@@ -40,19 +39,19 @@ export class ModelsClient {
      *     await client.models.list()
      */
     public list(
-        request: Hedra.ListModelsRequest = {},
+        request: Hedra.ModelsListRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): core.HttpResponsePromise<Hedra.ModelListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
-        request: Hedra.ListModelsRequest = {},
+        request: Hedra.ModelsListRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Hedra.ModelListResponse>> {
-        const { type: type_ } = request;
+        const { modality } = request;
         const _queryParams: Record<string, unknown> = {
-            type: type_,
+            modality: modality !== undefined ? modality : undefined,
         };
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
         const _response = await core.fetcher({
@@ -87,11 +86,6 @@ export class ModelsClient {
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
                     throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.HttpValidationError,
-                        _response.rawResponse,
-                    );
                 case 429:
                     throw new Hedra.TooManyRequestsError(
                         _response.error.body as Hedra.ErrorResponse,
@@ -116,13 +110,12 @@ export class ModelsClient {
 
     /**
      * @param {string} model
-     * @param {Hedra.GetModelsRequest} request
+     * @param {Hedra.ModelsGetRequest} request
      * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
      *
@@ -131,7 +124,7 @@ export class ModelsClient {
      */
     public get(
         model: string,
-        request: Hedra.GetModelsRequest = {},
+        request: Hedra.ModelsGetRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): core.HttpResponsePromise<Hedra.ModelDetail> {
         return core.HttpResponsePromise.fromPromise(this.__get(model, request, requestOptions));
@@ -139,7 +132,7 @@ export class ModelsClient {
 
     private async __get(
         model: string,
-        _request: Hedra.GetModelsRequest = {},
+        _request: Hedra.ModelsGetRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Hedra.ModelDetail>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
@@ -171,11 +164,6 @@ export class ModelsClient {
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
                     throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.HttpValidationError,
-                        _response.rawResponse,
-                    );
                 case 429:
                     throw new Hedra.TooManyRequestsError(
                         _response.error.body as Hedra.ErrorResponse,
@@ -199,16 +187,128 @@ export class ModelsClient {
     }
 
     /**
+     * @param {string} model
+     * @param {Hedra.ModelsListModelJobsRequest} request
+     * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     *
+     * @example
+     *     await client.models.listModelJobs("model")
+     */
+    public async listModelJobs(
+        model: string,
+        request: Hedra.ModelsListModelJobsRequest = {},
+        requestOptions?: ModelsClient.RequestOptions,
+    ): Promise<core.Page<Hedra.JobSummary, Hedra.JobListResponse>> {
+        const list = core.HttpResponsePromise.interceptFunction(
+            async (request: Hedra.ModelsListModelJobsRequest): Promise<core.WithRawResponse<Hedra.JobListResponse>> => {
+                const { limit, cursor } = request;
+                const _queryParams: Record<string, unknown> = {
+                    limit,
+                    cursor,
+                };
+                const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+                const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+                    _authRequest.headers,
+                    this._options?.headers,
+                    requestOptions?.headers,
+                );
+                const _response = await core.fetcher({
+                    url: core.url.join(
+                        (await core.Supplier.get(this._options.baseUrl)) ??
+                            (await core.Supplier.get(this._options.environment)) ??
+                            environments.HedraEnvironment.Production,
+                        `models/${core.url.encodePathParam(model)}/jobs`,
+                    ),
+                    method: "GET",
+                    headers: _headers,
+                    queryString: core.url
+                        .queryBuilder()
+                        .addMany(_queryParams)
+                        .mergeAdditional(requestOptions?.queryParams)
+                        .build(),
+                    timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+                    maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+                    abortSignal: requestOptions?.abortSignal,
+                    fetchFn: this._options?.fetch,
+                    logging: this._options.logging,
+                });
+                if (_response.ok) {
+                    return { data: _response.body as Hedra.JobListResponse, rawResponse: _response.rawResponse };
+                }
+                if (_response.error.reason === "status-code") {
+                    switch (_response.error.statusCode) {
+                        case 400:
+                            throw new Hedra.BadRequestError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
+                        case 401:
+                            throw new Hedra.UnauthorizedError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
+                        case 403:
+                            throw new Hedra.ForbiddenError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
+                        case 404:
+                            throw new Hedra.NotFoundError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
+                        case 429:
+                            throw new Hedra.TooManyRequestsError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
+                        case 500:
+                            throw new Hedra.InternalServerError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
+                        default:
+                            throw new errors.HedraError({
+                                statusCode: _response.error.statusCode,
+                                body: _response.error.body,
+                                rawResponse: _response.rawResponse,
+                            });
+                    }
+                }
+                return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/models/{model}/jobs");
+            },
+        );
+        const dataWithRawResponse = await list(request).withRawResponse();
+        return new core.Page<Hedra.JobSummary, Hedra.JobListResponse>({
+            response: dataWithRawResponse.data,
+            rawResponse: dataWithRawResponse.rawResponse,
+            hasNextPage: (response) =>
+                response?.next_cursor != null &&
+                !(typeof response?.next_cursor === "string" && response?.next_cursor === ""),
+            getItems: (response) => response?.data ?? [],
+            loadPage: (response) => {
+                return list(core.setObjectProperty(request, "cursor", response?.next_cursor));
+            },
+        });
+    }
+
+    /**
      * Voices this model accepts — scoped to the model's voice provider.
      *
      * @param {string} model
-     * @param {Hedra.ListVoicesModelsRequest} request
+     * @param {Hedra.ModelsListVoicesRequest} request
      * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
      *
@@ -217,7 +317,7 @@ export class ModelsClient {
      */
     public listVoices(
         model: string,
-        request: Hedra.ListVoicesModelsRequest = {},
+        request: Hedra.ModelsListVoicesRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): core.HttpResponsePromise<Hedra.VoiceListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__listVoices(model, request, requestOptions));
@@ -225,7 +325,7 @@ export class ModelsClient {
 
     private async __listVoices(
         model: string,
-        _request: Hedra.ListVoicesModelsRequest = {},
+        _request: Hedra.ModelsListVoicesRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Hedra.VoiceListResponse>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
@@ -257,11 +357,6 @@ export class ModelsClient {
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
                     throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.HttpValidationError,
-                        _response.rawResponse,
-                    );
                 case 429:
                     throw new Hedra.TooManyRequestsError(
                         _response.error.body as Hedra.ErrorResponse,
@@ -288,13 +383,12 @@ export class ModelsClient {
      * A standalone one-operation OpenAPI spec for this model's submit call.
      *
      * @param {string} model
-     * @param {Hedra.GetOpenapiModelsRequest} request
+     * @param {Hedra.ModelsGetOpenapiRequest} request
      * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
      *
@@ -303,7 +397,7 @@ export class ModelsClient {
      */
     public getOpenapi(
         model: string,
-        request: Hedra.GetOpenapiModelsRequest = {},
+        request: Hedra.ModelsGetOpenapiRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): core.HttpResponsePromise<Record<string, unknown>> {
         return core.HttpResponsePromise.fromPromise(this.__getOpenapi(model, request, requestOptions));
@@ -311,7 +405,7 @@ export class ModelsClient {
 
     private async __getOpenapi(
         model: string,
-        _request: Hedra.GetOpenapiModelsRequest = {},
+        _request: Hedra.ModelsGetOpenapiRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Record<string, unknown>>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
@@ -343,11 +437,6 @@ export class ModelsClient {
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
                     throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.HttpValidationError,
-                        _response.rawResponse,
-                    );
                 case 429:
                     throw new Hedra.TooManyRequestsError(
                         _response.error.body as Hedra.ErrorResponse,
@@ -379,7 +468,6 @@ export class ModelsClient {
      * @throws {@link Hedra.UnauthorizedError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
      *
@@ -441,11 +529,6 @@ export class ModelsClient {
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
                     throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.HttpValidationError,
-                        _response.rawResponse,
-                    );
                 case 429:
                     throw new Hedra.TooManyRequestsError(
                         _response.error.body as Hedra.ErrorResponse,
