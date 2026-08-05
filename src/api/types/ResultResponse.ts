@@ -3,16 +3,20 @@
 import type * as Hedra from "../index.js";
 
 export interface ResultResponse {
+    /** The job this envelope describes. */
     job_id: string;
+    /** The resolved model id this job ran on. */
     model: string;
     /** The quality level this job ran at; present only for models that offer quality levels. */
     quality?: (string | null) | undefined;
     status: Hedra.JobStatus;
     /** The prompt this job ran with. When `enhance_prompt` was set, this is the rewritten prompt the model received rather than the one submitted. Absent on models that take no prompt. */
     prompt?: (string | null) | undefined;
+    /** The job's outputs — always an array, even for a single output; empty until the job completes. */
     outputs?: Hedra.OutputItem[] | undefined;
     /** Timing for this job; present on completed jobs only. */
     metrics?: (Hedra.Metrics | null) | undefined;
+    /** Why the job failed; null unless `status` is `FAILED`. */
     error?: (Hedra.ErrorEnvelope | null) | undefined;
     /** The most recent lifecycle events for this job, oldest first. Capped; GET /v3/jobs/{job_id}/logs serves the full paginated history. Absent from webhook payloads. */
     logs?: (Hedra.JobLogItem[] | null) | undefined;

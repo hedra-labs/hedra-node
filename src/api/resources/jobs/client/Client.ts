@@ -137,7 +137,7 @@ export class JobsClient {
     }
 
     /**
-     * @param {string} job_id
+     * @param {string} job_id - The job's id (`job_<uuid>`).
      * @param {Hedra.JobsGetRequest} request
      * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -226,7 +226,7 @@ export class JobsClient {
     }
 
     /**
-     * @param {string} job_id
+     * @param {string} job_id - The job's id (`job_<uuid>`).
      * @param {Hedra.JobsGetStatusRequest} request
      * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -323,7 +323,7 @@ export class JobsClient {
     }
 
     /**
-     * @param {string} job_id
+     * @param {string} job_id - The job's id (`job_<uuid>`).
      * @param {Hedra.JobsListJobLogsRequest} request
      * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -435,26 +435,11 @@ export class JobsClient {
         });
     }
 
-    /**
-     * @param {string} job_id
-     * @param {Hedra.JobsStreamRequest} request
-     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Hedra.BadRequestError}
-     * @throws {@link Hedra.UnauthorizedError}
-     * @throws {@link Hedra.ForbiddenError}
-     * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.TooManyRequestsError}
-     * @throws {@link Hedra.InternalServerError}
-     *
-     * @example
-     *     await client.jobs.stream("job_id")
-     */
     public stream(
         job_id: string,
         request: Hedra.JobsStreamRequest = {},
         requestOptions?: JobsClient.RequestOptions,
-    ): core.HttpResponsePromise<unknown> {
+    ): core.HttpResponsePromise<core.Stream<unknown>> {
         return core.HttpResponsePromise.fromPromise(this.__stream(job_id, request, requestOptions));
     }
 
@@ -462,7 +447,7 @@ export class JobsClient {
         job_id: string,
         request: Hedra.JobsStreamRequest = {},
         requestOptions?: JobsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<unknown>> {
+    ): Promise<core.WithRawResponse<core.Stream<unknown>>> {
         const { "Last-Event-Id": lastEventId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -471,7 +456,7 @@ export class JobsClient {
             mergeOnlyDefinedHeaders({ "Last-Event-Id": lastEventId ?? undefined }),
             requestOptions?.headers,
         );
-        const _response = await core.fetcher({
+        const _response = await core.fetcher<ReadableStream>({
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
                     (await core.Supplier.get(this._options.environment)) ??
@@ -481,6 +466,7 @@ export class JobsClient {
             method: "GET",
             headers: _headers,
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            responseType: "sse",
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -488,7 +474,17 @@ export class JobsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body, rawResponse: _response.rawResponse };
+            return {
+                data: new core.Stream({
+                    stream: _response.body,
+                    parse: (data) => data as any,
+                    signal: requestOptions?.abortSignal,
+                    eventShape: {
+                        type: "sse",
+                    },
+                }),
+                rawResponse: _response.rawResponse,
+            };
         }
 
         if (_response.error.reason === "status-code") {
@@ -536,6 +532,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -600,6 +597,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -639,6 +641,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -704,6 +707,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -748,6 +756,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -811,6 +820,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -850,6 +864,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -913,6 +928,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -959,6 +979,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -1022,6 +1043,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -1063,6 +1089,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -1127,6 +1154,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -1168,6 +1200,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -1231,6 +1264,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -1263,6 +1301,118 @@ export class JobsClient {
     }
 
     /**
+     * Black Forest Labs FLUX.3 text-to-video with native audio.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyFlux3} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     *
+     * @example
+     *     await client.jobs.submitFlux3({
+     *         input: {
+     *             prompt: "prompt",
+     *             aspect_ratio: "auto",
+     *             resolution: "720p",
+     *             duration_ms: 1
+     *         }
+     *     })
+     */
+    public submitFlux3(
+        request: Hedra.SubmitBodyFlux3,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitFlux3(request, requestOptions));
+    }
+
+    private async __submitFlux3(
+        request: Hedra.SubmitBodyFlux3,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/flux-3",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: request,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/flux-3");
+    }
+
+    /**
      * Fast and light for quick concepts or high-volume social posts on a budget.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -1272,6 +1422,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -1336,6 +1487,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -1377,6 +1533,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -1439,6 +1596,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -1480,6 +1642,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -1542,6 +1705,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -1583,6 +1751,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -1646,6 +1815,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -1687,6 +1861,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -1750,6 +1925,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -1791,6 +1971,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -1854,6 +2035,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -1895,6 +2081,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -1958,6 +2145,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -1999,6 +2191,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -2062,6 +2255,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -2103,6 +2301,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -2166,6 +2365,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -2207,6 +2411,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -2272,6 +2477,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -2313,6 +2523,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -2375,6 +2586,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -2416,6 +2632,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -2481,6 +2698,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -2522,6 +2744,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -2587,6 +2810,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -2628,6 +2856,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -2700,6 +2929,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -2741,6 +2975,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -2813,6 +3048,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -2854,6 +3094,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -2865,7 +3106,6 @@ export class JobsClient {
      *         input: {
      *             prompt: "prompt",
      *             aspect_ratio: "16:9",
-     *             resolution: "540p",
      *             quality: "standard"
      *         }
      *     })
@@ -2919,6 +3159,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -2960,6 +3205,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -3023,6 +3269,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -3055,7 +3306,7 @@ export class JobsClient {
     }
 
     /**
-     * Ideogram V4 at its middle render setting; poster-ready text and layout at everyday cost.
+     * Ideogram V4 renders poster-ready text and layout; the required quality parameter picks turbo, balanced or quality, which sets both the render effort and the price.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
      *
@@ -3064,6 +3315,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -3129,6 +3381,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -3170,6 +3427,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -3233,6 +3491,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -3274,6 +3537,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -3338,6 +3602,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -3377,6 +3646,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -3439,6 +3709,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -3480,6 +3755,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -3544,6 +3820,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -3585,6 +3866,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -3649,6 +3931,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -3690,6 +3977,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -3754,6 +4042,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -3795,6 +4088,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -3866,6 +4160,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -3907,6 +4206,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -3971,6 +4271,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -4012,6 +4317,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -4077,6 +4383,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -4118,6 +4429,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -4183,6 +4495,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -4224,6 +4541,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -4290,6 +4608,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -4331,6 +4654,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -4396,6 +4720,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -4437,6 +4766,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -4501,6 +4831,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -4533,6 +4868,117 @@ export class JobsClient {
     }
 
     /**
+     * MiniMax H3 video generation from text, frames, or references.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyMinimaxH3} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     *
+     * @example
+     *     await client.jobs.submitMinimaxH3({
+     *         input: {
+     *             prompt: "prompt",
+     *             resolution: "768p",
+     *             duration_ms: 1
+     *         }
+     *     })
+     */
+    public submitMinimaxH3(
+        request: Hedra.SubmitBodyMinimaxH3,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitMinimaxH3(request, requestOptions));
+    }
+
+    private async __submitMinimaxH3(
+        request: Hedra.SubmitBodyMinimaxH3,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/minimax-h3",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: request,
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/minimax-h3");
+    }
+
+    /**
      * Everyday 1080p video with natural movement.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -4542,6 +4988,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -4606,6 +5053,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -4647,6 +5099,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -4711,6 +5164,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -4752,6 +5210,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -4815,6 +5274,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -4861,6 +5325,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -4924,6 +5389,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -4970,6 +5440,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -5034,6 +5505,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -5075,6 +5551,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -5139,6 +5616,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -5180,6 +5662,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -5244,6 +5727,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -5285,6 +5773,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -5354,6 +5843,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -5395,6 +5889,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -5459,6 +5954,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -5500,6 +6000,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -5565,6 +6066,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -5606,6 +6112,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -5670,6 +6177,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -5711,6 +6223,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -5774,6 +6287,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -5815,6 +6333,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -5882,6 +6401,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -5923,6 +6447,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -5990,6 +6515,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -6031,6 +6561,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -6095,6 +6626,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -6136,6 +6672,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -6201,6 +6738,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -6242,6 +6784,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -6308,6 +6851,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -6349,6 +6897,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -6414,6 +6963,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -6455,6 +7009,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -6519,6 +7074,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -6560,6 +7120,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -6624,6 +7185,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -6665,6 +7231,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -6729,6 +7296,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -6770,6 +7342,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -6834,6 +7407,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -6875,6 +7453,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -6940,6 +7519,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -6981,6 +7565,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -7053,6 +7638,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -7094,6 +7684,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -7156,6 +7747,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -7197,6 +7793,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -7263,6 +7860,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -7304,6 +7906,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -7369,6 +7972,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -7401,7 +8009,7 @@ export class JobsClient {
     }
 
     /**
-     * Vidu Q3 text-to-video with native dialogue and sound, up to 16 seconds
+     * Vidu Q3 video with native dialogue and sound, up to 16 seconds — from a text prompt, from a start frame, or between a start and end frame
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
      *
@@ -7410,6 +8018,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -7420,7 +8029,7 @@ export class JobsClient {
      *     await client.jobs.submitViduQ3({
      *         input: {
      *             prompt: "prompt",
-     *             resolution: "360p",
+     *             resolution: "540p",
      *             duration_ms: 1,
      *             quality: "standard"
      *         }
@@ -7475,6 +8084,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -7516,6 +8130,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -7527,7 +8142,7 @@ export class JobsClient {
      *         input: {
      *             prompt: "prompt",
      *             aspect_ratio: "16:9",
-     *             resolution: "360p",
+     *             resolution: "540p",
      *             duration_ms: 1,
      *             images: [{
      *                     source: "url",
@@ -7585,6 +8200,11 @@ export class JobsClient {
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
@@ -7617,7 +8237,7 @@ export class JobsClient {
     }
 
     /**
-     * Wan 2.7 text-to-video with native audio and up to 15-second generations
+     * Wan 2.7 video with native audio — from a text prompt, from a first frame with an optional last frame, or from reference images that keep subjects consistent
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
      *
@@ -7626,6 +8246,7 @@ export class JobsClient {
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.UnprocessableEntityError}
@@ -7687,6 +8308,11 @@ export class JobsClient {
                     throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 401:
                     throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );

@@ -8,7 +8,7 @@ import type * as Hedra from "../../../../index.js";
  *         input: {
  *             prompt: "prompt",
  *             aspect_ratio: "16:9",
- *             resolution: "360p",
+ *             resolution: "540p",
  *             duration_ms: 1,
  *             images: [{
  *                     source: "url",

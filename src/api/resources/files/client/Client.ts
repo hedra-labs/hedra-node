@@ -23,6 +23,12 @@ export class FilesClient {
     }
 
     /**
+     * Store a file and return a short-lived URL to pass in a model's `input`.
+     *
+     * Free, and available on an empty API wallet — funding is enforced when you
+     * submit a generation, not when you upload its inputs. `GET /v3/balance`
+     * reports what the wallet holds.
+     *
      * @param {Hedra.FilesUploadRequest} request
      * @param {FilesClient.RequestOptions} requestOptions - Request-specific configuration.
      *

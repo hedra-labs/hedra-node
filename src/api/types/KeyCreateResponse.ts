@@ -3,12 +3,19 @@
 import type * as Hedra from "../index.js";
 
 export interface KeyCreateResponse {
+    /** The key's public identifier. */
     key_id: string;
+    /** The full `<key_id>:<secret>` pair — a valid Bearer credential. Returned exactly once, at creation; store it now. */
     credential: string;
     kind: Hedra.ApiKeyKind;
+    /** Human-readable label for the key. */
     name?: (string | null) | undefined;
+    /** Scopes granted to the key; null means full access (a legacy key predating scopes). */
     scopes?: (string[] | null) | undefined;
+    /** The workspace the key bills and acts in. */
     workspace_id?: (string | null) | undefined;
+    /** ISO-8601 instant the key stops authenticating; null means it never expires. */
     expires_at?: (string | null) | undefined;
+    /** ISO-8601 instant the key was created. */
     created_at?: (string | null) | undefined;
 }

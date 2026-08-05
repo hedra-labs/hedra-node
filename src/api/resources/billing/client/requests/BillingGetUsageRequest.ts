@@ -7,7 +7,10 @@ import type * as Hedra from "../../../../index.js";
  *     {}
  */
 export interface BillingGetUsageRequest {
+    /** Window start (inclusive, ISO-8601); defaults to 7 days before `end`. Bounds job-creation time. */
     start?: string | null;
+    /** Window end (exclusive, ISO-8601); defaults to now. The window is capped at 90 days. */
     end?: string | null;
+    /** One summary row (`total`), one per UTC day (`day`), or one per model (`model`). */
     group_by?: Hedra.UsageGroupBy;
 }

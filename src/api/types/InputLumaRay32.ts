@@ -4,6 +4,7 @@
  * Model-specific inputs for `luma-ray-32`.
  */
 export interface InputLumaRay32 {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;

@@ -4,6 +4,8 @@
  * The ed25519 public key callers verify outbound webhook signatures with.
  */
 export interface WebhookPublicKey {
+    /** Signature algorithm; always `ed25519`. */
     algorithm?: string | undefined;
+    /** Base64-encoded ed25519 public key. Verify each delivery's signature header with it before trusting the payload. */
     public_key: string;
 }

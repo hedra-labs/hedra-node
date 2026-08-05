@@ -6,12 +6,13 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `flux-kontext-max`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, prompt
- * (2) requires: images, prompt
+ * (1) requires: aspect_ratio, prompt; must omit: images
+ * (2) requires: images, prompt; must omit: aspect_ratio, resolution
  */
 export interface InputFluxKontextMax {
     /** Generation prompt. */
     prompt: string;
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
@@ -23,7 +24,7 @@ export interface InputFluxKontextMax {
     output_format?: InputFluxKontextMax.OutputFormat | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** Images to edit or blend. */
+    /** The single source image to edit. */
     images?: Hedra.InputFluxKontextMaxImagesItem[] | undefined;
 }
 

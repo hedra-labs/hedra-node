@@ -4,8 +4,17 @@ import type * as Hedra from "../index.js";
 
 /**
  * Model-specific inputs for `minimax-hailuo-02`.
+ *
+ * Accepted field combinations (one per input mode):
+ * (1) requires: duration_ms, end_image, prompt, start_image; must omit: aspect_ratio; accepts quality: standard; resolution: 768p
+ * (2) requires: duration_ms, prompt; must omit: end_image, start_image; accepts quality: standard; resolution: 768p
+ * (3) requires: duration_ms, prompt, start_image; must omit: aspect_ratio, end_image; accepts quality: standard; resolution: 768p
+ * (4) requires: end_image, prompt, start_image; must omit: aspect_ratio; accepts duration_ms: 6000; quality: pro; resolution: 1080p
+ * (5) requires: prompt; must omit: end_image, start_image; accepts duration_ms: 6000; quality: pro; resolution: 1080p
+ * (6) requires: prompt, start_image; must omit: aspect_ratio, end_image; accepts duration_ms: 6000; quality: pro; resolution: 1080p
  */
 export interface InputMinimaxHailuo02 {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;
@@ -15,7 +24,7 @@ export interface InputMinimaxHailuo02 {
     resolution?: InputMinimaxHailuo02.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). The output video follows this image's aspect ratio. */
     start_image?: Hedra.InputMinimaxHailuo02StartImage | undefined;
     /** End frame (first-last-frame-to-video). */
     end_image?: Hedra.InputMinimaxHailuo02EndImage | undefined;

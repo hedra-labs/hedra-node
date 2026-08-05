@@ -5,5 +5,6 @@
  *     {}
  */
 export interface EstimateRequest {
+    /** The same model-specific inputs a submit would carry; the estimate prices exactly this body. */
     input?: Record<string, unknown>;
 }

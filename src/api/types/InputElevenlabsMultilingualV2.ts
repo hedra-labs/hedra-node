@@ -6,7 +6,9 @@
 export interface InputElevenlabsMultilingualV2 {
     /** Generation prompt. */
     text: string;
+    /** Voice stability, from 0 to 1. Higher values give a steadier, more consistent delivery; lower values allow more expressive variation between generations. */
     stability?: number | undefined;
+    /** Speech rate multiplier; 1.0 is the voice's natural pace. */
     speed?: number | undefined;
     /** Language code; 'auto' by default. */
     language?: string | undefined;

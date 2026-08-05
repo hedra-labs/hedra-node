@@ -3,8 +3,9 @@
 import type * as Hedra from "../index.js";
 
 export interface SubmitResponse {
-    /** This job's id (`job_<uuid>`). The job's output asset carries the same UUID, so once the job completes, replacing the `job_` prefix with `asset_` yields the `asset_id` to reference its output in a later submit's media inputs. */
+    /** This job's id — server-issued, and opaque. */
     job_id: string;
+    /** The resolved model id this job runs on. */
     model: string;
     status: Hedra.JobStatus;
     /** Path of this job's status monitor: poll GET /v3/jobs/{job_id}/status for status, progress, and an estimate. */

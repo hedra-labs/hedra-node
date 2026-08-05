@@ -3,13 +3,17 @@
 import type * as Hedra from "../index.js";
 
 export interface UsageResponse {
+    /** Window start (inclusive). */
     start: string;
+    /** Window end (exclusive). */
     end: string;
     group_by: Hedra.UsageGroupBy;
+    /** Jobs submitted across the whole window. */
     total_jobs: number;
     /** Net amount spent across the whole window. */
     total_spent: number;
     /** ISO-4217 currency code for every amount in this response. */
     currency: string;
+    /** One bucket per `group_by` group. */
     data?: Hedra.UsageBucket[] | undefined;
 }

@@ -816,6 +816,7 @@ describe("WebhooksClient", () => {
                 param: "param",
                 details: [{ field: "field", message: "message" }],
                 replaced_by: "replaced_by",
+                billing: { balance: 1.1, required: 1.1, currency: "currency", funding_url: "funding_url" },
             },
             webhook_url: "webhook_url",
             created_at: "2024-01-15T09:30:00Z",

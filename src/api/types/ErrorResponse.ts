@@ -7,5 +7,6 @@ import type * as Hedra from "../index.js";
  */
 export interface ErrorResponse {
     error: Hedra.ErrorEnvelope;
+    /** Debug id to quote to support (32-char hex trace id), also emitted as the `X-Trace-Id` response header. */
     trace_id?: (string | null) | undefined;
 }

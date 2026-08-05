@@ -3,11 +3,17 @@
 import type * as Hedra from "../index.js";
 
 export interface ModelDetail {
+    /** The model's public id — the value POST /v3/models/{model} takes. */
     id: string;
     modality: Hedra.Modality;
+    /** Human-readable name. */
     name?: (string | null) | undefined;
+    /** One-line summary of what the model does. */
     description?: (string | null) | undefined;
+    /** URL of the provider's logo. */
     logo_url?: (string | null) | undefined;
+    /** JSON Schema for this model's `input` object on submit — the same schema `GET /v3/models/{model}/openapi.json` embeds. */
     input_schema?: Record<string, unknown> | undefined;
+    /** JSON Schema of one item of a completed job's `outputs[]`. */
     output_schema?: Record<string, unknown> | undefined;
 }

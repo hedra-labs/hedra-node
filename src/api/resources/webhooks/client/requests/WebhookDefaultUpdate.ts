@@ -7,6 +7,8 @@
  *     }
  */
 export interface WebhookDefaultUpdate {
+    /** HTTPS endpoint to receive terminal webhooks for every job that names no per-job `webhook` on submit. */
     url: string;
+    /** Whether the default endpoint receives deliveries; false pauses it without discarding the URL. */
     enabled?: boolean;
 }

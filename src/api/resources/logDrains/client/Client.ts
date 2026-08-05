@@ -220,7 +220,7 @@ export class LogDrainsClient {
     }
 
     /**
-     * @param {string} drain_id
+     * @param {string} drain_id - The drain's id (`drain_<uuid>`).
      * @param {Hedra.LogDrainsGetLogDrainRequest} request
      * @param {LogDrainsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -309,7 +309,7 @@ export class LogDrainsClient {
     }
 
     /**
-     * @param {string} drain_id
+     * @param {string} drain_id - The drain's id (`drain_<uuid>`).
      * @param {Hedra.LogDrainsDeleteLogDrainRequest} request
      * @param {LogDrainsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -398,7 +398,7 @@ export class LogDrainsClient {
     }
 
     /**
-     * @param {string} drain_id
+     * @param {string} drain_id - The drain's id (`drain_<uuid>`).
      * @param {Hedra.LogDrainUpdate} request
      * @param {LogDrainsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -490,7 +490,7 @@ export class LogDrainsClient {
     }
 
     /**
-     * @param {string} drain_id
+     * @param {string} drain_id - The drain's id (`drain_<uuid>`).
      * @param {Hedra.LogDrainsTestLogDrainRequest} request
      * @param {LogDrainsClient.RequestOptions} requestOptions - Request-specific configuration.
      *

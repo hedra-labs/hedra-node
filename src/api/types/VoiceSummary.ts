@@ -6,7 +6,10 @@
 export interface VoiceSummary {
     /** The voice's id (`voice_<uuid>`); pass it as `input.voice_id` on submit. */
     id: string;
+    /** Human-readable name. */
     name?: (string | null) | undefined;
+    /** URL of a short audio sample of this voice. */
     preview_url?: (string | null) | undefined;
+    /** Curation metadata (language, gender, accent, ...). */
     labels?: Record<string, string> | undefined;
 }

@@ -6,7 +6,7 @@
         "namespaceExport": "Hedra",
         "inlinePathParameters": false
     },
-    "originGitCommit": "f2d51fb428f35a8e74d8215e902baf95f9151f63",
+    "originGitCommit": "3901ce52acffb2229823b9493f3a3e0e2d95a680",
     "originGitCommitIsDirty": false,
     "invokedBy": "ci",
     "ciProvider": "github",

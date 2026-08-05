@@ -5,5 +5,6 @@
  *     {}
  */
 export interface KeyRotateRequest {
+    /** Seconds the old secret keeps authenticating after the rotation; omitted means the service default (24h). */
     grace_period_seconds?: number | null;
 }

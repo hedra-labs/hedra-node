@@ -6,11 +6,15 @@ import type * as Hedra from "../index.js";
  * One customer-visible lifecycle event for a v3 job.
  */
 export interface JobLogItem {
+    /** Monotonically increasing id of this event within the job's log. Cursors are separate opaque values (`next_cursor` / `logs_next_cursor`); do not send this id as one. */
     id: number;
+    /** ISO-8601 instant the event was recorded. */
     timestamp: string;
     level: Hedra.JobLogLevel;
     event: Hedra.JobLogEvent;
+    /** Human-readable summary of the event. */
     message: string;
     source: Hedra.JobLogSource;
+    /** Structured detail specific to this event type; empty when the event carries none. */
     data?: Record<string, unknown> | undefined;
 }

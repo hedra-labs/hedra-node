@@ -130,6 +130,7 @@ describe("JobsClient", () => {
             outputs: [
                 {
                     status: "COMPLETED",
+                    asset_id: "asset_id",
                     url: "url",
                     content_type: "content_type",
                     width: 1,
@@ -148,6 +149,7 @@ describe("JobsClient", () => {
                 param: "param",
                 details: [{ field: "field", message: "message" }],
                 replaced_by: "replaced_by",
+                billing: { balance: 1.1, required: 1.1, currency: "currency", funding_url: "funding_url" },
             },
             logs: [
                 {
@@ -515,18 +517,20 @@ describe("JobsClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = 'event: \ndata: {"key":"value"}\n\n';
 
-        server
-            .mockEndpoint()
-            .get("/jobs/job_id/stream")
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
+        server.mockEndpoint().get("/jobs/job_id/stream").respondWith().statusCode(200).sseBody(rawResponseBody).build();
 
         const response = await client.jobs.stream("job_id");
-        expect(response).toEqual(rawResponseBody);
+        const events: unknown[] = [];
+        for await (const event of response) {
+            events.push(event);
+        }
+        expect(events).toEqual([
+            {
+                key: "value",
+            },
+        ]);
     });
 
     test("stream (2)", async () => {
@@ -738,6 +742,32 @@ describe("JobsClient", () => {
             .post("/models/dreamina-31")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitDreamina31({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "540p",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_dreamina_31 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "540p" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/dreamina-31")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -753,7 +783,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_dreamina_31 (5)", async () => {
+    test("submit_dreamina_31 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "540p" } };
@@ -779,7 +809,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_dreamina_31 (6)", async () => {
+    test("submit_dreamina_31 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "540p" } };
@@ -805,7 +835,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_dreamina_31 (7)", async () => {
+    test("submit_dreamina_31 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "540p" } };
@@ -831,7 +861,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_dreamina_31 (8)", async () => {
+    test("submit_dreamina_31 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "540p" } };
@@ -949,6 +979,31 @@ describe("JobsClient", () => {
             .post("/models/elevenlabs-flash-multilingual-v2")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitElevenlabsFlashMultilingualV2({
+                input: {
+                    text: "text",
+                    voice_id: "voice_id",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_elevenlabs_flash_multilingual_v2 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/elevenlabs-flash-multilingual-v2")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -963,7 +1018,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_elevenlabs_flash_multilingual_v2 (5)", async () => {
+    test("submit_elevenlabs_flash_multilingual_v2 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -988,7 +1043,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_elevenlabs_flash_multilingual_v2 (6)", async () => {
+    test("submit_elevenlabs_flash_multilingual_v2 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1013,7 +1068,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_elevenlabs_flash_multilingual_v2 (7)", async () => {
+    test("submit_elevenlabs_flash_multilingual_v2 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1038,7 +1093,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_elevenlabs_flash_multilingual_v2 (8)", async () => {
+    test("submit_elevenlabs_flash_multilingual_v2 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1155,6 +1210,31 @@ describe("JobsClient", () => {
             .post("/models/elevenlabs-flash-v2")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitElevenlabsFlashV2({
+                input: {
+                    text: "text",
+                    voice_id: "voice_id",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_elevenlabs_flash_v2 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/elevenlabs-flash-v2")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -1169,7 +1249,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_elevenlabs_flash_v2 (5)", async () => {
+    test("submit_elevenlabs_flash_v2 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1194,7 +1274,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_elevenlabs_flash_v2 (6)", async () => {
+    test("submit_elevenlabs_flash_v2 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1219,7 +1299,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_elevenlabs_flash_v2 (7)", async () => {
+    test("submit_elevenlabs_flash_v2 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1244,7 +1324,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_elevenlabs_flash_v2 (8)", async () => {
+    test("submit_elevenlabs_flash_v2 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1361,6 +1441,31 @@ describe("JobsClient", () => {
             .post("/models/elevenlabs-multilingual-v2")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitElevenlabsMultilingualV2({
+                input: {
+                    text: "text",
+                    voice_id: "voice_id",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_elevenlabs_multilingual_v2 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/elevenlabs-multilingual-v2")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -1375,7 +1480,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_elevenlabs_multilingual_v2 (5)", async () => {
+    test("submit_elevenlabs_multilingual_v2 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1400,7 +1505,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_elevenlabs_multilingual_v2 (6)", async () => {
+    test("submit_elevenlabs_multilingual_v2 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1425,7 +1530,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_elevenlabs_multilingual_v2 (7)", async () => {
+    test("submit_elevenlabs_multilingual_v2 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1450,7 +1555,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_elevenlabs_multilingual_v2 (8)", async () => {
+    test("submit_elevenlabs_multilingual_v2 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1567,6 +1672,31 @@ describe("JobsClient", () => {
             .post("/models/elevenlabs-v3")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitElevenlabsV3({
+                input: {
+                    text: "text",
+                    voice_id: "voice_id",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_elevenlabs_v3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/elevenlabs-v3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -1581,7 +1711,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_elevenlabs_v3 (5)", async () => {
+    test("submit_elevenlabs_v3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1606,7 +1736,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_elevenlabs_v3 (6)", async () => {
+    test("submit_elevenlabs_v3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1631,7 +1761,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_elevenlabs_v3 (7)", async () => {
+    test("submit_elevenlabs_v3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1656,7 +1786,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_elevenlabs_v3 (8)", async () => {
+    test("submit_elevenlabs_v3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -1776,6 +1906,32 @@ describe("JobsClient", () => {
             .post("/models/flux-11-pro")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux11Pro({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "540p",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_flux_11_pro (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-11-pro")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -1791,7 +1947,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_flux_11_pro (5)", async () => {
+    test("submit_flux_11_pro (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -1817,7 +1973,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_flux_11_pro (6)", async () => {
+    test("submit_flux_11_pro (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -1843,7 +1999,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_flux_11_pro (7)", async () => {
+    test("submit_flux_11_pro (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -1869,7 +2025,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_flux_11_pro (8)", async () => {
+    test("submit_flux_11_pro (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -1987,6 +2143,31 @@ describe("JobsClient", () => {
             .post("/models/flux-11-ultra")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux11Ultra({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_flux_11_ultra (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-11-ultra")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -2001,7 +2182,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_flux_11_ultra (5)", async () => {
+    test("submit_flux_11_ultra (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -2026,7 +2207,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_flux_11_ultra (6)", async () => {
+    test("submit_flux_11_ultra (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -2051,7 +2232,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_flux_11_ultra (7)", async () => {
+    test("submit_flux_11_ultra (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -2076,7 +2257,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_flux_11_ultra (8)", async () => {
+    test("submit_flux_11_ultra (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -2096,6 +2277,273 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "prompt",
                     aspect_ratio: "16:9",
+                },
+            });
+        }).rejects.toThrow(Hedra.InternalServerError);
+    });
+
+    test("submit_flux_3 (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "auto", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = {
+            job_id: "job_id",
+            model: "model",
+            status: "IN_QUEUE",
+            status_url: "status_url",
+            result_url: "result_url",
+            estimated_completion_at: "2024-01-15T09:30:00Z",
+        };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.submitFlux3({
+            input: {
+                prompt: "prompt",
+                aspect_ratio: "auto",
+                resolution: "720p",
+                duration_ms: 1,
+            },
+        });
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("submit_flux_3 (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "auto", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "auto",
+                    resolution: "720p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.BadRequestError);
+    });
+
+    test("submit_flux_3 (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "auto", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "auto",
+                    resolution: "720p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.UnauthorizedError);
+    });
+
+    test("submit_flux_3 (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "auto", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "auto",
+                    resolution: "720p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_flux_3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "auto", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "auto",
+                    resolution: "720p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.ForbiddenError);
+    });
+
+    test("submit_flux_3 (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "auto", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "auto",
+                    resolution: "720p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.NotFoundError);
+    });
+
+    test("submit_flux_3 (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "auto", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "auto",
+                    resolution: "720p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.UnprocessableEntityError);
+    });
+
+    test("submit_flux_3 (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "auto", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "auto",
+                    resolution: "720p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.TooManyRequestsError);
+    });
+
+    test("submit_flux_3 (9)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "auto", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(500)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "auto",
+                    resolution: "720p",
+                    duration_ms: 1,
                 },
             });
         }).rejects.toThrow(Hedra.InternalServerError);
@@ -2196,6 +2644,32 @@ describe("JobsClient", () => {
             .post("/models/flux-dev")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFluxDev({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "540p",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_flux_dev (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-dev")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -2211,7 +2685,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_flux_dev (5)", async () => {
+    test("submit_flux_dev (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -2237,7 +2711,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_flux_dev (6)", async () => {
+    test("submit_flux_dev (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -2263,7 +2737,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_flux_dev (7)", async () => {
+    test("submit_flux_dev (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -2289,7 +2763,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_flux_dev (8)", async () => {
+    test("submit_flux_dev (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -2404,6 +2878,30 @@ describe("JobsClient", () => {
             .post("/models/flux-kontext-max")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFluxKontextMax({
+                input: {
+                    prompt: "prompt",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_flux_kontext_max (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-kontext-max")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -2417,7 +2915,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_flux_kontext_max (5)", async () => {
+    test("submit_flux_kontext_max (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -2441,7 +2939,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_flux_kontext_max (6)", async () => {
+    test("submit_flux_kontext_max (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -2465,7 +2963,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_flux_kontext_max (7)", async () => {
+    test("submit_flux_kontext_max (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -2489,7 +2987,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_flux_kontext_max (8)", async () => {
+    test("submit_flux_kontext_max (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -2602,6 +3100,30 @@ describe("JobsClient", () => {
             .post("/models/flux-kontext-pro")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFluxKontextPro({
+                input: {
+                    prompt: "prompt",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_flux_kontext_pro (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux-kontext-pro")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -2615,7 +3137,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_flux_kontext_pro (5)", async () => {
+    test("submit_flux_kontext_pro (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -2639,7 +3161,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_flux_kontext_pro (6)", async () => {
+    test("submit_flux_kontext_pro (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -2663,7 +3185,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_flux_kontext_pro (7)", async () => {
+    test("submit_flux_kontext_pro (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -2687,7 +3209,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_flux_kontext_pro (8)", async () => {
+    test("submit_flux_kontext_pro (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -2803,6 +3325,31 @@ describe("JobsClient", () => {
             .post("/models/flux2-flex")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux2Flex({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_flux2_flex (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux2-flex")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -2817,7 +3364,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_flux2_flex (5)", async () => {
+    test("submit_flux2_flex (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -2842,7 +3389,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_flux2_flex (6)", async () => {
+    test("submit_flux2_flex (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -2867,7 +3414,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_flux2_flex (7)", async () => {
+    test("submit_flux2_flex (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -2892,7 +3439,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_flux2_flex (8)", async () => {
+    test("submit_flux2_flex (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3009,6 +3556,31 @@ describe("JobsClient", () => {
             .post("/models/flux2-klein-9b")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux2Klein9B({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_flux2_klein_9b (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux2-klein-9b")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -3023,7 +3595,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_flux2_klein_9b (5)", async () => {
+    test("submit_flux2_klein_9b (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3048,7 +3620,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_flux2_klein_9b (6)", async () => {
+    test("submit_flux2_klein_9b (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3073,7 +3645,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_flux2_klein_9b (7)", async () => {
+    test("submit_flux2_klein_9b (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3098,7 +3670,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_flux2_klein_9b (8)", async () => {
+    test("submit_flux2_klein_9b (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3215,6 +3787,31 @@ describe("JobsClient", () => {
             .post("/models/flux2-max")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux2Max({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_flux2_max (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux2-max")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -3229,7 +3826,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_flux2_max (5)", async () => {
+    test("submit_flux2_max (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3254,7 +3851,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_flux2_max (6)", async () => {
+    test("submit_flux2_max (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3279,7 +3876,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_flux2_max (7)", async () => {
+    test("submit_flux2_max (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3304,7 +3901,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_flux2_max (8)", async () => {
+    test("submit_flux2_max (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3421,6 +4018,31 @@ describe("JobsClient", () => {
             .post("/models/flux2-pro")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitFlux2Pro({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_flux2_pro (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/flux2-pro")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -3435,7 +4057,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_flux2_pro (5)", async () => {
+    test("submit_flux2_pro (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3460,7 +4082,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_flux2_pro (6)", async () => {
+    test("submit_flux2_pro (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3485,7 +4107,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_flux2_pro (7)", async () => {
+    test("submit_flux2_pro (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3510,7 +4132,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_flux2_pro (8)", async () => {
+    test("submit_flux2_pro (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3627,6 +4249,31 @@ describe("JobsClient", () => {
             .post("/models/gemini-omni-flash")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitGeminiOmniFlash({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_gemini_omni_flash (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/gemini-omni-flash")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -3641,7 +4288,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_gemini_omni_flash (5)", async () => {
+    test("submit_gemini_omni_flash (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3666,7 +4313,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_gemini_omni_flash (6)", async () => {
+    test("submit_gemini_omni_flash (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3691,7 +4338,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_gemini_omni_flash (7)", async () => {
+    test("submit_gemini_omni_flash (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3716,7 +4363,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_gemini_omni_flash (8)", async () => {
+    test("submit_gemini_omni_flash (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -3833,6 +4480,31 @@ describe("JobsClient", () => {
             .post("/models/gpt-image-15")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitGptImage15({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_gpt_image_15 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/gpt-image-15")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -3847,7 +4519,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_gpt_image_15 (5)", async () => {
+    test("submit_gpt_image_15 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1" } };
@@ -3872,7 +4544,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_gpt_image_15 (6)", async () => {
+    test("submit_gpt_image_15 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1" } };
@@ -3897,7 +4569,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_gpt_image_15 (7)", async () => {
+    test("submit_gpt_image_15 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1" } };
@@ -3922,7 +4594,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_gpt_image_15 (8)", async () => {
+    test("submit_gpt_image_15 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1" } };
@@ -4045,6 +4717,33 @@ describe("JobsClient", () => {
             .post("/models/gpt-image-2")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitGptImage2({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "1K",
+                    quality: "low",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_gpt_image_2 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K", quality: "low" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/gpt-image-2")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -4061,7 +4760,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_gpt_image_2 (5)", async () => {
+    test("submit_gpt_image_2 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K", quality: "low" } };
@@ -4088,7 +4787,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_gpt_image_2 (6)", async () => {
+    test("submit_gpt_image_2 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K", quality: "low" } };
@@ -4115,7 +4814,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_gpt_image_2 (7)", async () => {
+    test("submit_gpt_image_2 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K", quality: "low" } };
@@ -4142,7 +4841,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_gpt_image_2 (8)", async () => {
+    test("submit_gpt_image_2 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K", quality: "low" } };
@@ -4258,6 +4957,30 @@ describe("JobsClient", () => {
             .post("/models/grok-imagine")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitGrokImagine({
+                input: {
+                    prompt: "prompt",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_grok_imagine (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/grok-imagine")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -4271,7 +4994,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_grok_imagine (5)", async () => {
+    test("submit_grok_imagine (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -4295,7 +5018,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_grok_imagine (6)", async () => {
+    test("submit_grok_imagine (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -4319,7 +5042,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_grok_imagine (7)", async () => {
+    test("submit_grok_imagine (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -4343,7 +5066,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_grok_imagine (8)", async () => {
+    test("submit_grok_imagine (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -4465,6 +5188,33 @@ describe("JobsClient", () => {
             .post("/models/grok-video")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitGrokVideo({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "480p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_grok_video (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/grok-video")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -4481,7 +5231,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_grok_video (5)", async () => {
+    test("submit_grok_video (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -4508,7 +5258,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_grok_video (6)", async () => {
+    test("submit_grok_video (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -4535,7 +5285,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_grok_video (7)", async () => {
+    test("submit_grok_video (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -4562,7 +5312,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_grok_video (8)", async () => {
+    test("submit_grok_video (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -4695,6 +5445,35 @@ describe("JobsClient", () => {
             .post("/models/happy-horse")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitHappyHorse({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "720p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_happy_horse (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/happy-horse")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -4711,7 +5490,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_happy_horse (5)", async () => {
+    test("submit_happy_horse (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -4740,7 +5519,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_happy_horse (6)", async () => {
+    test("submit_happy_horse (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -4769,7 +5548,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_happy_horse (7)", async () => {
+    test("submit_happy_horse (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -4798,7 +5577,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_happy_horse (8)", async () => {
+    test("submit_happy_horse (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -4978,6 +5757,48 @@ describe("JobsClient", () => {
             .post("/models/hedra-avatar")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitHedraAvatar({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "540p",
+                    start_image: {
+                        source: "url",
+                        url: "url",
+                    },
+                    audio: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_hedra_avatar (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: {
+                prompt: "prompt",
+                aspect_ratio: "1:1",
+                resolution: "540p",
+                start_image: { source: "url", url: "url" },
+                audio: { source: "url", url: "url" },
+            },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/hedra-avatar")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -5001,7 +5822,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_hedra_avatar (5)", async () => {
+    test("submit_hedra_avatar (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -5043,7 +5864,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_hedra_avatar (6)", async () => {
+    test("submit_hedra_avatar (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -5085,7 +5906,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_hedra_avatar (7)", async () => {
+    test("submit_hedra_avatar (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -5127,7 +5948,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_hedra_avatar (8)", async () => {
+    test("submit_hedra_avatar (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -5320,6 +6141,48 @@ describe("JobsClient", () => {
             .post("/models/hedra-character-3")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitHedraCharacter3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "540p",
+                    start_image: {
+                        source: "url",
+                        url: "url",
+                    },
+                    audio: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_hedra_character_3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: {
+                prompt: "prompt",
+                aspect_ratio: "1:1",
+                resolution: "540p",
+                start_image: { source: "url", url: "url" },
+                audio: { source: "url", url: "url" },
+            },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/hedra-character-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -5343,7 +6206,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_hedra_character_3 (5)", async () => {
+    test("submit_hedra_character_3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -5385,7 +6248,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_hedra_character_3 (6)", async () => {
+    test("submit_hedra_character_3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -5427,7 +6290,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_hedra_character_3 (7)", async () => {
+    test("submit_hedra_character_3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -5469,7 +6332,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_hedra_character_3 (8)", async () => {
+    test("submit_hedra_character_3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -5514,9 +6377,7 @@ describe("JobsClient", () => {
     test("submit_hidream_o1_image (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "540p", quality: "standard" },
-        };
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", quality: "standard" } };
         const rawResponseBody = {
             job_id: "job_id",
             model: "model",
@@ -5539,7 +6400,6 @@ describe("JobsClient", () => {
             input: {
                 prompt: "prompt",
                 aspect_ratio: "16:9",
-                resolution: "540p",
                 quality: "standard",
             },
         });
@@ -5549,9 +6409,7 @@ describe("JobsClient", () => {
     test("submit_hidream_o1_image (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "x", aspect_ratio: "16:9", resolution: "540p", quality: "standard" },
-        };
+        const rawRequestBody = { input: { prompt: "x", aspect_ratio: "16:9", quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -5568,7 +6426,6 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "x",
                     aspect_ratio: "16:9",
-                    resolution: "540p",
                     quality: "standard",
                 },
             });
@@ -5578,9 +6435,7 @@ describe("JobsClient", () => {
     test("submit_hidream_o1_image (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "x", aspect_ratio: "16:9", resolution: "540p", quality: "standard" },
-        };
+        const rawRequestBody = { input: { prompt: "x", aspect_ratio: "16:9", quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -5597,7 +6452,6 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "x",
                     aspect_ratio: "16:9",
-                    resolution: "540p",
                     quality: "standard",
                 },
             });
@@ -5607,9 +6461,33 @@ describe("JobsClient", () => {
     test("submit_hidream_o1_image (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "x", aspect_ratio: "16:9", resolution: "540p", quality: "standard" },
-        };
+        const rawRequestBody = { input: { prompt: "x", aspect_ratio: "16:9", quality: "standard" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/hidream-o1-image")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitHidreamO1Image({
+                input: {
+                    prompt: "x",
+                    aspect_ratio: "16:9",
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_hidream_o1_image (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "x", aspect_ratio: "16:9", quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -5626,19 +6504,16 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "x",
                     aspect_ratio: "16:9",
-                    resolution: "540p",
                     quality: "standard",
                 },
             });
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_hidream_o1_image (5)", async () => {
+    test("submit_hidream_o1_image (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "x", aspect_ratio: "16:9", resolution: "540p", quality: "standard" },
-        };
+        const rawRequestBody = { input: { prompt: "x", aspect_ratio: "16:9", quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -5655,19 +6530,16 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "x",
                     aspect_ratio: "16:9",
-                    resolution: "540p",
                     quality: "standard",
                 },
             });
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_hidream_o1_image (6)", async () => {
+    test("submit_hidream_o1_image (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "x", aspect_ratio: "16:9", resolution: "540p", quality: "standard" },
-        };
+        const rawRequestBody = { input: { prompt: "x", aspect_ratio: "16:9", quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -5684,19 +6556,16 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "x",
                     aspect_ratio: "16:9",
-                    resolution: "540p",
                     quality: "standard",
                 },
             });
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_hidream_o1_image (7)", async () => {
+    test("submit_hidream_o1_image (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "x", aspect_ratio: "16:9", resolution: "540p", quality: "standard" },
-        };
+        const rawRequestBody = { input: { prompt: "x", aspect_ratio: "16:9", quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -5713,19 +6582,16 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "x",
                     aspect_ratio: "16:9",
-                    resolution: "540p",
                     quality: "standard",
                 },
             });
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_hidream_o1_image (8)", async () => {
+    test("submit_hidream_o1_image (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "x", aspect_ratio: "16:9", resolution: "540p", quality: "standard" },
-        };
+        const rawRequestBody = { input: { prompt: "x", aspect_ratio: "16:9", quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -5742,7 +6608,6 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "x",
                     aspect_ratio: "16:9",
-                    resolution: "540p",
                     quality: "standard",
                 },
             });
@@ -5841,6 +6706,31 @@ describe("JobsClient", () => {
             .post("/models/ideogram-v2")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitIdeogramV2({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_ideogram_v2 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/ideogram-v2")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -5855,7 +6745,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_ideogram_v2 (5)", async () => {
+    test("submit_ideogram_v2 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1" } };
@@ -5880,7 +6770,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_ideogram_v2 (6)", async () => {
+    test("submit_ideogram_v2 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1" } };
@@ -5905,7 +6795,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_ideogram_v2 (7)", async () => {
+    test("submit_ideogram_v2 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1" } };
@@ -5930,7 +6820,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_ideogram_v2 (8)", async () => {
+    test("submit_ideogram_v2 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1" } };
@@ -6061,6 +6951,35 @@ describe("JobsClient", () => {
             .post("/models/ideogram-v4")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitIdeogramV4({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "720p",
+                    quality: "turbo",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_ideogram_v4 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "720p", quality: "turbo" },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/ideogram-v4")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -6077,7 +6996,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_ideogram_v4 (5)", async () => {
+    test("submit_ideogram_v4 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -6106,7 +7025,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_ideogram_v4 (6)", async () => {
+    test("submit_ideogram_v4 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -6135,7 +7054,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_ideogram_v4 (7)", async () => {
+    test("submit_ideogram_v4 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -6164,7 +7083,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_ideogram_v4 (8)", async () => {
+    test("submit_ideogram_v4 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -6285,6 +7204,31 @@ describe("JobsClient", () => {
             .post("/models/imagen3")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitImagen3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_imagen3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/imagen3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -6299,7 +7243,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_imagen3 (5)", async () => {
+    test("submit_imagen3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -6324,7 +7268,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_imagen3 (6)", async () => {
+    test("submit_imagen3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -6349,7 +7293,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_imagen3 (7)", async () => {
+    test("submit_imagen3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -6374,7 +7318,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_imagen3 (8)", async () => {
+    test("submit_imagen3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9" } };
@@ -6494,6 +7438,32 @@ describe("JobsClient", () => {
             .post("/models/imagen4")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitImagen4({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "1K",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_imagen4 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/imagen4")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -6509,7 +7479,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_imagen4 (5)", async () => {
+    test("submit_imagen4 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -6535,7 +7505,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_imagen4 (6)", async () => {
+    test("submit_imagen4 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -6561,7 +7531,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_imagen4 (7)", async () => {
+    test("submit_imagen4 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -6587,7 +7557,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_imagen4 (8)", async () => {
+    test("submit_imagen4 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -6702,6 +7672,30 @@ describe("JobsClient", () => {
             .post("/models/kling-16")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitKling16({
+                input: {
+                    prompt: "prompt",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_kling_16 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/kling-16")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -6715,7 +7709,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_kling_16 (5)", async () => {
+    test("submit_kling_16 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -6739,7 +7733,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_kling_16 (6)", async () => {
+    test("submit_kling_16 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -6763,7 +7757,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_kling_16 (7)", async () => {
+    test("submit_kling_16 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -6787,7 +7781,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_kling_16 (8)", async () => {
+    test("submit_kling_16 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -6906,6 +7900,32 @@ describe("JobsClient", () => {
             .post("/models/kling-21-master")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitKling21Master({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_kling_21_master (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/kling-21-master")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -6921,7 +7941,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_kling_21_master (5)", async () => {
+    test("submit_kling_21_master (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -6947,7 +7967,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_kling_21_master (6)", async () => {
+    test("submit_kling_21_master (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -6973,7 +7993,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_kling_21_master (7)", async () => {
+    test("submit_kling_21_master (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -6999,7 +8019,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_kling_21_master (8)", async () => {
+    test("submit_kling_21_master (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7120,6 +8140,32 @@ describe("JobsClient", () => {
             .post("/models/kling-25-turbo")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitKling25Turbo({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_kling_25_turbo (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/kling-25-turbo")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -7135,7 +8181,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_kling_25_turbo (5)", async () => {
+    test("submit_kling_25_turbo (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7161,7 +8207,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_kling_25_turbo (6)", async () => {
+    test("submit_kling_25_turbo (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7187,7 +8233,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_kling_25_turbo (7)", async () => {
+    test("submit_kling_25_turbo (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7213,7 +8259,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_kling_25_turbo (8)", async () => {
+    test("submit_kling_25_turbo (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7334,6 +8380,32 @@ describe("JobsClient", () => {
             .post("/models/kling-26-pro")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitKling26Pro({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_kling_26_pro (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/kling-26-pro")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -7349,7 +8421,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_kling_26_pro (5)", async () => {
+    test("submit_kling_26_pro (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7375,7 +8447,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_kling_26_pro (6)", async () => {
+    test("submit_kling_26_pro (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7401,7 +8473,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_kling_26_pro (7)", async () => {
+    test("submit_kling_26_pro (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7427,7 +8499,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_kling_26_pro (8)", async () => {
+    test("submit_kling_26_pro (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7597,6 +8669,46 @@ describe("JobsClient", () => {
             .post("/models/kling-ai-avatar-v2")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitKlingAiAvatarV2({
+                input: {
+                    aspect_ratio: "16:9",
+                    start_image: {
+                        source: "url",
+                        url: "url",
+                    },
+                    audio: {
+                        source: "url",
+                        url: "url",
+                    },
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_kling_ai_avatar_v2 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: {
+                aspect_ratio: "16:9",
+                start_image: { source: "url", url: "url" },
+                audio: { source: "url", url: "url" },
+                quality: "standard",
+            },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/kling-ai-avatar-v2")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -7619,7 +8731,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_kling_ai_avatar_v2 (5)", async () => {
+    test("submit_kling_ai_avatar_v2 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -7659,7 +8771,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_kling_ai_avatar_v2 (6)", async () => {
+    test("submit_kling_ai_avatar_v2 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -7699,7 +8811,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_kling_ai_avatar_v2 (7)", async () => {
+    test("submit_kling_ai_avatar_v2 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -7739,7 +8851,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_kling_ai_avatar_v2 (8)", async () => {
+    test("submit_kling_ai_avatar_v2 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -7874,6 +8986,32 @@ describe("JobsClient", () => {
             .post("/models/kling-o1")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitKlingO1({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_kling_o1 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/kling-o1")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -7889,7 +9027,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_kling_o1 (5)", async () => {
+    test("submit_kling_o1 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7915,7 +9053,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_kling_o1 (6)", async () => {
+    test("submit_kling_o1 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7941,7 +9079,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_kling_o1 (7)", async () => {
+    test("submit_kling_o1 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -7967,7 +9105,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_kling_o1 (8)", async () => {
+    test("submit_kling_o1 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1 } };
@@ -8099,6 +9237,35 @@ describe("JobsClient", () => {
             .post("/models/kling-o3")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitKlingO3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    duration_ms: 1,
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_kling_o3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/kling-o3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -8115,7 +9282,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_kling_o3 (5)", async () => {
+    test("submit_kling_o3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8144,7 +9311,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_kling_o3 (6)", async () => {
+    test("submit_kling_o3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8173,7 +9340,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_kling_o3 (7)", async () => {
+    test("submit_kling_o3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8202,7 +9369,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_kling_o3 (8)", async () => {
+    test("submit_kling_o3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8337,6 +9504,35 @@ describe("JobsClient", () => {
             .post("/models/kling-v3")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitKlingV3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    duration_ms: 1,
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_kling_v3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/kling-v3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -8353,7 +9549,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_kling_v3 (5)", async () => {
+    test("submit_kling_v3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8382,7 +9578,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_kling_v3 (6)", async () => {
+    test("submit_kling_v3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8411,7 +9607,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_kling_v3 (7)", async () => {
+    test("submit_kling_v3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8440,7 +9636,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_kling_v3 (8)", async () => {
+    test("submit_kling_v3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8578,6 +9774,36 @@ describe("JobsClient", () => {
             .post("/models/ltx-2-3")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitLtx23({
+                input: {
+                    prompt: "x",
+                    resolution: "1080p",
+                    duration_ms: 1,
+                    aspect_ratio: "16:9",
+                    quality: "fast",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_ltx_2_3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "x", resolution: "1080p", duration_ms: 1, aspect_ratio: "16:9", quality: "fast" },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/ltx-2-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -8595,7 +9821,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_ltx_2_3 (5)", async () => {
+    test("submit_ltx_2_3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8625,7 +9851,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_ltx_2_3 (6)", async () => {
+    test("submit_ltx_2_3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8655,7 +9881,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_ltx_2_3 (7)", async () => {
+    test("submit_ltx_2_3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8685,7 +9911,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_ltx_2_3 (8)", async () => {
+    test("submit_ltx_2_3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -8813,6 +10039,33 @@ describe("JobsClient", () => {
             .post("/models/luma-ray-32")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitLumaRay32({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "540p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_luma_ray_32 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/luma-ray-32")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -8829,7 +10082,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_luma_ray_32 (5)", async () => {
+    test("submit_luma_ray_32 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p", duration_ms: 1 } };
@@ -8856,7 +10109,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_luma_ray_32 (6)", async () => {
+    test("submit_luma_ray_32 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p", duration_ms: 1 } };
@@ -8883,7 +10136,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_luma_ray_32 (7)", async () => {
+    test("submit_luma_ray_32 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p", duration_ms: 1 } };
@@ -8910,7 +10163,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_luma_ray_32 (8)", async () => {
+    test("submit_luma_ray_32 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p", duration_ms: 1 } };
@@ -9032,6 +10285,32 @@ describe("JobsClient", () => {
             .post("/models/mai-image-2-5")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMaiImage25({
+                input: {
+                    prompt: "foo",
+                    aspect_ratio: "1:1",
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_mai_image_2_5 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "foo", aspect_ratio: "1:1", quality: "standard" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/mai-image-2-5")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -9047,7 +10326,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_mai_image_2_5 (5)", async () => {
+    test("submit_mai_image_2_5 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "foo", aspect_ratio: "1:1", quality: "standard" } };
@@ -9073,7 +10352,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_mai_image_2_5 (6)", async () => {
+    test("submit_mai_image_2_5 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "foo", aspect_ratio: "1:1", quality: "standard" } };
@@ -9099,7 +10378,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_mai_image_2_5 (7)", async () => {
+    test("submit_mai_image_2_5 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "foo", aspect_ratio: "1:1", quality: "standard" } };
@@ -9125,7 +10404,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_mai_image_2_5 (8)", async () => {
+    test("submit_mai_image_2_5 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "foo", aspect_ratio: "1:1", quality: "standard" } };
@@ -9146,6 +10425,246 @@ describe("JobsClient", () => {
                     prompt: "foo",
                     aspect_ratio: "1:1",
                     quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.InternalServerError);
+    });
+
+    test("submit_minimax_h3 (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "768p", duration_ms: 1 } };
+        const rawResponseBody = {
+            job_id: "job_id",
+            model: "model",
+            status: "IN_QUEUE",
+            status_url: "status_url",
+            result_url: "result_url",
+            estimated_completion_at: "2024-01-15T09:30:00Z",
+        };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-h3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.submitMinimaxH3({
+            input: {
+                prompt: "prompt",
+                resolution: "768p",
+                duration_ms: 1,
+            },
+        });
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("submit_minimax_h3 (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "x", resolution: "768p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-h3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxH3({
+                input: {
+                    prompt: "x",
+                    resolution: "768p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.BadRequestError);
+    });
+
+    test("submit_minimax_h3 (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "x", resolution: "768p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-h3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxH3({
+                input: {
+                    prompt: "x",
+                    resolution: "768p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.UnauthorizedError);
+    });
+
+    test("submit_minimax_h3 (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "x", resolution: "768p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-h3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxH3({
+                input: {
+                    prompt: "x",
+                    resolution: "768p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_minimax_h3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "x", resolution: "768p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-h3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxH3({
+                input: {
+                    prompt: "x",
+                    resolution: "768p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.ForbiddenError);
+    });
+
+    test("submit_minimax_h3 (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "x", resolution: "768p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-h3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxH3({
+                input: {
+                    prompt: "x",
+                    resolution: "768p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.NotFoundError);
+    });
+
+    test("submit_minimax_h3 (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "x", resolution: "768p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-h3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxH3({
+                input: {
+                    prompt: "x",
+                    resolution: "768p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.UnprocessableEntityError);
+    });
+
+    test("submit_minimax_h3 (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "x", resolution: "768p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-h3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxH3({
+                input: {
+                    prompt: "x",
+                    resolution: "768p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.TooManyRequestsError);
+    });
+
+    test("submit_minimax_h3 (9)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "x", resolution: "768p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-h3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(500)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxH3({
+                input: {
+                    prompt: "x",
+                    resolution: "768p",
+                    duration_ms: 1,
                 },
             });
         }).rejects.toThrow(Hedra.InternalServerError);
@@ -9246,6 +10765,32 @@ describe("JobsClient", () => {
             .post("/models/minimax-hailuo-02")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxHailuo02({
+                input: {
+                    prompt: "prompt",
+                    duration_ms: 1,
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_minimax_hailuo_02 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", duration_ms: 1, quality: "standard" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-hailuo-02")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -9261,7 +10806,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_minimax_hailuo_02 (5)", async () => {
+    test("submit_minimax_hailuo_02 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", duration_ms: 1, quality: "standard" } };
@@ -9287,7 +10832,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_minimax_hailuo_02 (6)", async () => {
+    test("submit_minimax_hailuo_02 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", duration_ms: 1, quality: "standard" } };
@@ -9313,7 +10858,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_minimax_hailuo_02 (7)", async () => {
+    test("submit_minimax_hailuo_02 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", duration_ms: 1, quality: "standard" } };
@@ -9339,7 +10884,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_minimax_hailuo_02 (8)", async () => {
+    test("submit_minimax_hailuo_02 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", duration_ms: 1, quality: "standard" } };
@@ -9460,6 +11005,32 @@ describe("JobsClient", () => {
             .post("/models/minimax-hailuo-23")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxHailuo23({
+                input: {
+                    prompt: "prompt",
+                    duration_ms: 1,
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_minimax_hailuo_23 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", duration_ms: 1, quality: "standard" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-hailuo-23")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -9475,7 +11046,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_minimax_hailuo_23 (5)", async () => {
+    test("submit_minimax_hailuo_23 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", duration_ms: 1, quality: "standard" } };
@@ -9501,7 +11072,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_minimax_hailuo_23 (6)", async () => {
+    test("submit_minimax_hailuo_23 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", duration_ms: 1, quality: "standard" } };
@@ -9527,7 +11098,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_minimax_hailuo_23 (7)", async () => {
+    test("submit_minimax_hailuo_23 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", duration_ms: 1, quality: "standard" } };
@@ -9553,7 +11124,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_minimax_hailuo_23 (8)", async () => {
+    test("submit_minimax_hailuo_23 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", duration_ms: 1, quality: "standard" } };
@@ -9671,6 +11242,31 @@ describe("JobsClient", () => {
             .post("/models/minimax-speech-25-hd-preview")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxSpeech25HdPreview({
+                input: {
+                    text: "text",
+                    voice_id: "voice_id",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_minimax_speech_25_hd_preview (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-speech-25-hd-preview")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -9685,7 +11281,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_minimax_speech_25_hd_preview (5)", async () => {
+    test("submit_minimax_speech_25_hd_preview (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -9710,7 +11306,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_minimax_speech_25_hd_preview (6)", async () => {
+    test("submit_minimax_speech_25_hd_preview (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -9735,7 +11331,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_minimax_speech_25_hd_preview (7)", async () => {
+    test("submit_minimax_speech_25_hd_preview (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -9760,7 +11356,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_minimax_speech_25_hd_preview (8)", async () => {
+    test("submit_minimax_speech_25_hd_preview (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -9877,6 +11473,31 @@ describe("JobsClient", () => {
             .post("/models/minimax-speech-25-turbo-preview")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitMinimaxSpeech25TurboPreview({
+                input: {
+                    text: "text",
+                    voice_id: "voice_id",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_minimax_speech_25_turbo_preview (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/minimax-speech-25-turbo-preview")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -9891,7 +11512,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_minimax_speech_25_turbo_preview (5)", async () => {
+    test("submit_minimax_speech_25_turbo_preview (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -9916,7 +11537,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_minimax_speech_25_turbo_preview (6)", async () => {
+    test("submit_minimax_speech_25_turbo_preview (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -9941,7 +11562,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_minimax_speech_25_turbo_preview (7)", async () => {
+    test("submit_minimax_speech_25_turbo_preview (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -9966,7 +11587,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_minimax_speech_25_turbo_preview (8)", async () => {
+    test("submit_minimax_speech_25_turbo_preview (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { text: "text", voice_id: "voice_id" } };
@@ -10086,6 +11707,32 @@ describe("JobsClient", () => {
             .post("/models/nano-banana")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitNanoBanana({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "1K",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_nano_banana (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/nano-banana")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -10101,7 +11748,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_nano_banana (5)", async () => {
+    test("submit_nano_banana (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10127,7 +11774,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_nano_banana (6)", async () => {
+    test("submit_nano_banana (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10153,7 +11800,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_nano_banana (7)", async () => {
+    test("submit_nano_banana (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10179,7 +11826,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_nano_banana (8)", async () => {
+    test("submit_nano_banana (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10300,6 +11947,32 @@ describe("JobsClient", () => {
             .post("/models/nano-banana-2")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitNanoBanana2({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "1K",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_nano_banana_2 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/nano-banana-2")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -10315,7 +11988,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_nano_banana_2 (5)", async () => {
+    test("submit_nano_banana_2 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10341,7 +12014,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_nano_banana_2 (6)", async () => {
+    test("submit_nano_banana_2 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10367,7 +12040,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_nano_banana_2 (7)", async () => {
+    test("submit_nano_banana_2 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10393,7 +12066,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_nano_banana_2 (8)", async () => {
+    test("submit_nano_banana_2 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10514,6 +12187,32 @@ describe("JobsClient", () => {
             .post("/models/nano-banana-pro")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitNanoBananaPro({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "1K",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_nano_banana_pro (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/nano-banana-pro")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -10529,7 +12228,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_nano_banana_pro (5)", async () => {
+    test("submit_nano_banana_pro (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10555,7 +12254,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_nano_banana_pro (6)", async () => {
+    test("submit_nano_banana_pro (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10581,7 +12280,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_nano_banana_pro (7)", async () => {
+    test("submit_nano_banana_pro (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10607,7 +12306,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_nano_banana_pro (8)", async () => {
+    test("submit_nano_banana_pro (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "1K" } };
@@ -10751,6 +12450,39 @@ describe("JobsClient", () => {
             .post("/models/omnihuman-15")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitOmnihuman15({
+                input: {
+                    start_image: {
+                        source: "url",
+                        url: "url",
+                    },
+                    audio: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_omnihuman_15 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { start_image: { source: "url", url: "url" }, audio: { source: "url", url: "url" } },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/omnihuman-15")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -10771,7 +12503,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_omnihuman_15 (5)", async () => {
+    test("submit_omnihuman_15 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -10804,7 +12536,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_omnihuman_15 (6)", async () => {
+    test("submit_omnihuman_15 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -10837,7 +12569,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_omnihuman_15 (7)", async () => {
+    test("submit_omnihuman_15 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -10870,7 +12602,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_omnihuman_15 (8)", async () => {
+    test("submit_omnihuman_15 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -10998,6 +12730,32 @@ describe("JobsClient", () => {
             .post("/models/pixverse-v6")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitPixverseV6({
+                input: {
+                    prompt: "prompt",
+                    resolution: "360p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_pixverse_v6 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/pixverse-v6")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -11013,7 +12771,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_pixverse_v6 (5)", async () => {
+    test("submit_pixverse_v6 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1 } };
@@ -11039,7 +12797,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_pixverse_v6 (6)", async () => {
+    test("submit_pixverse_v6 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1 } };
@@ -11065,7 +12823,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_pixverse_v6 (7)", async () => {
+    test("submit_pixverse_v6 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1 } };
@@ -11091,7 +12849,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_pixverse_v6 (8)", async () => {
+    test("submit_pixverse_v6 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1 } };
@@ -11223,6 +12981,35 @@ describe("JobsClient", () => {
             .post("/models/qwen-image-2")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitQwenImage2({
+                input: {
+                    prompt: "x",
+                    aspect_ratio: "16:9",
+                    resolution: "540p",
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_qwen_image_2 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "x", aspect_ratio: "16:9", resolution: "540p", quality: "standard" },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/qwen-image-2")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -11239,7 +13026,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_qwen_image_2 (5)", async () => {
+    test("submit_qwen_image_2 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -11268,7 +13055,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_qwen_image_2 (6)", async () => {
+    test("submit_qwen_image_2 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -11297,7 +13084,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_qwen_image_2 (7)", async () => {
+    test("submit_qwen_image_2 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -11326,7 +13113,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_qwen_image_2 (8)", async () => {
+    test("submit_qwen_image_2 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -11450,6 +13237,32 @@ describe("JobsClient", () => {
             .post("/models/recraft-v3")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitRecraftV3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "540p",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_recraft_v3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/recraft-v3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -11465,7 +13278,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_recraft_v3 (5)", async () => {
+    test("submit_recraft_v3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -11491,7 +13304,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_recraft_v3 (6)", async () => {
+    test("submit_recraft_v3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -11517,7 +13330,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_recraft_v3 (7)", async () => {
+    test("submit_recraft_v3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -11543,7 +13356,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_recraft_v3 (8)", async () => {
+    test("submit_recraft_v3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -11661,6 +13474,31 @@ describe("JobsClient", () => {
             .post("/models/reve-21")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitReve21({
+                input: {
+                    prompt: "x",
+                    aspect_ratio: "4:1",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_reve_21 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "x", aspect_ratio: "4:1" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/reve-21")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -11675,7 +13513,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_reve_21 (5)", async () => {
+    test("submit_reve_21 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "x", aspect_ratio: "4:1" } };
@@ -11700,7 +13538,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_reve_21 (6)", async () => {
+    test("submit_reve_21 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "x", aspect_ratio: "4:1" } };
@@ -11725,7 +13563,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_reve_21 (7)", async () => {
+    test("submit_reve_21 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "x", aspect_ratio: "4:1" } };
@@ -11750,7 +13588,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_reve_21 (8)", async () => {
+    test("submit_reve_21 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "x", aspect_ratio: "4:1" } };
@@ -11922,6 +13760,50 @@ describe("JobsClient", () => {
             .post("/models/reve-21-edit")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitReve21Edit({
+                input: {
+                    prompt: "x",
+                    aspect_ratio: "4:1",
+                    images: [
+                        {
+                            source: "url",
+                            url: "url",
+                        },
+                        {
+                            source: "url",
+                            url: "url",
+                        },
+                    ],
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_reve_21_edit (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: {
+                prompt: "x",
+                aspect_ratio: "4:1",
+                images: [
+                    { source: "url", url: "url" },
+                    { source: "url", url: "url" },
+                ],
+            },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/reve-21-edit")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -11946,7 +13828,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_reve_21_edit (5)", async () => {
+    test("submit_reve_21_edit (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -11990,7 +13872,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_reve_21_edit (6)", async () => {
+    test("submit_reve_21_edit (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -12034,7 +13916,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_reve_21_edit (7)", async () => {
+    test("submit_reve_21_edit (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -12078,7 +13960,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_reve_21_edit (8)", async () => {
+    test("submit_reve_21_edit (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -12269,6 +14151,50 @@ describe("JobsClient", () => {
             .post("/models/reve-21-remix")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitReve21Remix({
+                input: {
+                    prompt: "x",
+                    aspect_ratio: "4:1",
+                    images: [
+                        {
+                            source: "url",
+                            url: "url",
+                        },
+                        {
+                            source: "url",
+                            url: "url",
+                        },
+                    ],
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_reve_21_remix (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: {
+                prompt: "x",
+                aspect_ratio: "4:1",
+                images: [
+                    { source: "url", url: "url" },
+                    { source: "url", url: "url" },
+                ],
+            },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/reve-21-remix")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -12293,7 +14219,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_reve_21_remix (5)", async () => {
+    test("submit_reve_21_remix (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -12337,7 +14263,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_reve_21_remix (6)", async () => {
+    test("submit_reve_21_remix (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -12381,7 +14307,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_reve_21_remix (7)", async () => {
+    test("submit_reve_21_remix (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -12425,7 +14351,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_reve_21_remix (8)", async () => {
+    test("submit_reve_21_remix (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -12564,6 +14490,32 @@ describe("JobsClient", () => {
             .post("/models/sana")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitSana({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "540p",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_sana (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/sana")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -12579,7 +14531,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_sana (5)", async () => {
+    test("submit_sana (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -12605,7 +14557,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_sana (6)", async () => {
+    test("submit_sana (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -12631,7 +14583,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_sana (7)", async () => {
+    test("submit_sana (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -12657,7 +14609,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_sana (8)", async () => {
+    test("submit_sana (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "540p" } };
@@ -12781,6 +14733,33 @@ describe("JobsClient", () => {
             .post("/models/seedance-15-pro")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitSeedance15Pro({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "480p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_seedance_15_pro (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/seedance-15-pro")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -12797,7 +14776,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_seedance_15_pro (5)", async () => {
+    test("submit_seedance_15_pro (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -12824,7 +14803,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_seedance_15_pro (6)", async () => {
+    test("submit_seedance_15_pro (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -12851,7 +14830,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_seedance_15_pro (7)", async () => {
+    test("submit_seedance_15_pro (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -12878,7 +14857,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_seedance_15_pro (8)", async () => {
+    test("submit_seedance_15_pro (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -13014,6 +14993,36 @@ describe("JobsClient", () => {
             .post("/models/seedance-20")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitSeedance20({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "480p",
+                    duration_ms: 1,
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_seedance_20 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1, quality: "standard" },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/seedance-20")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -13031,7 +15040,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_seedance_20 (5)", async () => {
+    test("submit_seedance_20 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -13061,7 +15070,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_seedance_20 (6)", async () => {
+    test("submit_seedance_20 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -13091,7 +15100,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_seedance_20 (7)", async () => {
+    test("submit_seedance_20 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -13121,7 +15130,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_seedance_20 (8)", async () => {
+    test("submit_seedance_20 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -13249,6 +15258,33 @@ describe("JobsClient", () => {
             .post("/models/seedance-20-mini")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitSeedance20Mini({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "480p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_seedance_20_mini (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/seedance-20-mini")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -13265,7 +15301,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_seedance_20_mini (5)", async () => {
+    test("submit_seedance_20_mini (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -13292,7 +15328,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_seedance_20_mini (6)", async () => {
+    test("submit_seedance_20_mini (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -13319,7 +15355,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_seedance_20_mini (7)", async () => {
+    test("submit_seedance_20_mini (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -13346,7 +15382,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_seedance_20_mini (8)", async () => {
+    test("submit_seedance_20_mini (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "480p", duration_ms: 1 } };
@@ -13468,6 +15504,32 @@ describe("JobsClient", () => {
             .post("/models/seedream-40")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitSeedream40({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "1080p",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_seedream_40 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1080p" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/seedream-40")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -13483,7 +15545,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_seedream_40 (5)", async () => {
+    test("submit_seedream_40 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1080p" } };
@@ -13509,7 +15571,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_seedream_40 (6)", async () => {
+    test("submit_seedream_40 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1080p" } };
@@ -13535,7 +15597,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_seedream_40 (7)", async () => {
+    test("submit_seedream_40 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1080p" } };
@@ -13561,7 +15623,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_seedream_40 (8)", async () => {
+    test("submit_seedream_40 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1080p" } };
@@ -13682,6 +15744,32 @@ describe("JobsClient", () => {
             .post("/models/seedream-45")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitSeedream45({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "1440p (2K QHD)",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_seedream_45 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1440p (2K QHD)" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/seedream-45")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -13697,7 +15785,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_seedream_45 (5)", async () => {
+    test("submit_seedream_45 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1440p (2K QHD)" } };
@@ -13723,7 +15811,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_seedream_45 (6)", async () => {
+    test("submit_seedream_45 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1440p (2K QHD)" } };
@@ -13749,7 +15837,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_seedream_45 (7)", async () => {
+    test("submit_seedream_45 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1440p (2K QHD)" } };
@@ -13775,7 +15863,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_seedream_45 (8)", async () => {
+    test("submit_seedream_45 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1440p (2K QHD)" } };
@@ -13896,6 +15984,32 @@ describe("JobsClient", () => {
             .post("/models/seedream-50-lite")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitSeedream50Lite({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "1440p (2K QHD)",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_seedream_50_lite (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1440p (2K QHD)" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/seedream-50-lite")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -13911,7 +16025,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_seedream_50_lite (5)", async () => {
+    test("submit_seedream_50_lite (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1440p (2K QHD)" } };
@@ -13937,7 +16051,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_seedream_50_lite (6)", async () => {
+    test("submit_seedream_50_lite (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1440p (2K QHD)" } };
@@ -13963,7 +16077,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_seedream_50_lite (7)", async () => {
+    test("submit_seedream_50_lite (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1440p (2K QHD)" } };
@@ -13989,7 +16103,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_seedream_50_lite (8)", async () => {
+    test("submit_seedream_50_lite (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1440p (2K QHD)" } };
@@ -14110,6 +16224,32 @@ describe("JobsClient", () => {
             .post("/models/seedream-50-pro")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitSeedream50Pro({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "1:1",
+                    resolution: "1080p",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_seedream_50_pro (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1080p" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/seedream-50-pro")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -14125,7 +16265,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_seedream_50_pro (5)", async () => {
+    test("submit_seedream_50_pro (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1080p" } };
@@ -14151,7 +16291,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_seedream_50_pro (6)", async () => {
+    test("submit_seedream_50_pro (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1080p" } };
@@ -14177,7 +16317,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_seedream_50_pro (7)", async () => {
+    test("submit_seedream_50_pro (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1080p" } };
@@ -14203,7 +16343,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_seedream_50_pro (8)", async () => {
+    test("submit_seedream_50_pro (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", aspect_ratio: "1:1", resolution: "1080p" } };
@@ -14335,6 +16475,35 @@ describe("JobsClient", () => {
             .post("/models/sora-2-pro")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitSora2Pro({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "720p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_sora_2_pro (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "720p", duration_ms: 1 },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/sora-2-pro")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -14351,7 +16520,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_sora_2_pro (5)", async () => {
+    test("submit_sora_2_pro (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -14380,7 +16549,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_sora_2_pro (6)", async () => {
+    test("submit_sora_2_pro (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -14409,7 +16578,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_sora_2_pro (7)", async () => {
+    test("submit_sora_2_pro (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -14438,7 +16607,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_sora_2_pro (8)", async () => {
+    test("submit_sora_2_pro (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -14618,6 +16787,48 @@ describe("JobsClient", () => {
             .post("/models/veed-fabric-10")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeedFabric10({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "480p",
+                    start_image: {
+                        source: "url",
+                        url: "url",
+                    },
+                    audio: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_veed_fabric_10 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: {
+                prompt: "prompt",
+                aspect_ratio: "16:9",
+                resolution: "480p",
+                start_image: { source: "url", url: "url" },
+                audio: { source: "url", url: "url" },
+            },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veed-fabric-10")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -14641,7 +16852,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_veed_fabric_10 (5)", async () => {
+    test("submit_veed_fabric_10 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -14683,7 +16894,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_veed_fabric_10 (6)", async () => {
+    test("submit_veed_fabric_10 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -14725,7 +16936,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_veed_fabric_10 (7)", async () => {
+    test("submit_veed_fabric_10 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -14767,7 +16978,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_veed_fabric_10 (8)", async () => {
+    test("submit_veed_fabric_10 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -14898,6 +17109,30 @@ describe("JobsClient", () => {
             .post("/models/veo-2")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeo2({
+                input: {
+                    prompt: "prompt",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_veo_2 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veo-2")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -14911,7 +17146,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_veo_2 (5)", async () => {
+    test("submit_veo_2 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -14935,7 +17170,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_veo_2 (6)", async () => {
+    test("submit_veo_2 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -14959,7 +17194,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_veo_2 (7)", async () => {
+    test("submit_veo_2 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -14983,7 +17218,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_veo_2 (8)", async () => {
+    test("submit_veo_2 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt" } };
@@ -15116,6 +17351,36 @@ describe("JobsClient", () => {
             .post("/models/veo-3")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeo3({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "720p",
+                    duration_ms: 1,
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_veo_3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "720p", duration_ms: 1, quality: "standard" },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veo-3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -15133,7 +17398,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_veo_3 (5)", async () => {
+    test("submit_veo_3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -15163,7 +17428,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_veo_3 (6)", async () => {
+    test("submit_veo_3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -15193,7 +17458,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_veo_3 (7)", async () => {
+    test("submit_veo_3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -15223,7 +17488,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_veo_3 (8)", async () => {
+    test("submit_veo_3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -15359,6 +17624,35 @@ describe("JobsClient", () => {
             .post("/models/veo-31")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeo31({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "720p",
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_veo_31 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: { prompt: "prompt", aspect_ratio: "16:9", resolution: "720p", quality: "standard" },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veo-31")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -15375,7 +17669,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_veo_31 (5)", async () => {
+    test("submit_veo_31 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -15404,7 +17698,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_veo_31 (6)", async () => {
+    test("submit_veo_31 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -15433,7 +17727,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_veo_31 (7)", async () => {
+    test("submit_veo_31 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -15462,7 +17756,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_veo_31 (8)", async () => {
+    test("submit_veo_31 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -15494,7 +17788,7 @@ describe("JobsClient", () => {
     test("submit_vidu_q3 (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1, quality: "standard" } };
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "540p", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = {
             job_id: "job_id",
             model: "model",
@@ -15516,7 +17810,7 @@ describe("JobsClient", () => {
         const response = await client.jobs.submitViduQ3({
             input: {
                 prompt: "prompt",
-                resolution: "360p",
+                resolution: "540p",
                 duration_ms: 1,
                 quality: "standard",
             },
@@ -15527,7 +17821,7 @@ describe("JobsClient", () => {
     test("submit_vidu_q3 (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1, quality: "standard" } };
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "540p", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -15543,7 +17837,7 @@ describe("JobsClient", () => {
             return await client.jobs.submitViduQ3({
                 input: {
                     prompt: "prompt",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     quality: "standard",
                 },
@@ -15554,7 +17848,7 @@ describe("JobsClient", () => {
     test("submit_vidu_q3 (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1, quality: "standard" } };
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "540p", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -15570,7 +17864,7 @@ describe("JobsClient", () => {
             return await client.jobs.submitViduQ3({
                 input: {
                     prompt: "prompt",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     quality: "standard",
                 },
@@ -15581,7 +17875,34 @@ describe("JobsClient", () => {
     test("submit_vidu_q3 (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1, quality: "standard" } };
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "540p", duration_ms: 1, quality: "standard" } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/vidu-q3")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitViduQ3({
+                input: {
+                    prompt: "prompt",
+                    resolution: "540p",
+                    duration_ms: 1,
+                    quality: "standard",
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_vidu_q3 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "540p", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -15597,7 +17918,7 @@ describe("JobsClient", () => {
             return await client.jobs.submitViduQ3({
                 input: {
                     prompt: "prompt",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     quality: "standard",
                 },
@@ -15605,10 +17926,10 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_vidu_q3 (5)", async () => {
+    test("submit_vidu_q3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1, quality: "standard" } };
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "540p", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -15624,7 +17945,7 @@ describe("JobsClient", () => {
             return await client.jobs.submitViduQ3({
                 input: {
                     prompt: "prompt",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     quality: "standard",
                 },
@@ -15632,10 +17953,10 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_vidu_q3 (6)", async () => {
+    test("submit_vidu_q3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1, quality: "standard" } };
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "540p", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -15651,7 +17972,7 @@ describe("JobsClient", () => {
             return await client.jobs.submitViduQ3({
                 input: {
                     prompt: "prompt",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     quality: "standard",
                 },
@@ -15659,10 +17980,10 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_vidu_q3 (7)", async () => {
+    test("submit_vidu_q3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1, quality: "standard" } };
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "540p", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -15678,7 +17999,7 @@ describe("JobsClient", () => {
             return await client.jobs.submitViduQ3({
                 input: {
                     prompt: "prompt",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     quality: "standard",
                 },
@@ -15686,10 +18007,10 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_vidu_q3 (8)", async () => {
+    test("submit_vidu_q3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { input: { prompt: "prompt", resolution: "360p", duration_ms: 1, quality: "standard" } };
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "540p", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -15705,7 +18026,7 @@ describe("JobsClient", () => {
             return await client.jobs.submitViduQ3({
                 input: {
                     prompt: "prompt",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     quality: "standard",
                 },
@@ -15720,7 +18041,7 @@ describe("JobsClient", () => {
             input: {
                 prompt: "prompt",
                 aspect_ratio: "16:9",
-                resolution: "360p",
+                resolution: "540p",
                 duration_ms: 1,
                 images: [{ source: "url", url: "url" }],
             },
@@ -15747,7 +18068,7 @@ describe("JobsClient", () => {
             input: {
                 prompt: "prompt",
                 aspect_ratio: "16:9",
-                resolution: "360p",
+                resolution: "540p",
                 duration_ms: 1,
                 images: [
                     {
@@ -15767,7 +18088,7 @@ describe("JobsClient", () => {
             input: {
                 prompt: "prompt",
                 aspect_ratio: "16:9",
-                resolution: "360p",
+                resolution: "540p",
                 duration_ms: 1,
                 images: [
                     { source: "url", url: "url" },
@@ -15791,7 +18112,7 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "prompt",
                     aspect_ratio: "16:9",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     images: [
                         {
@@ -15815,7 +18136,7 @@ describe("JobsClient", () => {
             input: {
                 prompt: "prompt",
                 aspect_ratio: "16:9",
-                resolution: "360p",
+                resolution: "540p",
                 duration_ms: 1,
                 images: [
                     { source: "url", url: "url" },
@@ -15839,7 +18160,7 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "prompt",
                     aspect_ratio: "16:9",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     images: [
                         {
@@ -15863,7 +18184,55 @@ describe("JobsClient", () => {
             input: {
                 prompt: "prompt",
                 aspect_ratio: "16:9",
-                resolution: "360p",
+                resolution: "540p",
+                duration_ms: 1,
+                images: [
+                    { source: "url", url: "url" },
+                    { source: "url", url: "url" },
+                ],
+            },
+        };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/vidu-q3-reference")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitViduQ3Reference({
+                input: {
+                    prompt: "prompt",
+                    aspect_ratio: "16:9",
+                    resolution: "540p",
+                    duration_ms: 1,
+                    images: [
+                        {
+                            source: "url",
+                            url: "url",
+                        },
+                        {
+                            source: "url",
+                            url: "url",
+                        },
+                    ],
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_vidu_q3_reference (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            input: {
+                prompt: "prompt",
+                aspect_ratio: "16:9",
+                resolution: "540p",
                 duration_ms: 1,
                 images: [
                     { source: "url", url: "url" },
@@ -15887,7 +18256,7 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "prompt",
                     aspect_ratio: "16:9",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     images: [
                         {
@@ -15904,14 +18273,14 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_vidu_q3_reference (5)", async () => {
+    test("submit_vidu_q3_reference (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
             input: {
                 prompt: "prompt",
                 aspect_ratio: "16:9",
-                resolution: "360p",
+                resolution: "540p",
                 duration_ms: 1,
                 images: [
                     { source: "url", url: "url" },
@@ -15935,7 +18304,7 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "prompt",
                     aspect_ratio: "16:9",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     images: [
                         {
@@ -15952,14 +18321,14 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_vidu_q3_reference (6)", async () => {
+    test("submit_vidu_q3_reference (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
             input: {
                 prompt: "prompt",
                 aspect_ratio: "16:9",
-                resolution: "360p",
+                resolution: "540p",
                 duration_ms: 1,
                 images: [
                     { source: "url", url: "url" },
@@ -15983,7 +18352,7 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "prompt",
                     aspect_ratio: "16:9",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     images: [
                         {
@@ -16000,14 +18369,14 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_vidu_q3_reference (7)", async () => {
+    test("submit_vidu_q3_reference (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
             input: {
                 prompt: "prompt",
                 aspect_ratio: "16:9",
-                resolution: "360p",
+                resolution: "540p",
                 duration_ms: 1,
                 images: [
                     { source: "url", url: "url" },
@@ -16031,7 +18400,7 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "prompt",
                     aspect_ratio: "16:9",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     images: [
                         {
@@ -16048,14 +18417,14 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_vidu_q3_reference (8)", async () => {
+    test("submit_vidu_q3_reference (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {
             input: {
                 prompt: "prompt",
                 aspect_ratio: "16:9",
-                resolution: "360p",
+                resolution: "540p",
                 duration_ms: 1,
                 images: [
                     { source: "url", url: "url" },
@@ -16079,7 +18448,7 @@ describe("JobsClient", () => {
                 input: {
                     prompt: "prompt",
                     aspect_ratio: "16:9",
-                    resolution: "360p",
+                    resolution: "540p",
                     duration_ms: 1,
                     images: [
                         {
@@ -16191,6 +18560,32 @@ describe("JobsClient", () => {
             .post("/models/wan-2-7")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitWan27({
+                input: {
+                    prompt: "prompt",
+                    resolution: "720p",
+                    duration_ms: 1,
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_wan_2_7 (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { prompt: "prompt", resolution: "720p", duration_ms: 1 } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/wan-2-7")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -16206,7 +18601,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.ForbiddenError);
     });
 
-    test("submit_wan_2_7 (5)", async () => {
+    test("submit_wan_2_7 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", resolution: "720p", duration_ms: 1 } };
@@ -16232,7 +18627,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.NotFoundError);
     });
 
-    test("submit_wan_2_7 (6)", async () => {
+    test("submit_wan_2_7 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", resolution: "720p", duration_ms: 1 } };
@@ -16258,7 +18653,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.UnprocessableEntityError);
     });
 
-    test("submit_wan_2_7 (7)", async () => {
+    test("submit_wan_2_7 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", resolution: "720p", duration_ms: 1 } };
@@ -16284,7 +18679,7 @@ describe("JobsClient", () => {
         }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
 
-    test("submit_wan_2_7 (8)", async () => {
+    test("submit_wan_2_7 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = { input: { prompt: "prompt", resolution: "720p", duration_ms: 1 } };

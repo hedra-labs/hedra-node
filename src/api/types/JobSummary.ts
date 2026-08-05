@@ -3,10 +3,13 @@
 import type * as Hedra from "../index.js";
 
 export interface JobSummary {
+    /** The job's id — server-issued, and opaque. */
     job_id: string;
+    /** The resolved model id this job ran on. */
     model: string;
     /** The quality level this job ran at; present only for models that offer quality levels. */
     quality?: (string | null) | undefined;
     status: Hedra.JobStatus;
+    /** ISO-8601 instant the job was submitted. */
     created_at: string;
 }

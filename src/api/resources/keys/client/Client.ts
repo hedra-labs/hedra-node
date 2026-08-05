@@ -206,7 +206,7 @@ export class KeysClient {
     }
 
     /**
-     * @param {string} key_id
+     * @param {string} key_id - The key's public identifier.
      * @param {Hedra.KeyRotateRequest} request
      * @param {KeysClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -298,7 +298,7 @@ export class KeysClient {
     }
 
     /**
-     * @param {string} key_id
+     * @param {string} key_id - The key's public identifier.
      * @param {Hedra.KeysRevokeRequest} request
      * @param {KeysClient.RequestOptions} requestOptions - Request-specific configuration.
      *

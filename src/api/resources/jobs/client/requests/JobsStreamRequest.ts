@@ -5,5 +5,6 @@
  *     {}
  */
 export interface JobsStreamRequest {
+    /** Resume after this event id — the standard SSE reconnect header; browsers' EventSource sends it automatically. */
     "Last-Event-Id"?: string | null;
 }

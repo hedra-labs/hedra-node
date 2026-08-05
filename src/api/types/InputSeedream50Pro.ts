@@ -4,10 +4,15 @@ import type * as Hedra from "../index.js";
 
 /**
  * Model-specific inputs for `seedream-50-pro`.
+ *
+ * Accepted field combinations (one per input mode):
+ * (1) requires: aspect_ratio, images, prompt, resolution
+ * (2) requires: aspect_ratio, prompt, resolution; must omit: images
  */
 export interface InputSeedream50Pro {
     /** Generation prompt. */
     prompt: string;
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;

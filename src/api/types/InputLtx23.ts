@@ -4,8 +4,15 @@ import type * as Hedra from "../index.js";
 
 /**
  * Model-specific inputs for `ltx-2-3`.
+ *
+ * Accepted field combinations (one per input mode):
+ * (1) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: end_image, start_image; accepts aspect_ratio: 16:9 | 9:16; duration_ms: 6000 | 8000 | 10000; quality: pro
+ * (2) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: end_image, start_image; accepts aspect_ratio: 16:9 | 9:16; quality: fast
+ * (3) requires: aspect_ratio, duration_ms, prompt, resolution, start_image; accepts duration_ms: 6000 | 8000 | 10000; quality: pro
+ * (4) requires: aspect_ratio, duration_ms, prompt, resolution, start_image; accepts quality: fast
  */
 export interface InputLtx23 {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;

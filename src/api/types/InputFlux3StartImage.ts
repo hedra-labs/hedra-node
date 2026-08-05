@@ -3,17 +3,17 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Driving audio.
+ * Start frame (image-to-video).
  */
-export type InputHedraCharacter3Audio =
+export type InputFlux3StartImage =
     /**
      * A file uploaded via POST /v3/files, referenced by the returned url. */
-    | Hedra.InputHedraCharacter3Audio.Url
+    | Hedra.InputFlux3StartImage.Url
     /**
      * An existing asset you own, referenced by its id. */
-    | Hedra.InputHedraCharacter3Audio.Asset;
+    | Hedra.InputFlux3StartImage.Asset;
 
-export namespace InputHedraCharacter3Audio {
+export namespace InputFlux3StartImage {
     export interface Url {
         source: "url";
         /** A URL returned by POST /v3/files. */
@@ -22,7 +22,7 @@ export namespace InputHedraCharacter3Audio {
 
     export interface Asset {
         source: "asset";
-        /** The asset's id (`asset_<uuid>`). A completed job's output asset carries the job's UUID: replace the `job_` prefix with `asset_`. */
+        /** The asset's id (`asset_<uuid>`), as issued by the server — a completed generation publishes one per output as `outputs[].asset_id`. Do not construct one or derive it from any other id. */
         asset_id: string;
     }
 }

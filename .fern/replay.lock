@@ -1,0 +1,16 @@
+# DO NOT EDIT MANUALLY - Managed by Fern Replay
+version: "1.0"
+generations:
+  - commit_sha: 6082e5661a504a4c7ed931fe1a7de3979d15a060
+    tree_hash: e9bf5a74a13afaf79f9b4058701754163e9fc4f9
+    timestamp: 2026-08-05T22:43:55.875Z
+    cli_version: unknown
+    generator_versions: {}
+  - commit_sha: 7f6607532c6548553c2172fdfa3ca294b473f116
+    tree_hash: e89abeb999821a54387c968d5e8b2938d74eba8c
+    timestamp: 2026-08-05T22:43:56.356Z
+    cli_version: unknown
+    generator_versions:
+      fernapi/fern-typescript-sdk: 3.73.4
+current_generation: 7f6607532c6548553c2172fdfa3ca294b473f116
+patches: []
