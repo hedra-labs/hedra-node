@@ -20,3 +20,6 @@ src/version.ts
 # Lint config is scoped to hand-maintained files (generated code is excluded);
 # Fern's default biome.json would undo that scoping.
 biome.json
+.fern/replay.lock
+.fern/replay.yml
+.gitattributes

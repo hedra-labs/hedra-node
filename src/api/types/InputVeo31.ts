@@ -6,6 +6,7 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `veo-31`.
  */
 export interface InputVeo31 {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;

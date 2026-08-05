@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Start frame (image-to-video).
+ * Start frame (image-to-video). The output video follows this image's aspect ratio.
  */
 export type InputMinimaxHailuo02StartImage =
     /**
@@ -22,7 +22,7 @@ export namespace InputMinimaxHailuo02StartImage {
 
     export interface Asset {
         source: "asset";
-        /** The asset's id (`asset_<uuid>`). A completed job's output asset carries the job's UUID: replace the `job_` prefix with `asset_`. */
+        /** The asset's id (`asset_<uuid>`), as issued by the server — a completed generation publishes one per output as `outputs[].asset_id`. Do not construct one or derive it from any other id. */
         asset_id: string;
     }
 }

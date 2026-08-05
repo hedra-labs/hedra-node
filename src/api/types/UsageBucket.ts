@@ -6,7 +6,9 @@
  * ``group_by=model``.
  */
 export interface UsageBucket {
+    /** What this bucket rolls up: `"total"`, an ISO date (`YYYY-MM-DD`, UTC), or a public model id — per `group_by`. */
     key: string;
+    /** Jobs submitted in this bucket. */
     jobs: number;
     /** Net amount spent in this bucket. */
     spent: number;

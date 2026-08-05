@@ -6,6 +6,7 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `hedra-character-3`.
  */
 export interface InputHedraCharacter3 {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;
@@ -17,8 +18,10 @@ export interface InputHedraCharacter3 {
     duration_ms?: number | undefined;
     /** Start frame (image-to-video). */
     start_image: Hedra.InputHedraCharacter3StartImage;
-    /** Driving audio. */
-    audio: Hedra.InputHedraCharacter3Audio;
+    /** Driving audio: a single reference, or a list of up to 4 references for multi-speaker generation — one audio per speaker, played in list order. */
+    audio: InputHedraCharacter3.Audio;
+    /** Speaker position(s) in the start frame, as normalized [x, y] image coordinates (0-1 from the top-left). */
+    bounding_box_target?: InputHedraCharacter3.BoundingBoxTarget | undefined;
 }
 
 export namespace InputHedraCharacter3 {
@@ -40,4 +43,12 @@ export namespace InputHedraCharacter3 {
         OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+    /**
+     * Driving audio: a single reference, or a list of up to 4 references for multi-speaker generation — one audio per speaker, played in list order.
+     */
+    export type Audio = Hedra.InputHedraCharacter3AudioZero | Hedra.InputHedraCharacter3AudioOneItem[];
+    /**
+     * Speaker position(s) in the start frame, as normalized [x, y] image coordinates (0-1 from the top-left).
+     */
+    export type BoundingBoxTarget = unknown[] | unknown[][];
 }

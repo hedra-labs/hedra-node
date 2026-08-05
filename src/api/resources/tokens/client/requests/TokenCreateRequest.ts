@@ -7,6 +7,8 @@ import type * as Hedra from "../../../../index.js";
  *     {}
  */
 export interface TokenCreateRequest {
+    /** Seconds until the token expires; omitted means the service default. */
     ttl_seconds?: number | null;
+    /** Scopes granted to the token. Omitted means every scope of the minting key; an explicit subset narrows the grant, and requesting beyond the key's scopes is a 403. */
     scopes?: Hedra.ApiKeyScope[] | null;
 }

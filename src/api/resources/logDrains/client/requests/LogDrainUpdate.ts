@@ -7,12 +7,18 @@ import type * as Hedra from "../../../../index.js";
  *     {}
  */
 export interface LogDrainUpdate {
+    /** New label; omitted means unchanged. */
     name?: string | null;
+    /** New destination; omitted means unchanged. */
     url?: string | null;
+    /** New wire format; omitted means unchanged. */
     format?: Hedra.LogDrainFormat | null;
     /** Rotates the signing secret. No conditional applies here: the drain may already hold one. Switching `format` to `ndjson` on a drain with no stored secret requires supplying one in the same request. */
     secret?: string | null;
+    /** Replaces the full header set; `{}` clears it. Omitted means unchanged. */
     headers?: Record<string, string | null> | null;
+    /** Pause (false) or resume (true) the drain; omitted means unchanged. Re-enabling clears the auto-disable failure count. */
     enabled?: boolean | null;
+    /** New maximum log lines per post; omitted means unchanged. */
     batch_size?: number | null;
 }

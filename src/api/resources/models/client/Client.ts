@@ -109,7 +109,7 @@ export class ModelsClient {
     }
 
     /**
-     * @param {string} model
+     * @param {string} model - The model's public id (`GET /v3/models`).
      * @param {Hedra.ModelsGetRequest} request
      * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -187,7 +187,7 @@ export class ModelsClient {
     }
 
     /**
-     * @param {string} model
+     * @param {string} model - The model's public id (`GET /v3/models`).
      * @param {Hedra.ModelsListModelJobsRequest} request
      * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -302,7 +302,7 @@ export class ModelsClient {
     /**
      * Voices this model accepts — scoped to the model's voice provider.
      *
-     * @param {string} model
+     * @param {string} model - The model's public id (`GET /v3/models`).
      * @param {Hedra.ModelsListVoicesRequest} request
      * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -382,7 +382,7 @@ export class ModelsClient {
     /**
      * A standalone one-operation OpenAPI spec for this model's submit call.
      *
-     * @param {string} model
+     * @param {string} model - The model's public id (`GET /v3/models`).
      * @param {Hedra.ModelsGetOpenapiRequest} request
      * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -460,7 +460,7 @@ export class ModelsClient {
     }
 
     /**
-     * @param {string} model
+     * @param {string} model - The model's public id (`GET /v3/models`).
      * @param {Hedra.EstimateRequest} request
      * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
      *

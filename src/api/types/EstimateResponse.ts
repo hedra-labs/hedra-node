@@ -4,6 +4,7 @@
  * Price of a would-be submit, in US dollars.
  */
 export interface EstimateResponse {
+    /** The resolved model id this estimate prices. */
     model: string;
     /** Price of a would-be submit. */
     cost: number;

@@ -4,8 +4,13 @@ import type * as Hedra from "../index.js";
 
 /**
  * Model-specific inputs for `happy-horse`.
+ *
+ * Accepted field combinations (one per input mode):
+ * (1) requires: aspect_ratio, duration_ms, prompt, resolution; accepts aspect_ratio: 16:9 | 9:16 | 4:3 | 3:4 | 1:1
+ * (2) requires: aspect_ratio, duration_ms, prompt, resolution, start_image
  */
 export interface InputHappyHorse {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;

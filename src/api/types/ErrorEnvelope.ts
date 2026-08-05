@@ -4,10 +4,18 @@ import type * as Hedra from "../index.js";
 
 export interface ErrorEnvelope {
     code: Hedra.ErrorCode;
+    /** Human-readable summary of the error. Fixed per condition — match on `code`, not on this text. */
     message: string;
+    /** Whether retrying the same request can succeed. Describes the condition, not a promise — pair with `retry_after` when present. */
     retryable?: boolean | undefined;
+    /** Seconds to wait before retrying; set when the error is retryable. Mirrors the `Retry-After` response header. */
     retry_after?: (number | null) | undefined;
+    /** The primary offending input field, when the error is about one specific field. */
     param?: (string | null) | undefined;
+    /** Every field-level problem, when the error is a validation failure — all of them at once, not just the first. */
     details?: (Hedra.FieldError[] | null) | undefined;
+    /** The id of a successor model, set when the requested model has been retired (code `GONE`) and replaced; null otherwise. Lets a client programmatically migrate off a retired model. */
     replaced_by?: (string | null) | undefined;
+    /** Balance, price, and where to add funds — set when the request was refused for funds (code `INSUFFICIENT_BALANCE`); null otherwise. */
+    billing?: (Hedra.BillingError | null) | undefined;
 }

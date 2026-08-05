@@ -6,12 +6,13 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `grok-imagine`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, prompt
- * (2) requires: images, prompt
+ * (1) requires: aspect_ratio, prompt; must omit: images
+ * (2) requires: images, prompt; must omit: aspect_ratio
  */
 export interface InputGrokImagine {
     /** Generation prompt. */
     prompt: string;
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;

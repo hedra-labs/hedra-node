@@ -3,12 +3,19 @@
 import type * as Hedra from "../index.js";
 
 export interface KeyRotateResponse {
+    /** The key's public identifier — unchanged by rotation. */
     key_id: string;
+    /** The new `<key_id>:<secret>` pair — a valid Bearer credential, shown exactly once, like at create. */
     credential: string;
     kind: Hedra.ApiKeyKind;
+    /** Human-readable label for the key. */
     name?: (string | null) | undefined;
+    /** Scopes granted to the key; null means full access (a legacy key predating scopes). */
     scopes?: (string[] | null) | undefined;
+    /** The workspace the key bills and acts in. */
     workspace_id?: (string | null) | undefined;
+    /** ISO-8601 instant the key stops authenticating; null means it never expires. */
     expires_at?: (string | null) | undefined;
+    /** ISO-8601 instant the previous secret stops authenticating — the end of the grace window. */
     previous_secret_expires_at?: (string | null) | undefined;
 }

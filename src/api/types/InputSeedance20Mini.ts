@@ -6,6 +6,7 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `seedance-20-mini`.
  */
 export interface InputSeedance20Mini {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;

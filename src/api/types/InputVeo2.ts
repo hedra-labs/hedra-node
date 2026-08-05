@@ -4,8 +4,13 @@ import type * as Hedra from "../index.js";
 
 /**
  * Model-specific inputs for `veo-2`.
+ *
+ * Accepted field combinations (one per input mode):
+ * (1) requires: prompt; must omit: start_image
+ * (2) requires: prompt, start_image; must omit: negative_prompt, seed
  */
 export interface InputVeo2 {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;

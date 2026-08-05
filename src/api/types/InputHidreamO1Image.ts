@@ -4,17 +4,20 @@ import type * as Hedra from "../index.js";
 
 /**
  * Model-specific inputs for `hidream-o1-image`.
+ *
+ * Accepted field combinations (one per input mode):
+ * (1) requires: aspect_ratio, images, prompt; must omit: resolution
+ * (2) requires: aspect_ratio, prompt, resolution; must omit: images
  */
 export interface InputHidreamO1Image {
     /** Generation prompt. */
     prompt: string;
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
     /** Output aspect ratio. */
     aspect_ratio: InputHidreamO1Image.AspectRatio;
-    /** Output resolution. */
-    resolution: InputHidreamO1Image.Resolution;
     /** Images to edit or blend. */
     images?: Hedra.InputHidreamO1ImageImagesItem[] | undefined;
     /** Output image format. */
@@ -25,6 +28,8 @@ export interface InputHidreamO1Image {
     guidance_scale?: number | undefined;
     /** Denoising steps to run. */
     num_inference_steps?: number | undefined;
+    /** Output resolution. */
+    resolution?: InputHidreamO1Image.Resolution | undefined;
     /** Quality level to generate at. */
     quality: InputHidreamO1Image.Quality;
 }
@@ -39,13 +44,6 @@ export namespace InputHidreamO1Image {
         One1: "1:1",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
-    /** Output resolution. */
-    export const Resolution = {
-        FiveHundredFortyP: "540p",
-        SevenHundredTwentyP: "720p",
-        OneThousandEightyP: "1080p",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Output image format. */
     export const OutputFormat = {
         Jpeg: "jpeg",
@@ -53,6 +51,13 @@ export namespace InputHidreamO1Image {
         Webp: "webp",
     } as const;
     export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
+    /** Output resolution. */
+    export const Resolution = {
+        FiveHundredFortyP: "540p",
+        SevenHundredTwentyP: "720p",
+        OneThousandEightyP: "1080p",
+    } as const;
+    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Quality level to generate at. */
     export const Quality = {
         Standard: "standard",

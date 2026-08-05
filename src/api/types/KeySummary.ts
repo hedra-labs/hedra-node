@@ -3,14 +3,22 @@
 import type * as Hedra from "../index.js";
 
 export interface KeySummary {
+    /** The key's public identifier; null only for legacy rows predating public key ids. */
     key_id: string | null;
     kind: Hedra.ApiKeyKind;
+    /** Human-readable label for the key. */
     name?: (string | null) | undefined;
+    /** Scopes granted to the key; null means full access (a legacy key predating scopes). */
     scopes?: (string[] | null) | undefined;
+    /** The workspace the key bills and acts in. */
     workspace_id?: (string | null) | undefined;
     status: Hedra.KeyStatus;
+    /** ISO-8601 instant the key was created. */
     created_at?: (string | null) | undefined;
+    /** ISO-8601 instant the key stops authenticating; null means it never expires. */
     expires_at?: (string | null) | undefined;
+    /** ISO-8601 instant the key was revoked; null unless `status` is `revoked`. */
     revoked_at?: (string | null) | undefined;
+    /** ISO-8601 instant the key last authenticated a request; null when unused. */
     last_used_at?: (string | null) | undefined;
 }

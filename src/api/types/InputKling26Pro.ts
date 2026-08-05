@@ -4,8 +4,13 @@ import type * as Hedra from "../index.js";
 
 /**
  * Model-specific inputs for `kling-26-pro`.
+ *
+ * Accepted field combinations (one per input mode):
+ * (1) requires: aspect_ratio, duration_ms, prompt; must omit: start_image
+ * (2) requires: aspect_ratio, duration_ms, prompt, start_image; must omit: cfg_scale
  */
 export interface InputKling26Pro {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;

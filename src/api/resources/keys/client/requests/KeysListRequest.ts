@@ -5,5 +5,6 @@
  *     {}
  */
 export interface KeysListRequest {
+    /** List keys of this workspace; omitted means the authenticating key's workspace. */
     workspace_id?: string | null;
 }

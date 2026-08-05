@@ -6,6 +6,7 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `kling-ai-avatar-v2`.
  */
 export interface InputKlingAiAvatarV2 {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt?: string | undefined;

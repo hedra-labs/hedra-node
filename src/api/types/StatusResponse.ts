@@ -16,10 +16,12 @@ import type * as Hedra from "../index.js";
  * inside this one (ENG-9694), and MCP progress notifications stay status-only.
  */
 export interface StatusResponse {
+    /** The job this status describes. */
     job_id: string;
     status: Hedra.JobStatus;
     /** Fraction of the job completed, from 0 to 1 (not a percentage). Null when the job has not reported progress yet. */
     progress?: (number | null) | undefined;
+    /** ISO-8601 instant this job is estimated to finish; null when no estimate exists for the model yet. Refreshed on every poll. */
     estimated_completion_at?: (string | null) | undefined;
     /** Lifecycle events newer than the `logs_after` cursor, oldest first. Present only when `logs_after` is supplied; absent from SSE status frames and MCP progress notifications. */
     logs?: (Hedra.JobLogItem[] | null) | undefined;

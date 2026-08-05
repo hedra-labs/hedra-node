@@ -9,15 +9,25 @@ import type * as Hedra from "../index.js";
  * Every key is always present. The ones a modality carries no value for
  * serialize as null — an image output reports `duration_ms: null` and
  * `fps: null`, an audio output `width: null` — so the shape is one object
- * rather than one per modality.
+ * rather than one per modality. `url` and `asset_id` go null on an expired
+ * output, which has metadata but no retrievable bytes.
  */
 export interface OutputItem {
     status?: Hedra.OutputStatus | undefined;
+    /** This output's asset id — server-issued, and opaque. Pass it as `{"source": "asset", "asset_id": ...}` in a later submit's media inputs to reuse this output as a reference. Null once the output has expired, since its bytes are no longer retrievable. */
+    asset_id?: (string | null) | undefined;
+    /** Presigned download URL for the output bytes. Null once the output has expired. */
     url?: (string | null) | undefined;
+    /** MIME type of the output bytes. */
     content_type?: (string | null) | undefined;
+    /** Width in pixels; null for an output with no frame (audio). */
     width?: (number | null) | undefined;
+    /** Height in pixels; null for an output with no frame (audio). */
     height?: (number | null) | undefined;
+    /** Duration in milliseconds; null for a still image. */
     duration_ms?: (number | null) | undefined;
+    /** The video's measured frame rate; null for a non-video output and for a video that has not been probed yet. */
     fps?: (number | null) | undefined;
+    /** Why this item failed — present on a failed item within an otherwise-completed batch. */
     error?: (Hedra.ErrorEnvelope | null) | undefined;
 }

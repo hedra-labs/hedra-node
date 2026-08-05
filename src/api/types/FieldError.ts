@@ -8,8 +8,12 @@
  * can fix it without re-fetching the model schema.
  */
 export interface FieldError {
+    /** Dotted path to the offending input (e.g. `input.resolution`). */
     field: string;
+    /** What is wrong with this field's value. */
     message: string;
+    /** Machine-readable hint for which constraint failed ("required", "enum", "type", …). */
     reason?: (string | null) | undefined;
+    /** The accepted values, when the field is an enum — so the request can be fixed without re-fetching the model schema. */
     allowed?: (string[] | null) | undefined;
 }

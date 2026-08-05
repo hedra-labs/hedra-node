@@ -604,7 +604,7 @@ export class WebhooksClient {
      * our guidance says (dedupe on the id) would silently discard the replay, which is
      * the one case where the duplicate is the point.
      *
-     * @param {string} job_id
+     * @param {string} job_id - The job's id (`job_<uuid>`).
      * @param {Hedra.WebhooksRedeliverRequest} request
      * @param {WebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *

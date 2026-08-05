@@ -90,7 +90,7 @@ await client.jobs.get("job_id");
 <dl>
 <dd>
 
-**job_id:** `string` 
+**job_id:** `string` — The job's id (`job_<uuid>`).
     
 </dd>
 </dl>
@@ -147,7 +147,7 @@ await client.jobs.getStatus("job_id");
 <dl>
 <dd>
 
-**job_id:** `string` 
+**job_id:** `string` — The job's id (`job_<uuid>`).
     
 </dd>
 </dl>
@@ -216,7 +216,7 @@ const response = page.response;
 <dl>
 <dd>
 
-**job_id:** `string` 
+**job_id:** `string` — The job's id (`job_<uuid>`).
     
 </dd>
 </dl>
@@ -244,7 +244,7 @@ const response = page.response;
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">stream</a>(job_id, { ...params }) -> unknown</code></summary>
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">stream</a>(job_id, { ...params }) -> core.Stream&lt;unknown&gt;</code></summary>
 <dl>
 <dd>
 
@@ -257,7 +257,10 @@ const response = page.response;
 <dd>
 
 ```typescript
-await client.jobs.stream("job_id");
+const response = await client.jobs.stream("job_id");
+for await (const item of response) {
+    console.log(item);
+}
 
 ```
 </dd>
@@ -273,7 +276,7 @@ await client.jobs.stream("job_id");
 <dl>
 <dd>
 
-**job_id:** `string` 
+**job_id:** `string` — The job's id (`job_<uuid>`).
     
 </dd>
 </dl>
@@ -768,6 +771,78 @@ await client.jobs.submitFlux11Ultra({
 <dd>
 
 **request:** `Hedra.SubmitBodyFlux11Ultra` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux3</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Black Forest Labs FLUX.3 text-to-video with native audio.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitFlux3({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "auto",
+        resolution: "720p",
+        duration_ms: 1
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyFlux3` 
     
 </dd>
 </dl>
@@ -1892,7 +1967,6 @@ await client.jobs.submitHidreamO1Image({
     input: {
         prompt: "prompt",
         aspect_ratio: "16:9",
-        resolution: "540p",
         quality: "standard"
     }
 });
@@ -2013,7 +2087,7 @@ await client.jobs.submitIdeogramV2({
 <dl>
 <dd>
 
-Ideogram V4 at its middle render setting; poster-ready text and layout at everyday cost.
+Ideogram V4 renders poster-ready text and layout; the required quality parameter picks turbo, balanced or quality, which sets both the render effort and the price.
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -2984,6 +3058,77 @@ await client.jobs.submitMaiImage25({
 <dd>
 
 **request:** `Hedra.SubmitBodyMaiImage25` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitMinimaxH3</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+MiniMax H3 video generation from text, frames, or references.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitMinimaxH3({
+    input: {
+        prompt: "prompt",
+        resolution: "768p",
+        duration_ms: 1
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyMinimaxH3` 
     
 </dd>
 </dl>
@@ -4955,7 +5100,7 @@ await client.jobs.submitVeo31({
 <dl>
 <dd>
 
-Vidu Q3 text-to-video with native dialogue and sound, up to 16 seconds
+Vidu Q3 video with native dialogue and sound, up to 16 seconds — from a text prompt, from a start frame, or between a start and end frame
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -4975,7 +5120,7 @@ Submits an asynchronous job and returns `202` with a job id. Fetch the result at
 await client.jobs.submitViduQ3({
     input: {
         prompt: "prompt",
-        resolution: "360p",
+        resolution: "540p",
         duration_ms: 1,
         quality: "standard"
     }
@@ -5048,7 +5193,7 @@ await client.jobs.submitViduQ3Reference({
     input: {
         prompt: "prompt",
         aspect_ratio: "16:9",
-        resolution: "360p",
+        resolution: "540p",
         duration_ms: 1,
         images: [{
                 source: "url",
@@ -5103,7 +5248,7 @@ await client.jobs.submitViduQ3Reference({
 <dl>
 <dd>
 
-Wan 2.7 text-to-video with native audio and up to 15-second generations
+Wan 2.7 video with native audio — from a text prompt, from a first frame with an optional last frame, or from reference images that keep subjects consistent
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -5241,7 +5386,7 @@ await client.models.get("model");
 <dl>
 <dd>
 
-**model:** `string` 
+**model:** `string` — The model's public id (`GET /v3/models`).
     
 </dd>
 </dl>
@@ -5310,7 +5455,7 @@ const response = page.response;
 <dl>
 <dd>
 
-**model:** `string` 
+**model:** `string` — The model's public id (`GET /v3/models`).
     
 </dd>
 </dl>
@@ -5381,7 +5526,7 @@ await client.models.listVoices("model");
 <dl>
 <dd>
 
-**model:** `string` 
+**model:** `string` — The model's public id (`GET /v3/models`).
     
 </dd>
 </dl>
@@ -5452,7 +5597,7 @@ await client.models.getOpenapi("model");
 <dl>
 <dd>
 
-**model:** `string` 
+**model:** `string` — The model's public id (`GET /v3/models`).
     
 </dd>
 </dl>
@@ -5509,7 +5654,7 @@ await client.models.estimate("model");
 <dl>
 <dd>
 
-**model:** `string` 
+**model:** `string` — The model's public id (`GET /v3/models`).
     
 </dd>
 </dl>
@@ -5665,7 +5810,7 @@ await client.keys.rotate("key_id");
 <dl>
 <dd>
 
-**key_id:** `string` 
+**key_id:** `string` — The key's public identifier.
     
 </dd>
 </dl>
@@ -5722,7 +5867,7 @@ await client.keys.revoke("key_id");
 <dl>
 <dd>
 
-**key_id:** `string` 
+**key_id:** `string` — The key's public identifier.
     
 </dd>
 </dl>
@@ -5804,6 +5949,24 @@ await client.tokens.create();
 <details><summary><code>client.files.<a href="/src/api/resources/files/client/Client.ts">upload</a>({ ...params }) -> Hedra.FileUploadResponse</code></summary>
 <dl>
 <dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Store a file and return a short-lived URL to pass in a model's `input`.
+
+Free, and available on an empty API wallet — funding is enforced when you
+submit a generation, not when you upload its inputs. `GET /v3/balance`
+reports what the wallet holds.
+</dd>
+</dl>
+</dd>
+</dl>
 
 #### 🔌 Usage
 
@@ -6274,7 +6437,7 @@ await client.webhooks.redeliver("job_id");
 <dl>
 <dd>
 
-**job_id:** `string` 
+**job_id:** `string` — The job's id (`job_<uuid>`).
     
 </dd>
 </dl>
@@ -6425,7 +6588,7 @@ await client.logDrains.getLogDrain("drain_id");
 <dl>
 <dd>
 
-**drain_id:** `string` 
+**drain_id:** `string` — The drain's id (`drain_<uuid>`).
     
 </dd>
 </dl>
@@ -6482,7 +6645,7 @@ await client.logDrains.deleteLogDrain("drain_id");
 <dl>
 <dd>
 
-**drain_id:** `string` 
+**drain_id:** `string` — The drain's id (`drain_<uuid>`).
     
 </dd>
 </dl>
@@ -6539,7 +6702,7 @@ await client.logDrains.updateLogDrain("drain_id");
 <dl>
 <dd>
 
-**drain_id:** `string` 
+**drain_id:** `string` — The drain's id (`drain_<uuid>`).
     
 </dd>
 </dl>
@@ -6596,7 +6759,7 @@ await client.logDrains.testLogDrain("drain_id");
 <dl>
 <dd>
 
-**drain_id:** `string` 
+**drain_id:** `string` — The drain's id (`drain_<uuid>`).
     
 </dd>
 </dl>

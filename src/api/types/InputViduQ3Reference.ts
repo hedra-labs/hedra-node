@@ -6,6 +6,7 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `vidu-q3-reference`.
  */
 export interface InputViduQ3Reference {
+    /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;
@@ -33,7 +34,6 @@ export namespace InputViduQ3Reference {
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Output resolution. */
     export const Resolution = {
-        ThreeHundredSixtyP: "360p",
         FiveHundredFortyP: "540p",
         SevenHundredTwentyP: "720p",
         OneThousandEightyP: "1080p",

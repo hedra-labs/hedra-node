@@ -3,9 +3,13 @@
 import type * as Hedra from "../index.js";
 
 export interface ModelSummary {
+    /** The model's public id — the value POST /v3/models/{model} takes. */
     id: string;
     modality: Hedra.Modality;
+    /** Human-readable name. */
     name?: (string | null) | undefined;
+    /** One-line summary of what the model does. */
     description?: (string | null) | undefined;
+    /** URL of the provider's logo. */
     logo_url?: (string | null) | undefined;
 }

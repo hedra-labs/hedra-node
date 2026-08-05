@@ -8,11 +8,15 @@ import type * as Hedra from "../index.js";
  * replayed, so `status` is always terminal (`DELIVERED` / `FAILED`).
  */
 export interface WebhookRedelivery {
+    /** ISO-8601 instant the redelivery was requested. */
     requested_at: string;
     status: Hedra.WebhookDeliveryStatus;
+    /** Cumulative attempt count as it stood when this replay was requested. */
     attempts: number;
+    /** HTTP status of the superseded cycle's last attempt; null when it never got a response. */
     last_response_status?: (number | null) | undefined;
     /** Why the most recent delivery attempt failed, in the same error envelope `GET /jobs/{job_id}` returns for a failed job: a stable `code` from the shared error vocabulary, a fixed operator-facing `message`, and `retryable`. Null while no attempt has failed. Destination URLs, addresses, headers, credentials, response bodies, and internal exception text are never included — those stay in Hedra's own logs. `retryable` describes the condition, not what Hedra did: every non-2xx response is retried on the published ladder, so it answers whether replaying this delivery is likely to help. Deliveries that failed before this field became structured report `UNKNOWN`. */
     last_error?: (Hedra.ErrorEnvelope | null) | undefined;
+    /** ISO-8601 instant of the superseded cycle's last attempt. */
     last_attempt_at?: (string | null) | undefined;
 }

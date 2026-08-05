@@ -3,19 +3,30 @@
 import type * as Hedra from "../index.js";
 
 export interface WebhookDeliverySummary {
+    /** The job whose terminal event this delivers. */
     job_id: string;
+    /** Whether GET /v3/jobs/{job_id} works for the caller — false when the job belongs to a different owner than the authenticating key. */
     job_accessible: boolean;
+    /** The resolved model id the job ran on. */
     model: string;
+    /** The terminal event this delivery announces; null until the delivery fires — a row registered at submit has no outcome to announce while its job is still running. */
     event_type?: (Hedra.WebhookEventType | null) | undefined;
     status: Hedra.WebhookDeliveryStatus;
     source: Hedra.WebhookDeliverySource;
+    /** Delivery attempts so far, cumulative across replays. */
     attempts: number;
+    /** How many operator replays this delivery has had; 0 means every attempt was automatic. */
     redelivery_count?: number | undefined;
+    /** One entry per operator replay, oldest first — each holds the delivery's fields as they stood when the replay was requested. Replays recorded before this history existed appear only in `redelivery_count`, so the list can be shorter. */
     redeliveries?: Hedra.WebhookRedelivery[] | undefined;
+    /** HTTP status of the most recent attempt; null when it never got a response. */
     last_response_status?: (number | null) | undefined;
     /** Why the most recent delivery attempt failed, in the same error envelope `GET /jobs/{job_id}` returns for a failed job: a stable `code` from the shared error vocabulary, a fixed operator-facing `message`, and `retryable`. Null while no attempt has failed. Destination URLs, addresses, headers, credentials, response bodies, and internal exception text are never included — those stay in Hedra's own logs. `retryable` describes the condition, not what Hedra did: every non-2xx response is retried on the published ladder, so it answers whether replaying this delivery is likely to help. Deliveries that failed before this field became structured report `UNKNOWN`. */
     last_error?: (Hedra.ErrorEnvelope | null) | undefined;
+    /** The destination endpoint. */
     webhook_url: string;
+    /** ISO-8601 instant the delivery was registered. */
     created_at: string;
+    /** ISO-8601 instant of the most recent attempt; null before the first one. */
     last_attempt_at?: (string | null) | undefined;
 }

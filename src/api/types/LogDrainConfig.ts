@@ -3,21 +3,35 @@
 import type * as Hedra from "../index.js";
 
 export interface LogDrainConfig {
+    /** The drain's id (`drain_<uuid>`). */
     id: string;
+    /** Human-readable label. */
     name: string;
+    /** The destination endpoint. */
     url: string;
     format: Hedra.LogDrainFormat;
+    /** Names of the configured extra headers. Values are write-only and never echoed back. */
     header_names?: string[] | undefined;
+    /** Whether the drain receives batches. */
     enabled: boolean;
+    /** Maximum log lines per post. */
     batch_size: number;
+    /** Failed batches since the last success; the drain auto-disables when it crosses the failure threshold. */
     consecutive_failures: number;
+    /** ISO-8601 instant of the last delivered batch. */
     last_success_at?: (string | null) | undefined;
+    /** ISO-8601 instant of the last failed batch. */
     last_failure_at?: (string | null) | undefined;
+    /** HTTP status of the last failed batch; null when it never got a response. */
     last_failure_status?: (number | null) | undefined;
     /** Why the most recent batch delivery failed, in the same error envelope `GET /jobs/{job_id}` returns for a failed job: a stable `code` from the shared error vocabulary, a fixed operator-facing `message`, and `retryable`. Null while no batch has failed, and cleared on the next success. Destination URLs, headers, credentials, response bodies, and internal exception text are never included. Nor is your drain URL written to Hedra's own logs, since it may carry authentication in its query string. `retryable` describes the condition, not what Hedra did: every failed batch is requeued until the drain auto-disables, so it answers whether fixing the destination and re-enabling is likely to help. Drains that last failed before this field became structured report `UNKNOWN`. */
     last_error?: (Hedra.ErrorEnvelope | null) | undefined;
+    /** Why the drain is off (`consecutive_failures` for auto-disable, `disabled_by_user`); null while enabled. */
     disabled_reason?: (string | null) | undefined;
+    /** ISO-8601 instant the drain was created. */
     created_at: string;
+    /** ISO-8601 instant the config last changed. */
     updated_at: string;
+    /** The API key that last changed the config. */
     updated_by_key_id?: (string | null) | undefined;
 }

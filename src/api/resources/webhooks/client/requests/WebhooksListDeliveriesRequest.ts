@@ -5,6 +5,8 @@
  *     {}
  */
 export interface WebhooksListDeliveriesRequest {
+    /** Maximum items per page. */
     limit?: number;
+    /** Opaque cursor from the previous page's `next_cursor`; omit for the first page. */
     cursor?: string | null;
 }

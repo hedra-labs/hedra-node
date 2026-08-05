@@ -7,9 +7,14 @@ import type * as Hedra from "../../../../index.js";
  *     {}
  */
 export interface KeyCreateRequest {
+    /** Human-readable label for the key. */
     name?: string | null;
+    /** Scopes granted to the key; omitted means full access. */
     scopes?: Hedra.ApiKeyScope[] | null;
+    /** `personal` (default) dies with the member; `service` is workspace-shared, OWNER/ADMIN-managed, and survives member removal. */
     kind?: Hedra.ApiKeyKind;
+    /** Target workspace; omitted means the authenticating key's workspace. */
     workspace_id?: string | null;
+    /** ISO-8601 instant the key stops authenticating; omitted means it never expires. */
     expires_at?: string | null;
 }

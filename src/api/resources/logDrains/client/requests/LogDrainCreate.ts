@@ -10,12 +10,17 @@ import type * as Hedra from "../../../../index.js";
  *     }
  */
 export interface LogDrainCreate {
+    /** Human-readable label. */
     name: string;
+    /** HTTPS endpoint job-log batches are posted to. */
     url: string;
     format?: Hedra.LogDrainFormat;
     /** Signs every NDJSON post. Required when `format` is `ndjson` (the default); optional for `otlp` drains, whose receivers authenticate with `headers` instead. */
     secret?: string | null;
+    /** Extra headers sent with every post — typically the receiver's authentication. Stored values are never echoed back; reads expose `header_names` only. */
     headers?: Record<string, string | null> | null;
+    /** Whether the drain receives batches. */
     enabled?: boolean;
+    /** Maximum log lines per post. */
     batch_size?: number;
 }
