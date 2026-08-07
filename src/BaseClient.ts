@@ -15,6 +15,8 @@ export type BaseClientOptions = {
     environment?: core.Supplier<environments.HedraEnvironment | string>;
     /** Specify a custom URL to connect the client to. */
     baseUrl?: core.Supplier<string>;
+    /** Override the X-Hedra-Spec-Version header */
+    specVersion?: "3.0.0";
     /** Additional headers to include in requests. */
     headers?: Record<string, string | core.Supplier<string | null | undefined> | null | undefined>;
     /** The default maximum time to wait for a response in seconds. */
@@ -25,6 +27,8 @@ export type BaseClientOptions = {
     fetch?: typeof fetch;
     /** Configure logging for the client. */
     logging?: core.logging.LogConfig | core.logging.Logger;
+    /** Default options for SSE stream reconnection behavior. Has no effect on non-resumable endpoints. */
+    stream?: { reconnectionEnabled?: boolean; maxReconnectionAttempts?: number };
     /** Override auth. Pass false to disable, a function returning auth headers, an AuthProvider, or auth options. */
     auth?: AuthOption;
 } & BearerAuthProvider.AuthOptions;
@@ -36,10 +40,16 @@ export interface BaseRequestOptions {
     maxRetries?: number;
     /** A hook to abort the request. */
     abortSignal?: AbortSignal;
+    /** Override the X-Hedra-Spec-Version header */
+    specVersion?: "3.0.0";
     /** Additional query string parameters to include in the request. */
     queryParams?: Record<string, unknown>;
+    /** A dictionary containing additional parameters to spread into the request's body. */
+    additionalBodyParameters?: Record<string, unknown>;
     /** Additional headers to include in the request. */
     headers?: Record<string, string | core.Supplier<string | null | undefined> | null | undefined>;
+    /** Options for SSE stream reconnection behavior. Has no effect on non-resumable endpoints. */
+    stream?: { reconnectionEnabled?: boolean; maxReconnectionAttempts?: number };
 }
 
 export type NormalizedClientOptions<T extends BaseClientOptions = BaseClientOptions> = T & {
@@ -63,6 +73,7 @@ export function normalizeClientOptions<T extends BaseClientOptions = BaseClientO
             "User-Agent": "/0.1.3",
             "X-Fern-Runtime": core.RUNTIME.type,
             "X-Fern-Runtime-Version": core.RUNTIME.version,
+            "X-Hedra-Spec-Version": options?.specVersion ?? "3.0.0",
         },
         options?.headers,
     );
