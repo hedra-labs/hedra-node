@@ -46,17 +46,35 @@ import { HedraClient } from "hedra-node";
 
 const client = new HedraClient({ apiKey: "YOUR_API_KEY" });
 
-const submitted = await client.queue.submit("kling-o3-pro", {
+const submitted = await client.jobs.submit("kling-o3", {
     input: {
         prompt: "a fox sprinting across fresh snow",
         aspect_ratio: "16:9",
+        duration_ms: 5000,
+        quality: "standard",
     },
 });
 
-// Poll until terminal, then fetch the result envelope (outputs, metrics)
-const status = await client.requests.getStatus(submitted.request_id);
-const result = await client.requests.get(submitted.request_id);
+// Poll until the job reaches a terminal state, then fetch the result envelope.
+let status = await client.jobs.getStatus(submitted.job_id);
+while (status.status === "IN_QUEUE" || status.status === "IN_PROGRESS") {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    status = await client.jobs.getStatus(submitted.job_id);
+}
+
+const result = await client.jobs.get(submitted.job_id);
+console.log(result.outputs?.[0]?.url);
 ```
+
+`submit` takes any model id published by `GET /v3/models`, so a model this SDK predates
+still works. Its `input` is model-specific and validated server-side against that model's
+published schema (`GET /v3/models/{model}`) — the example above is `kling-o3`'s
+text-to-video mode. Each model also has a typed helper that checks `input` at compile
+time, e.g. `client.jobs.submitKlingO3({ input: { ... } })` — see the
+[reference](./reference.md).
+
+Instead of polling you can consume the job's server-sent event stream with
+`client.jobs.stream(job_id)`.
 
 The client authenticates with `Authorization: Bearer <api key>`; an API key is the
 `<key_id>:<secret>` credential from the Hedra console. When `apiKey` is not passed,
@@ -83,20 +101,20 @@ following namespace:
 ```typescript
 import { Hedra } from "hedra-node";
 
-const request: Hedra.SubmitRequest = {
+const request: Hedra.SubmitBody = {
     ...
 };
 ```
 
 ## Pagination
 
-`client.requests.list(...)` returns a `Page` that can be iterated asynchronously; it
+`client.jobs.list(...)` returns a `Page` that can be iterated asynchronously; it
 fetches cursor pages lazily as you iterate:
 
 ```typescript
-const page = await client.requests.list({ limit: 50 });
-for await (const request of page) {
-    console.log(request.request_id, request.status);
+const page = await client.jobs.list({ limit: 50 });
+for await (const job of page) {
+    console.log(job.job_id, job.status);
 }
 ```
 
@@ -109,7 +127,7 @@ will be thrown.
 import { HedraError } from "hedra-node";
 
 try {
-    await client.queue.submit(...);
+    await client.jobs.submit(...);
 } catch (err) {
     if (err instanceof HedraError) {
         console.log(err.statusCode);
@@ -180,7 +198,7 @@ const client = new HedraClient({
     }
 });
 
-const response = await client.queue.submit(..., {
+const response = await client.jobs.submit(..., {
     headers: {
         'X-Custom-Header': 'custom value'
     }
@@ -192,7 +210,7 @@ const response = await client.queue.submit(..., {
 If you would like to send additional query string parameters as part of the request, use the `queryParams` request option.
 
 ```typescript
-const response = await client.queue.submit(..., {
+const response = await client.jobs.submit(..., {
     queryParams: {
         'customQueryParamKey': 'custom query param value'
     }
@@ -222,7 +240,7 @@ Which status codes are retried depends on the `retryStatusCodes` generator confi
 Use the `maxRetries` request option to configure this behavior.
 
 ```typescript
-const response = await client.queue.submit(..., {
+const response = await client.jobs.submit(..., {
     maxRetries: 0 // override maxRetries at the request level
 });
 ```
@@ -232,7 +250,7 @@ const response = await client.queue.submit(..., {
 The SDK defaults to a 60 second timeout. Use the `timeoutInSeconds` option to configure this behavior.
 
 ```typescript
-const response = await client.queue.submit(..., {
+const response = await client.jobs.submit(..., {
     timeoutInSeconds: 30 // override timeout to 30s
 });
 ```
@@ -243,7 +261,7 @@ The SDK allows users to abort requests at any point by passing in an abort signa
 
 ```typescript
 const controller = new AbortController();
-const response = await client.queue.submit(..., {
+const response = await client.jobs.submit(..., {
     abortSignal: controller.signal
 });
 controller.abort(); // aborts the request
@@ -255,7 +273,7 @@ The SDK provides access to raw response data, including headers, through the `.w
 The `.withRawResponse()` method returns a promise that results to an object with a `data` and a `rawResponse` property.
 
 ```typescript
-const { data, rawResponse } = await client.queue.submit(...).withRawResponse();
+const { data, rawResponse } = await client.jobs.submit(...).withRawResponse();
 
 console.log(data);
 console.log(rawResponse.headers['X-My-Header']);
@@ -326,12 +344,29 @@ const logger: logging.ILogger = {
 
 ### Custom Fetch
 
-The SDK provides a low-level `fetch` method for making custom HTTP requests while still
-benefiting from SDK-level configuration like authentication, retries, timeouts, and logging.
-This is useful for calling API endpoints not yet supported in the SDK.
+**To run a model this SDK predates, you do not need this** — use
+`client.jobs.submit(model, { input })`, which accepts any model id published by
+`GET /v3/models`. See [Usage](#usage).
+
+`client.fetch` is the remaining escape hatch, for an endpoint the SDK's vendored API spec
+has not synced yet. It is a low-level `fetch` that still gets SDK-level configuration:
+authentication, retries, timeouts, and logging.
+
+Construct the client with an explicit `environment` (or `baseUrl`) when you use it. Unlike
+the resource clients, `client.fetch` does not fall back to the default production URL, and
+that has two consequences: a relative path throws `TypeError: Failed to parse URL`, and an
+absolute URL is judged cross-origin and silently sent **without** the `Authorization`
+header.
 
 ```typescript
-const response = await client.fetch("/v1/custom/endpoint", {
+import { HedraClient, HedraEnvironment } from "hedra-node";
+
+const client = new HedraClient({
+    apiKey: "YOUR_API_KEY",
+    environment: HedraEnvironment.Production,
+});
+
+const response = await client.fetch("/some/unsynced/endpoint", {
     method: "GET",
 }, {
     timeoutInSeconds: 30,
@@ -343,6 +378,9 @@ const response = await client.fetch("/v1/custom/endpoint", {
 
 const data = await response.json();
 ```
+
+Auth headers are attached only when the resolved URL is same-origin with the configured
+base URL, so credentials are never leaked to an unrelated host you pass in by hand.
 
 ### Runtime Compatibility
 
