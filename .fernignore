@@ -14,6 +14,14 @@ CHANGELOG.md
 # SDK version constant (bumped by hand at release time)
 src/version.ts
 
+# Dependency lockfile. Fern regenerates it on every SDK regeneration, which
+# silently reverts anything committed here — it already ate a merged fast-uri
+# security bump once (1dfc681, reverted by 11519b2). Hand-owned instead, like
+# poetry.lock in hedra-python and Cargo.lock in hedra-cli. Trade-off: if Fern
+# ever changes a dependency, `pnpm install --frozen-lockfile` fails loudly in
+# CI and publish-npm rather than silently dropping the fix.
+pnpm-lock.yaml
+
 # CI + publishing are hand-maintained (Fern doesn't manage workflows here)
 .github/
 
