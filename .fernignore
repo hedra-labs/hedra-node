@@ -11,8 +11,17 @@ README.md
 LICENSE
 CHANGELOG.md
 
-# SDK version constant (bumped by hand at release time)
-src/version.ts
+# NOTE: src/version.ts is deliberately NOT listed. Fern generates it from
+# `fern generate --version X`, so the runtime constant and the version
+# publish-npm.yml derives from the release tag come from the same number
+# instead of being hand-bumped.
+#
+# This ONLY holds once fern-config runs a release-mode generate that passes an
+# explicit --version. Until then `generate-sdks.yml` runs `fern generate --group
+# <g>` with no version, and Fern writes its own auto-computed sdkVersion --
+# which is 0.1.3 today and is not monotonic. That is what commit 8d4b8e0 did on
+# 2026-07-08: it rewrote SDK_VERSION 0.3.0 -> 0.1.3, and 6b1a566 added the
+# ignore entry back 17 minutes later. Do not re-remove it before fern-config#19.
 
 # Dependency lockfile. Fern regenerates it on every SDK regeneration, which
 # silently reverts anything committed here — it already ate a merged fast-uri
