@@ -1,10 +1,21 @@
 name: publish-npm
 # Builds the hedra-node package from the committed SDK and publishes to npm.
 # Triggered when a GitHub Release is published. Requires the HEDRA_NPM_TOKEN secret.
+#
+# The published version is derived from the release tag, NOT from package.json.
+# package.json is .fernignore'd and hand-maintained, so its version drifts from
+# what is actually being released -- before this, a release at v1.0.0 would have
+# tagged v1.0.0 and then published package.json's stale number to npm. See
+# ENG-10111.
 on:
   release:
     types: [published]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish, e.g. 1.0.0 (required: a manual run has no release tag to derive it from)"
+        required: true
+        type: string
 
 jobs:
   publish:
@@ -12,6 +23,29 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
+
+      # Resolves from the release tag on a `release` run, or from the input on a
+      # manual one. Fails loudly rather than falling back to package.json, so a
+      # misconfigured run cannot quietly publish the wrong number.
+      - name: Resolve version to publish
+        id: resolve
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          raw="${RELEASE_TAG:-${INPUT_VERSION:-}}"
+          if [ -z "$raw" ]; then
+            echo "::error::No version to publish. A release run takes it from the release tag; a manual run requires the 'version' input."
+            exit 1
+          fi
+          version="${raw#v}"
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'; then
+            echo "::error::Resolved version '$version' (from '$raw') is not valid semver; refusing to publish."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Publishing version $version (from '$raw')."
 
       - name: Set up node
         uses: actions/setup-node@v6
@@ -23,6 +57,29 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # No commit: the working copy is discarded when the job ends. --allow-same-version
+      # keeps this a no-op rather than an error when package.json already matches the tag.
+      - name: Write the resolved version into package.json
+        env:
+          VERSION: ${{ steps.resolve.outputs.version }}
+        run: npm version --no-git-tag-version --allow-same-version "$VERSION"
+
+      # src/version.ts is .fernignore'd, so it is hand-maintained and will drift from the
+      # released version unless someone bumps it. This is the only thing that surfaces that
+      # drift. Warn rather than fail on purpose: it is currently 0.3.0, so a hard failure
+      # would block the very first tag-derived release instead of reporting the problem.
+      - name: Check the runtime SDK_VERSION matches
+        env:
+          VERSION: ${{ steps.resolve.outputs.version }}
+        run: |
+          set -euo pipefail
+          sdk_version="$(grep -oE 'SDK_VERSION *= *"[^"]*"' src/version.ts | grep -oE '"[^"]*"' | tr -d '"')"
+          if [ "$sdk_version" != "$VERSION" ]; then
+            echo "::warning::src/version.ts reports SDK_VERSION=$sdk_version but publishing $VERSION. Bump src/version.ts to $VERSION (it is .fernignore'd, so it is hand-maintained today)."
+          else
+            echo "SDK_VERSION matches the published version ($VERSION)."
+          fi
 
       - name: Build
         run: pnpm build
