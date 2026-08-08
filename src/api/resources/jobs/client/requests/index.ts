@@ -3,6 +3,7 @@ export type { JobsGetStatusRequest } from "./JobsGetStatusRequest.js";
 export type { JobsListJobLogsRequest } from "./JobsListJobLogsRequest.js";
 export type { JobsListRequest } from "./JobsListRequest.js";
 export type { JobsStreamRequest } from "./JobsStreamRequest.js";
+export type { SubmitBody } from "./SubmitBody.js";
 export type { SubmitBodyDreamina31 } from "./SubmitBodyDreamina31.js";
 export type { SubmitBodyElevenlabsFlashMultilingualV2 } from "./SubmitBodyElevenlabsFlashMultilingualV2.js";
 export type { SubmitBodyElevenlabsFlashV2 } from "./SubmitBodyElevenlabsFlashV2.js";
