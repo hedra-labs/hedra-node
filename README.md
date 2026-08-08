@@ -46,17 +46,32 @@ import { HedraClient } from "hedra-node";
 
 const client = new HedraClient({ apiKey: "YOUR_API_KEY" });
 
-const submitted = await client.queue.submit("kling-o3-pro", {
+const submitted = await client.jobs.submitKlingO3({
     input: {
         prompt: "a fox sprinting across fresh snow",
         aspect_ratio: "16:9",
+        duration_ms: 5000,
+        quality: "standard",
     },
 });
 
-// Poll until terminal, then fetch the result envelope (outputs, metrics)
-const status = await client.requests.getStatus(submitted.request_id);
-const result = await client.requests.get(submitted.request_id);
+// Poll until the job reaches a terminal state, then fetch the result envelope.
+let status = await client.jobs.getStatus(submitted.job_id);
+while (status.status === "IN_QUEUE" || status.status === "IN_PROGRESS") {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    status = await client.jobs.getStatus(submitted.job_id);
+}
+
+const result = await client.jobs.get(submitted.job_id);
+console.log(result.outputs?.[0]?.url);
 ```
+
+Every model has its own submit method — `submitKlingO3`, `submitVeo3`, `submitNanoBanana`
+and so on — each taking the `input` that model actually accepts, checked at compile time.
+The [reference](./reference.md) lists all of them.
+
+Instead of polling you can consume the job's server-sent event stream with
+`client.jobs.stream(job_id)`.
 
 The client authenticates with `Authorization: Bearer <api key>`; an API key is the
 `<key_id>:<secret>` credential from the Hedra console. When `apiKey` is not passed,
@@ -83,20 +98,20 @@ following namespace:
 ```typescript
 import { Hedra } from "hedra-node";
 
-const request: Hedra.SubmitRequest = {
+const request: Hedra.SubmitBodyKlingO3 = {
     ...
 };
 ```
 
 ## Pagination
 
-`client.requests.list(...)` returns a `Page` that can be iterated asynchronously; it
+`client.jobs.list(...)` returns a `Page` that can be iterated asynchronously; it
 fetches cursor pages lazily as you iterate:
 
 ```typescript
-const page = await client.requests.list({ limit: 50 });
-for await (const request of page) {
-    console.log(request.request_id, request.status);
+const page = await client.jobs.list({ limit: 50 });
+for await (const job of page) {
+    console.log(job.job_id, job.status);
 }
 ```
 
@@ -109,7 +124,7 @@ will be thrown.
 import { HedraError } from "hedra-node";
 
 try {
-    await client.queue.submit(...);
+    await client.jobs.submitKlingO3(...);
 } catch (err) {
     if (err instanceof HedraError) {
         console.log(err.statusCode);
@@ -180,7 +195,7 @@ const client = new HedraClient({
     }
 });
 
-const response = await client.queue.submit(..., {
+const response = await client.jobs.submitKlingO3(..., {
     headers: {
         'X-Custom-Header': 'custom value'
     }
@@ -192,7 +207,7 @@ const response = await client.queue.submit(..., {
 If you would like to send additional query string parameters as part of the request, use the `queryParams` request option.
 
 ```typescript
-const response = await client.queue.submit(..., {
+const response = await client.jobs.submitKlingO3(..., {
     queryParams: {
         'customQueryParamKey': 'custom query param value'
     }
@@ -222,7 +237,7 @@ Which status codes are retried depends on the `retryStatusCodes` generator confi
 Use the `maxRetries` request option to configure this behavior.
 
 ```typescript
-const response = await client.queue.submit(..., {
+const response = await client.jobs.submitKlingO3(..., {
     maxRetries: 0 // override maxRetries at the request level
 });
 ```
@@ -232,7 +247,7 @@ const response = await client.queue.submit(..., {
 The SDK defaults to a 60 second timeout. Use the `timeoutInSeconds` option to configure this behavior.
 
 ```typescript
-const response = await client.queue.submit(..., {
+const response = await client.jobs.submitKlingO3(..., {
     timeoutInSeconds: 30 // override timeout to 30s
 });
 ```
@@ -243,7 +258,7 @@ The SDK allows users to abort requests at any point by passing in an abort signa
 
 ```typescript
 const controller = new AbortController();
-const response = await client.queue.submit(..., {
+const response = await client.jobs.submitKlingO3(..., {
     abortSignal: controller.signal
 });
 controller.abort(); // aborts the request
@@ -255,7 +270,7 @@ The SDK provides access to raw response data, including headers, through the `.w
 The `.withRawResponse()` method returns a promise that results to an object with a `data` and a `rawResponse` property.
 
 ```typescript
-const { data, rawResponse } = await client.queue.submit(...).withRawResponse();
+const { data, rawResponse } = await client.jobs.submitKlingO3(...).withRawResponse();
 
 console.log(data);
 console.log(rawResponse.headers['X-My-Header']);
@@ -330,8 +345,20 @@ The SDK provides a low-level `fetch` method for making custom HTTP requests whil
 benefiting from SDK-level configuration like authentication, retries, timeouts, and logging.
 This is useful for calling API endpoints not yet supported in the SDK.
 
+Construct the client with an explicit `environment` (or `baseUrl`) when you use it. Unlike
+the resource clients, `client.fetch` does not fall back to the default production URL, so on
+a default-constructed client a relative path reaches `fetch()` unresolved and throws
+`TypeError: Failed to parse URL`.
+
 ```typescript
-const response = await client.fetch("/v1/custom/endpoint", {
+import { HedraClient, HedraEnvironment } from "hedra-node";
+
+const client = new HedraClient({
+    apiKey: "YOUR_API_KEY",
+    environment: HedraEnvironment.Production,
+});
+
+const response = await client.fetch("/some/unsupported/endpoint", {
     method: "GET",
 }, {
     timeoutInSeconds: 30,
@@ -343,6 +370,11 @@ const response = await client.fetch("/v1/custom/endpoint", {
 
 const data = await response.json();
 ```
+
+Prefer a relative path against a configured `environment`, as above — it is the one form
+that both resolves and carries the `Authorization` header on every generator version.
+Credentials are not guaranteed to be attached to an absolute URL that points somewhere
+other than your configured base.
 
 ### Runtime Compatibility
 
