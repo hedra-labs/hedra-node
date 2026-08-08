@@ -11,8 +11,26 @@ README.md
 LICENSE
 CHANGELOG.md
 
-# SDK version constant (bumped by hand at release time)
-src/version.ts
+# NOTE: src/version.ts is deliberately NOT listed, so Fern owns the runtime
+# constant instead of it being hand-bumped.
+#
+# Every generate targeting this repo stamps it -- `--version` selects WHICH
+# number, never whether one is written: GithubOutputMode.version is a required
+# field, and a config omitting it is rejected with PARSE_ERROR, so Fern Cloud
+# just fills it with its own auto-computed value when the flag is absent. That
+# value is not monotonic (it has gone 0.2.0 -> 0.1.3), and it is what rewrote
+# SDK_VERSION 0.3.0 -> 0.1.3 in commit 8d4b8e0 on 2026-07-08 -- after which
+# 6b1a566 added this entry back 17 minutes later.
+#
+# Safe to omit now because fern-config#37 makes generate-sdks.yml pass
+# --version pinned to this repo's package.json version, so a routine
+# regeneration stamps whatever package.json already says.
+#
+# THAT MAKES package.json THE SOURCE OF TRUTH. Bump it on main when cutting a
+# release: release-sdks.yml stamps this file with the released version, but
+# package.json is .fernignore'd and publish-npm.yml only rewrites it inside the
+# job's throwaway checkout -- so if main's package.json stays behind, the next
+# regeneration pins to the stale number and walks SDK_VERSION back.
 
 # Dependency lockfile. Fern regenerates it on every SDK regeneration, which
 # silently reverts anything committed here — it already ate a merged fast-uri
