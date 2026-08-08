@@ -20,6 +20,16 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # Manual approval gate. `release: published` fires this workflow with no human
+    # in the loop -- including when fern-config's release-sdks.yml cuts the Release
+    # remotely -- so this is the only thing standing between a published Release and
+    # a live npm publish. The job queues until a required reviewer approves it.
+    #
+    # The protection lives in the environment's settings, NOT here: GitHub creates a
+    # referenced environment on first use if it is missing, WITHOUT protection rules,
+    # so a missing or unconfigured `npm-publish` environment silently publishes
+    # rather than failing. If you rename this, configure the new environment first.
+    environment: npm-publish
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
