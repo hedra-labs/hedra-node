@@ -1,7 +1,7 @@
 # Hedra TypeScript Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=Hedra%2FTypeScript)
-[![npm shield](https://img.shields.io/npm/v/)](https://www.npmjs.com/package/)
+[![npm shield](https://img.shields.io/npm/v/hedra-node)](https://www.npmjs.com/package/hedra-node)
 
 The Hedra TypeScript library provides convenient access to the Hedra APIs from TypeScript.
 
@@ -140,9 +140,8 @@ try {
 You can upload files using the client:
 
 ```typescript
-import { createReadStream } from "fs";
-import { HedraClient } from "hedra-node";
 import * as fs from "fs";
+import { HedraClient } from "hedra-node";
 
 const client = new HedraClient({ apiKey: "YOUR_API_KEY" });
 await client.files.upload({
@@ -157,6 +156,9 @@ The client accepts a variety of types for file upload parameters:
 
 You can configure metadata when uploading a file:
 ```typescript
+import { createReadStream } from "fs";
+import { Uploadable } from "hedra-node";
+
 const file: Uploadable.WithMetadata = {
     data: createReadStream("path/to/file"),
     filename: "my-file",       // optional
@@ -167,7 +169,9 @@ const file: Uploadable.WithMetadata = {
 
 Alternatively, you can upload a file directly from a file path:
 ```typescript
-const file : Uploadable.FromPath = {
+import { Uploadable } from "hedra-node";
+
+const file: Uploadable.FromPath = {
     path: "path/to/file",
     filename: "my-file",        // optional
     contentType: "audio/mpeg",  // optional
