@@ -75,10 +75,12 @@ jobs:
           VERSION: ${{ steps.resolve.outputs.version }}
         run: npm version --no-git-tag-version --allow-same-version "$VERSION"
 
-      # src/version.ts is .fernignore'd, so it is hand-maintained and will drift from the
-      # released version unless someone bumps it. This is the only thing that surfaces that
-      # drift. Warn rather than fail on purpose: it is currently 0.3.0, so a hard failure
-      # would block the very first tag-derived release instead of reporting the problem.
+      # src/version.ts is stamped by Fern, not hand-maintained: it is deliberately NOT
+      # .fernignore'd, and generate-sdks.yml pins --version to this repo's package.json
+      # (fern-config#37). So it tracks main's package.json, not the tag being released,
+      # and drifts whenever the two disagree. This is the only thing that surfaces that.
+      # Warn rather than fail on purpose: turning this into a hard failure is a separate
+      # decision, deliberately not taken alongside the 1.0.0 bump (ENG-10134).
       - name: Check the runtime SDK_VERSION matches
         env:
           VERSION: ${{ steps.resolve.outputs.version }}
@@ -86,7 +88,7 @@ jobs:
           set -euo pipefail
           sdk_version="$(grep -oE 'SDK_VERSION *= *"[^"]*"' src/version.ts | grep -oE '"[^"]*"' | tr -d '"')"
           if [ "$sdk_version" != "$VERSION" ]; then
-            echo "::warning::src/version.ts reports SDK_VERSION=$sdk_version but publishing $VERSION. Bump src/version.ts to $VERSION (it is .fernignore'd, so it is hand-maintained today)."
+            echo "::warning::src/version.ts reports SDK_VERSION=$sdk_version but publishing $VERSION. Bump package.json on main to $VERSION so the next regeneration stamps it, or set src/version.ts directly."
           else
             echo "SDK_VERSION matches the published version ($VERSION)."
           fi
