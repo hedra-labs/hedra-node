@@ -4,6 +4,7 @@ export * from "./files/client/requests/index.js";
 export * as files from "./files/index.js";
 export * from "./jobs/client/requests/index.js";
 export * as jobs from "./jobs/index.js";
+export * from "./jobs/types/index.js";
 export * from "./keys/client/requests/index.js";
 export * as keys from "./keys/index.js";
 export * from "./logDrains/client/requests/index.js";
