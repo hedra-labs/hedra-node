@@ -11,25 +11,26 @@ README.md
 LICENSE
 CHANGELOG.md
 
-# NOTE: src/version.ts is deliberately NOT listed. Fern generates it from
-# `fern generate --version X`, so the runtime constant and the version
-# publish-npm.yml derives from the release tag come from the same number
-# instead of being hand-bumped.
+# NOTE: src/version.ts is deliberately NOT listed, so Fern owns the runtime
+# constant instead of it being hand-bumped.
 #
-# This ONLY holds if EVERY generate that targets this repo passes --version.
-# fern-config#19 added `release-sdks.yml`, which does (group ts-release, mode
-# release). But `generate-sdks.yml` -- the automatic one, fired by any push to
-# fern/** -- still runs `fern generate --group ts` with NO version, and Fern
-# then writes its own auto-computed sdkVersion: 0.1.3 today, and not monotonic
-# (it has already gone 0.2.0 -> 0.1.3). So a release would stamp the right
-# number and the next spec sync would walk it back.
+# Every generate targeting this repo stamps it -- `--version` selects WHICH
+# number, never whether one is written: GithubOutputMode.version is a required
+# field, and a config omitting it is rejected with PARSE_ERROR, so Fern Cloud
+# just fills it with its own auto-computed value when the flag is absent. That
+# value is not monotonic (it has gone 0.2.0 -> 0.1.3), and it is what rewrote
+# SDK_VERSION 0.3.0 -> 0.1.3 in commit 8d4b8e0 on 2026-07-08 -- after which
+# 6b1a566 added this entry back 17 minutes later.
 #
-# That is not hypothetical: commit 8d4b8e0 (2026-07-08 13:57 PDT) rewrote
-# SDK_VERSION 0.3.0 -> 0.1.3 exactly this way, and 6b1a566 added the ignore
-# entry back at 14:14 PDT -- 17 minutes later.
+# Safe to omit now because fern-config#37 makes generate-sdks.yml pass
+# --version pinned to this repo's package.json version, so a routine
+# regeneration stamps whatever package.json already says.
 #
-# Do not re-remove this entry until `generate-sdks.yml` also passes --version,
-# pinned to the last released version so routine regenerations hold it steady.
+# THAT MAKES package.json THE SOURCE OF TRUTH. Bump it on main when cutting a
+# release: release-sdks.yml stamps this file with the released version, but
+# package.json is .fernignore'd and publish-npm.yml only rewrites it inside the
+# job's throwaway checkout -- so if main's package.json stays behind, the next
+# regeneration pins to the stale number and walks SDK_VERSION back.
 
 # Dependency lockfile. Fern regenerates it on every SDK regeneration, which
 # silently reverts anything committed here — it already ate a merged fast-uri
