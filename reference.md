@@ -244,7 +244,7 @@ const response = page.response;
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">stream</a>(job_id, { ...params }) -> core.Stream&lt;unknown&gt;</code></summary>
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">stream</a>(job_id, { ...params }) -> core.Stream&lt;Hedra.JobsStreamResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -5307,6 +5307,85 @@ await client.jobs.submitWan27({
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submit</a>(model, { ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Runs any model in the catalog by its public id, with `input` passed through untyped — the same call the typed operations below make, minus the compile-time schema.
+
+Reach for it when the model is not known ahead of time: a client generated before a model shipped can still run it, and an id read from `GET /v3/models` at runtime needs no regeneration. Prefer the typed operation whenever your client already has one — `input` here is validated against the same published schema (`GET /v3/models/{model}`), so a bad field is a `400` at submit rather than an error before the call.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submit("model", {
+    input: {
+        "key": "value"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**model:** `string` — The model's public id (`GET /v3/models`).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Models
 <details><summary><code>client.models.<a href="/src/api/resources/models/client/Client.ts">list</a>({ ...params }) -> Hedra.ModelListResponse</code></summary>
 <dl>
@@ -5495,7 +5574,7 @@ const response = page.response;
 <dl>
 <dd>
 
-Voices this model accepts — scoped to the model's voice provider.
+Voices this model accepts — scoped to the model's voice provider. fern-config end-to-end regeneration probe 20260809-192528.
 </dd>
 </dl>
 </dd>
