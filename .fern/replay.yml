@@ -1,0 +1,22 @@
+# Hand-owned Fern Replay config (.fernignore'd — the CLI reads it, never
+# rewrites it). `exclude:` entries are minimatch globs against repo-relative
+# paths.
+#
+# Verified semantics (fern-api@5.57.0, the CLI version fern-config pins;
+# identical in 5.65.5): exclude suppresses patch APPLICATION, not detection.
+# The applicator skips a patch before any apply attempt when any of its files
+# matches any pattern, so an excluded patch can never conflict or go
+# "unresolved" ("Action required" in regeneration PRs). Detection still records
+# the patch in replay.lock's ledger; it just stays inert there.
+#
+# Whole-patch semantics: a patch is skipped ENTIRELY if ANY of its files
+# matches — keep version bumps in dedicated commits so a mixed commit doesn't
+# drag real customizations into the skip.
+
+# Machine-owned version files (ENG-10148): package.json is the version's
+# source of truth (generate-sdks.yml pins --version to it) and src/version.ts
+# is stamped by every generation. Hand-bumps to them are release mechanics,
+# not customizations to replay.
+exclude:
+  - package.json
+  - src/version.ts
