@@ -155,6 +155,6 @@
         "node": ">=18.0.0"
     },
     "sideEffects": false,
-    "description": "The official TypeScript library for the Hedra API",
+    "description": "The official TypeScript library for the Hedra API — API spec 3.2.2",
     "author": "Hedra <support@hedra.com>"
 }
