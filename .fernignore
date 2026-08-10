@@ -24,9 +24,11 @@ CHANGELOG.md
 # regeneration stamps whatever package.json already says.
 #
 # THAT MAKES package.json THE SOURCE OF TRUTH. Bump it on main when cutting a
-# release: release-sdks.yml stamps this file with the released version, but
-# package.json is .fernignore'd and publish-npm.yml only rewrites it inside the
-# job's throwaway checkout -- so if main's package.json stays behind, the next
+# release: release-sdks.yml stamps this file with the released version, and
+# since #33 un-ignored package.json a regeneration stamps the manifest too --
+# but only with the number read from main's package.json itself (a round-trip
+# that can never advance it), and publish-npm.yml only rewrites it inside the
+# job's throwaway checkout. So if main's package.json stays behind, the next
 # regeneration pins to the stale number and walks SDK_VERSION back.
 
 # Dependency lockfile. Fern regenerates it on every SDK regeneration, which
