@@ -6,6 +6,7 @@
         "type": "git",
         "url": "git+https://github.com/hedra-labs/hedra-node.git"
     },
+    "license": "Apache-2.0",
     "type": "commonjs",
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.mjs",
@@ -21,6 +22,94 @@
                 "default": "./dist/cjs/index.js"
             },
             "default": "./dist/cjs/index.js"
+        },
+        "./jobs": {
+            "import": {
+                "types": "./dist/esm/api/resources/jobs/exports.d.mts",
+                "default": "./dist/esm/api/resources/jobs/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/jobs/exports.d.ts",
+                "default": "./dist/cjs/api/resources/jobs/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/jobs/exports.js"
+        },
+        "./models": {
+            "import": {
+                "types": "./dist/esm/api/resources/models/exports.d.mts",
+                "default": "./dist/esm/api/resources/models/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/models/exports.d.ts",
+                "default": "./dist/cjs/api/resources/models/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/models/exports.js"
+        },
+        "./keys": {
+            "import": {
+                "types": "./dist/esm/api/resources/keys/exports.d.mts",
+                "default": "./dist/esm/api/resources/keys/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/keys/exports.d.ts",
+                "default": "./dist/cjs/api/resources/keys/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/keys/exports.js"
+        },
+        "./tokens": {
+            "import": {
+                "types": "./dist/esm/api/resources/tokens/exports.d.mts",
+                "default": "./dist/esm/api/resources/tokens/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/tokens/exports.d.ts",
+                "default": "./dist/cjs/api/resources/tokens/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/tokens/exports.js"
+        },
+        "./files": {
+            "import": {
+                "types": "./dist/esm/api/resources/files/exports.d.mts",
+                "default": "./dist/esm/api/resources/files/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/files/exports.d.ts",
+                "default": "./dist/cjs/api/resources/files/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/files/exports.js"
+        },
+        "./billing": {
+            "import": {
+                "types": "./dist/esm/api/resources/billing/exports.d.mts",
+                "default": "./dist/esm/api/resources/billing/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/billing/exports.d.ts",
+                "default": "./dist/cjs/api/resources/billing/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/billing/exports.js"
+        },
+        "./webhooks": {
+            "import": {
+                "types": "./dist/esm/api/resources/webhooks/exports.d.mts",
+                "default": "./dist/esm/api/resources/webhooks/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/webhooks/exports.d.ts",
+                "default": "./dist/cjs/api/resources/webhooks/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/webhooks/exports.js"
+        },
+        "./logDrains": {
+            "import": {
+                "types": "./dist/esm/api/resources/logDrains/exports.d.mts",
+                "default": "./dist/esm/api/resources/logDrains/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/logDrains/exports.d.ts",
+                "default": "./dist/cjs/api/resources/logDrains/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/logDrains/exports.js"
         },
         "./package.json": "./package.json"
     },
@@ -67,6 +156,5 @@
     },
     "sideEffects": false,
     "description": "The official TypeScript library for the Hedra API",
-    "license": "Apache-2.0",
     "author": "Hedra <support@hedra.com>"
 }
