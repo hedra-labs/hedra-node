@@ -5,6 +5,8 @@ import * as errors from "../../errors/index.js";
 import type * as Hedra from "../index.js";
 
 export class PaymentRequiredError extends errors.HedraError {
+    public declare readonly body: Hedra.ErrorResponse;
+
     constructor(body: Hedra.ErrorResponse, rawResponse?: core.RawResponse) {
         super({
             message: "PaymentRequiredError",

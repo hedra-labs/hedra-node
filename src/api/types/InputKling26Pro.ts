@@ -6,8 +6,8 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `kling-26-pro`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, duration_ms, prompt; must omit: start_image
- * (2) requires: aspect_ratio, duration_ms, prompt, start_image; must omit: cfg_scale
+ * (1) requires: aspect_ratio, duration_ms, prompt, start_image; must omit: cfg_scale
+ * (2) requires: aspect_ratio, duration_ms, prompt; must omit: start_image
  */
 export interface InputKling26Pro {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -22,12 +22,12 @@ export interface InputKling26Pro {
     duration_ms: number;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
+    /** Start frame (image-to-video). */
+    start_image?: Hedra.InputKling26ProStartImage | undefined;
     /** What to avoid in the generated video. */
     negative_prompt?: string | undefined;
     /** How closely the model follows the prompt. */
     cfg_scale?: number | undefined;
-    /** Start frame (image-to-video). */
-    start_image?: Hedra.InputKling26ProStartImage | undefined;
 }
 
 export namespace InputKling26Pro {

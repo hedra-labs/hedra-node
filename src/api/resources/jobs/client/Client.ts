@@ -4,6 +4,7 @@ import type { BaseClientOptions, BaseRequestOptions } from "../../../../BaseClie
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "../../../../BaseClient.js";
 import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../core/headers.js";
 import * as core from "../../../../core/index.js";
+import { mergeAdditionalBodyParameters } from "../../../../core/requestBody.js";
 import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
@@ -35,6 +36,8 @@ export class JobsClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.list()
@@ -54,6 +57,7 @@ export class JobsClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -147,6 +151,8 @@ export class JobsClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.get("job_id")
@@ -168,6 +174,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -236,6 +243,8 @@ export class JobsClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.getStatus("job_id")
@@ -261,6 +270,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -333,6 +343,8 @@ export class JobsClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.listJobLogs("job_id")
@@ -353,6 +365,7 @@ export class JobsClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -439,7 +452,7 @@ export class JobsClient {
         job_id: string,
         request: Hedra.JobsStreamRequest = {},
         requestOptions?: JobsClient.RequestOptions,
-    ): core.HttpResponsePromise<core.Stream<unknown>> {
+    ): core.HttpResponsePromise<core.Stream<Hedra.JobsStreamResponse>> {
         return core.HttpResponsePromise.fromPromise(this.__stream(job_id, request, requestOptions));
     }
 
@@ -447,13 +460,16 @@ export class JobsClient {
         job_id: string,
         request: Hedra.JobsStreamRequest = {},
         requestOptions?: JobsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<core.Stream<unknown>>> {
+    ): Promise<core.WithRawResponse<core.Stream<Hedra.JobsStreamResponse>>> {
         const { "Last-Event-Id": lastEventId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "Last-Event-Id": lastEventId ?? undefined }),
+            mergeOnlyDefinedHeaders({
+                "Last-Event-Id": lastEventId ?? undefined,
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2",
+            }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher<ReadableStream>({
@@ -473,6 +489,32 @@ export class JobsClient {
             fetchFn: this._options?.fetch,
             logging: this._options.logging,
         });
+        const _reconnect = async (lastEventId: string) => {
+            const _reconnectResponse = await core.fetcher<ReadableStream>({
+                url: core.url.join(
+                    (await core.Supplier.get(this._options.baseUrl)) ??
+                        (await core.Supplier.get(this._options.environment)) ??
+                        environments.HedraEnvironment.Production,
+                    `jobs/${core.url.encodePathParam(job_id)}/stream`,
+                ),
+                method: "GET",
+                headers: { ..._headers, "Last-Event-ID": lastEventId },
+                queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+                responseType: "sse",
+                timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+                maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+                abortSignal: requestOptions?.abortSignal,
+                fetchFn: this._options?.fetch,
+                logging: this._options.logging,
+            });
+            if (!_reconnectResponse.ok) {
+                throw new Error("SSE stream reconnection failed");
+            }
+            if (_reconnectResponse.body == null) {
+                throw new Error("SSE stream reconnection failed: empty response body");
+            }
+            return _reconnectResponse.body;
+        };
         if (_response.ok) {
             return {
                 data: new core.Stream({
@@ -481,7 +523,15 @@ export class JobsClient {
                     signal: requestOptions?.abortSignal,
                     eventShape: {
                         type: "sse",
+                        streamTerminator: "[STREAM_DONE]",
+                        resumable: true,
                     },
+                    reconnectionEnabled:
+                        requestOptions?.stream?.reconnectionEnabled ?? this._options?.stream?.reconnectionEnabled,
+                    maxReconnectionAttempts:
+                        requestOptions?.stream?.maxReconnectionAttempts ??
+                        this._options?.stream?.maxReconnectionAttempts,
+                    reconnect: _reconnect,
                 }),
                 rawResponse: _response.rawResponse,
             };
@@ -538,6 +588,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitDreamina31({
@@ -563,6 +615,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -577,7 +630,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -647,6 +700,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitElevenlabsFlashMultilingualV2({
@@ -673,6 +728,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -687,7 +743,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -762,6 +818,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitElevenlabsFlashV2({
@@ -786,6 +844,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -800,7 +859,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -870,6 +929,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitElevenlabsMultilingualV2({
@@ -894,6 +955,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -908,7 +970,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -985,6 +1047,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitElevenlabsV3({
@@ -1009,6 +1073,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1023,7 +1088,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -1095,6 +1160,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitFlux11Pro({
@@ -1120,6 +1187,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1134,7 +1202,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -1206,6 +1274,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitFlux11Ultra({
@@ -1230,6 +1300,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1244,7 +1315,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -1316,6 +1387,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitFlux3({
@@ -1342,6 +1415,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1356,7 +1430,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -1428,6 +1502,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitFluxDev({
@@ -1453,6 +1529,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1467,7 +1544,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -1539,6 +1616,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitFluxKontextMax({
@@ -1562,6 +1641,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1576,7 +1656,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -1648,6 +1728,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitFluxKontextPro({
@@ -1671,6 +1753,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1685,7 +1768,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -1757,6 +1840,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitFlux2Flex({
@@ -1781,6 +1866,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1795,7 +1881,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -1867,6 +1953,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitFlux2Klein9B({
@@ -1891,6 +1979,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1905,7 +1994,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -1977,6 +2066,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitFlux2Max({
@@ -2001,6 +2092,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2015,7 +2107,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -2087,6 +2179,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitFlux2Pro({
@@ -2111,6 +2205,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2125,7 +2220,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -2197,6 +2292,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitGeminiOmniFlash({
@@ -2221,6 +2318,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2235,7 +2333,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -2307,6 +2405,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitGptImage15({
@@ -2331,6 +2431,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2345,7 +2446,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -2417,6 +2518,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitGptImage2({
@@ -2443,6 +2546,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2457,7 +2561,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -2529,6 +2633,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitGrokImagine({
@@ -2552,6 +2658,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2566,7 +2673,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -2638,12 +2745,14 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitGrokVideo({
      *         input: {
      *             prompt: "prompt",
-     *             aspect_ratio: "1:1",
+     *             aspect_ratio: "auto",
      *             resolution: "480p",
      *             duration_ms: 1
      *         }
@@ -2664,6 +2773,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2678,7 +2788,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -2750,12 +2860,14 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitHappyHorse({
      *         input: {
      *             prompt: "prompt",
-     *             aspect_ratio: "16:9",
+     *             aspect_ratio: "21:9",
      *             resolution: "720p",
      *             duration_ms: 1
      *         }
@@ -2776,6 +2888,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2790,7 +2903,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -2862,6 +2975,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitHedraAvatar({
@@ -2895,6 +3010,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2909,7 +3025,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -2981,6 +3097,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitHedraCharacter3({
@@ -3014,6 +3132,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3028,7 +3147,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -3100,6 +3219,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitHidreamO1Image({
@@ -3125,6 +3246,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3139,7 +3261,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -3211,6 +3333,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitIdeogramV2({
@@ -3235,6 +3359,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3249,7 +3374,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -3321,6 +3446,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitIdeogramV4({
@@ -3347,6 +3474,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3361,7 +3489,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -3433,6 +3561,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitImagen3({
@@ -3457,6 +3587,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3471,7 +3602,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -3543,6 +3674,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitImagen4({
@@ -3568,6 +3701,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3582,7 +3716,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -3652,6 +3786,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitKling16({
@@ -3675,6 +3811,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3689,7 +3826,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -3761,6 +3898,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitKling21Master({
@@ -3786,6 +3925,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3800,7 +3940,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -3872,6 +4012,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitKling25Turbo({
@@ -3897,6 +4039,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3911,7 +4054,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -3968,6 +4111,131 @@ export class JobsClient {
     }
 
     /**
+     * Transfer movements from a reference video to any character image. Cost-effective mode for motion transfer, perfect for portraits and simple animations.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyKling26MotionControl} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitKling26MotionControl({
+     *         input: {
+     *             start_image: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             source_video: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             resolution: "720p"
+     *         }
+     *     })
+     */
+    public submitKling26MotionControl(
+        request: Hedra.SubmitBodyKling26MotionControl,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitKling26MotionControl(request, requestOptions));
+    }
+
+    private async __submitKling26MotionControl(
+        request: Hedra.SubmitBodyKling26MotionControl,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/kling-26-motion-control",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/kling-26-motion-control",
+        );
+    }
+
+    /**
      * Cinematic visuals, fluid motion, and native audio generation.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -3983,6 +4251,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitKling26Pro({
@@ -4008,6 +4278,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4022,7 +4293,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -4094,6 +4365,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitKlingAiAvatarV2({
@@ -4126,6 +4399,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4140,7 +4414,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -4212,6 +4486,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitKlingO1({
@@ -4237,6 +4513,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4251,7 +4528,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -4323,6 +4600,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitKlingO3({
@@ -4349,6 +4628,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4363,7 +4643,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -4420,6 +4700,240 @@ export class JobsClient {
     }
 
     /**
+     * Edit videos using natural language.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyKlingO3Edit} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitKlingO3Edit({
+     *         input: {
+     *             prompt: "prompt",
+     *             source_video: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             resolution: "720p"
+     *         }
+     *     })
+     */
+    public submitKlingO3Edit(
+        request: Hedra.SubmitBodyKlingO3Edit,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitKlingO3Edit(request, requestOptions));
+    }
+
+    private async __submitKlingO3Edit(
+        request: Hedra.SubmitBodyKlingO3Edit,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/kling-o3-edit",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/kling-o3-edit");
+    }
+
+    /**
+     * Input a reference video and preserve motion and camera style.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyKlingO3Reference} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitKlingO3Reference({
+     *         input: {
+     *             prompt: "prompt",
+     *             source_video: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             resolution: "720p"
+     *         }
+     *     })
+     */
+    public submitKlingO3Reference(
+        request: Hedra.SubmitBodyKlingO3Reference,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitKlingO3Reference(request, requestOptions));
+    }
+
+    private async __submitKlingO3Reference(
+        request: Hedra.SubmitBodyKlingO3Reference,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/kling-o3-reference",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/kling-o3-reference");
+    }
+
+    /**
      * Text-to-video with ultra-high-definition storyboards and native audio.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -4435,6 +4949,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitKlingV3({
@@ -4461,6 +4977,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4475,7 +4992,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -4532,6 +5049,131 @@ export class JobsClient {
     }
 
     /**
+     * Animate a character image to match the motion of a reference video. Standard tier for cost-effective generation.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyKlingV3MotionControl} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitKlingV3MotionControl({
+     *         input: {
+     *             start_image: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             source_video: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             resolution: "720p"
+     *         }
+     *     })
+     */
+    public submitKlingV3MotionControl(
+        request: Hedra.SubmitBodyKlingV3MotionControl,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitKlingV3MotionControl(request, requestOptions));
+    }
+
+    private async __submitKlingV3MotionControl(
+        request: Hedra.SubmitBodyKlingV3MotionControl,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/kling-v3-motion-control",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/kling-v3-motion-control",
+        );
+    }
+
+    /**
      * Lightricks LTX-2.3 text-to-video at up to 4K, with synchronized native audio
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -4547,6 +5189,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitLtx23({
@@ -4554,7 +5198,7 @@ export class JobsClient {
      *             prompt: "prompt",
      *             resolution: "1080p",
      *             duration_ms: 1,
-     *             aspect_ratio: "16:9",
+     *             aspect_ratio: "auto",
      *             quality: "fast"
      *         }
      *     })
@@ -4574,6 +5218,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4588,7 +5233,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -4660,6 +5305,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitLumaRay32({
@@ -4686,6 +5333,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4700,7 +5348,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -4772,6 +5420,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitMaiImage25({
@@ -4797,6 +5447,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4811,7 +5462,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -4883,6 +5534,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitMinimaxH3({
@@ -4908,6 +5561,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4922,7 +5576,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -4994,6 +5648,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitMinimaxHailuo02({
@@ -5019,6 +5675,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5033,7 +5690,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -5105,6 +5762,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitMinimaxHailuo23({
@@ -5130,6 +5789,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5144,7 +5804,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -5216,6 +5876,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitMinimaxSpeech25HdPreview({
@@ -5240,6 +5902,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5254,7 +5917,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -5331,6 +5994,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitMinimaxSpeech25TurboPreview({
@@ -5355,6 +6020,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5369,7 +6035,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -5446,6 +6112,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitNanoBanana({
@@ -5471,6 +6139,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5485,7 +6154,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -5557,6 +6226,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitNanoBanana2({
@@ -5582,6 +6253,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5596,7 +6268,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -5668,6 +6340,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitNanoBananaPro({
@@ -5693,6 +6367,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5707,7 +6382,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -5779,10 +6454,13 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitOmnihuman15({
      *         input: {
+     *             resolution: "720p",
      *             start_image: {
      *                 source: "url",
      *                 url: "url"
@@ -5809,6 +6487,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5823,7 +6502,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -5895,6 +6574,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitPixverseV6({
@@ -5920,6 +6601,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5934,7 +6616,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -6006,6 +6688,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitQwenImage2({
@@ -6032,6 +6716,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6046,7 +6731,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -6118,6 +6803,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitRecraftV3({
@@ -6143,6 +6830,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6157,7 +6845,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -6229,6 +6917,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitReve21({
@@ -6253,6 +6943,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6267,7 +6958,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -6339,6 +7030,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitReve21Edit({
@@ -6367,6 +7060,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6381,7 +7075,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -6453,6 +7147,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitReve21Remix({
@@ -6481,6 +7177,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6495,7 +7192,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -6567,6 +7264,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitSana({
@@ -6592,6 +7291,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6606,7 +7306,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -6678,6 +7378,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitSeedance15Pro({
@@ -6704,6 +7406,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6718,7 +7421,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -6790,13 +7493,15 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitSeedance20({
      *         input: {
      *             prompt: "prompt",
      *             aspect_ratio: "1:1",
-     *             resolution: "480p",
+     *             resolution: "4K",
      *             duration_ms: 1,
      *             quality: "standard"
      *         }
@@ -6817,6 +7522,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6831,7 +7537,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -6903,6 +7609,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitSeedance20Mini({
@@ -6929,6 +7637,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6943,7 +7652,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -7000,6 +7709,121 @@ export class JobsClient {
     }
 
     /**
+     * ByteDance Seedance 2.5 video generation model
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodySeedance25} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitSeedance25({
+     *         input: {
+     *             prompt: "prompt",
+     *             aspect_ratio: "1:1",
+     *             resolution: "480p",
+     *             duration_ms: 1
+     *         }
+     *     })
+     */
+    public submitSeedance25(
+        request: Hedra.SubmitBodySeedance25,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitSeedance25(request, requestOptions));
+    }
+
+    private async __submitSeedance25(
+        request: Hedra.SubmitBodySeedance25,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/seedance-25",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/seedance-25");
+    }
+
+    /**
      * Ultra-fast pro grade image model, pairing reference image support with high quality output for professional visuals
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -7015,6 +7839,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitSeedream40({
@@ -7040,6 +7866,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7054,7 +7881,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -7126,6 +7953,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitSeedream45({
@@ -7151,6 +7980,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7165,7 +7995,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -7237,6 +8067,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitSeedream50Lite({
@@ -7262,6 +8094,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7276,7 +8109,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -7348,6 +8181,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitSeedream50Pro({
@@ -7373,6 +8208,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7387,7 +8223,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -7459,6 +8295,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitSora2Pro({
@@ -7485,6 +8323,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7499,7 +8338,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -7571,6 +8410,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitVeedFabric10({
@@ -7604,6 +8445,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7618,7 +8460,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -7690,6 +8532,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitVeo2({
@@ -7713,6 +8557,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7727,7 +8572,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -7799,6 +8644,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitVeo3({
@@ -7826,6 +8673,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7840,7 +8688,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -7912,6 +8760,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitVeo31({
@@ -7938,6 +8788,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7952,7 +8803,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -8024,6 +8875,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitViduQ3({
@@ -8050,6 +8903,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8064,7 +8918,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -8136,6 +8990,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitViduQ3Reference({
@@ -8166,6 +9022,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8180,7 +9037,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -8252,6 +9109,8 @@ export class JobsClient {
      * @throws {@link Hedra.UnprocessableEntityError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.jobs.submitWan27({
@@ -8277,6 +9136,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8291,7 +9151,7 @@ export class JobsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -8345,5 +9205,122 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/wan-2-7");
+    }
+
+    /**
+     * Runs any model in the catalog by its public id, with `input` passed through untyped — the same call the typed operations below make, minus the compile-time schema.
+     *
+     * Reach for it when the model is not known ahead of time: a client generated before a model shipped can still run it, and an id read from `GET /v3/models` at runtime needs no regeneration. Prefer the typed operation whenever your client already has one — `input` here is validated against the same published schema (`GET /v3/models/{model}`), so a bad field is a `400` at submit rather than an error before the call.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {string} model - The model's public id (`GET /v3/models`).
+     * @param {Hedra.SubmitBody} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submit("model", {
+     *         input: {
+     *             "key": "value"
+     *         }
+     *     })
+     */
+    public submit(
+        model: string,
+        request: Hedra.SubmitBody,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submit(model, request, requestOptions));
+    }
+
+    private async __submit(
+        model: string,
+        request: Hedra.SubmitBody,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                `models/${core.url.encodePathParam(model)}`,
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/{model}");
     }
 }

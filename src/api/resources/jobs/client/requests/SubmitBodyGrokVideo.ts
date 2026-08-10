@@ -7,7 +7,7 @@ import type * as Hedra from "../../../../index.js";
  *     {
  *         input: {
  *             prompt: "prompt",
- *             aspect_ratio: "1:1",
+ *             aspect_ratio: "auto",
  *             resolution: "480p",
  *             duration_ms: 1
  *         }
