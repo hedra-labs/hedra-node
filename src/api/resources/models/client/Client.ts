@@ -2,8 +2,9 @@
 
 import type { BaseClientOptions, BaseRequestOptions } from "../../../../BaseClient.js";
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "../../../../BaseClient.js";
-import { mergeHeaders } from "../../../../core/headers.js";
+import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../core/headers.js";
 import * as core from "../../../../core/index.js";
+import { mergeAdditionalBodyParameters } from "../../../../core/requestBody.js";
 import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
@@ -34,6 +35,8 @@ export class ModelsClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.models.list()
@@ -53,7 +56,11 @@ export class ModelsClient {
         const _queryParams: Record<string, unknown> = {
             modality: modality !== undefined ? modality : undefined,
         };
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.0.0" }),
+            requestOptions?.headers,
+        );
         const _response = await core.fetcher({
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
@@ -118,6 +125,8 @@ export class ModelsClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.models.get("model")
@@ -135,7 +144,11 @@ export class ModelsClient {
         _request: Hedra.ModelsGetRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Hedra.ModelDetail>> {
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.0.0" }),
+            requestOptions?.headers,
+        );
         const _response = await core.fetcher({
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
@@ -197,6 +210,8 @@ export class ModelsClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.models.listModelJobs("model")
@@ -217,6 +232,7 @@ export class ModelsClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.0.0" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -300,7 +316,7 @@ export class ModelsClient {
     }
 
     /**
-     * Voices this model accepts — scoped to the model's voice provider.
+     * Voices this model accepts — scoped to the model's voice provider. fern-config end-to-end regeneration probe 20260810-011748.
      *
      * @param {string} model - The model's public id (`GET /v3/models`).
      * @param {Hedra.ModelsListVoicesRequest} request
@@ -311,6 +327,8 @@ export class ModelsClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.models.listVoices("model")
@@ -328,7 +346,11 @@ export class ModelsClient {
         _request: Hedra.ModelsListVoicesRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Hedra.VoiceListResponse>> {
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.0.0" }),
+            requestOptions?.headers,
+        );
         const _response = await core.fetcher({
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
@@ -391,6 +413,8 @@ export class ModelsClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.models.getOpenapi("model")
@@ -408,7 +432,11 @@ export class ModelsClient {
         _request: Hedra.ModelsGetOpenapiRequest = {},
         requestOptions?: ModelsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Record<string, unknown>>> {
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.0.0" }),
+            requestOptions?.headers,
+        );
         const _response = await core.fetcher({
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
@@ -470,6 +498,8 @@ export class ModelsClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.models.estimate("model")
@@ -491,6 +521,7 @@ export class ModelsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.0.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -505,7 +536,7 @@ export class ModelsClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
