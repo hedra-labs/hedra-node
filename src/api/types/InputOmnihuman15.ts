@@ -13,7 +13,7 @@ export interface InputOmnihuman15 {
     /** Output aspect ratio. */
     aspect_ratio?: InputOmnihuman15.AspectRatio | undefined;
     /** Output resolution. */
-    resolution?: InputOmnihuman15.Resolution | undefined;
+    resolution: InputOmnihuman15.Resolution;
     /** Start frame (image-to-video). */
     start_image: Hedra.InputOmnihuman15StartImage;
     /** Driving audio. */
@@ -29,6 +29,7 @@ export namespace InputOmnihuman15 {
     /** Output resolution. */
     export const Resolution = {
         SevenHundredTwentyP: "720p",
+        OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
 }

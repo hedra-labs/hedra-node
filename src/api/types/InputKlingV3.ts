@@ -6,12 +6,12 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `kling-v3`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, duration_ms, end_image, prompt, resolution, start_image; accepts quality: pro; resolution: 1080p | 4K
- * (2) requires: aspect_ratio, duration_ms, end_image, prompt, start_image; accepts quality: standard; resolution: 720p
- * (3) requires: aspect_ratio, duration_ms, prompt; must omit: end_image, start_image; accepts quality: standard; resolution: 720p
- * (4) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: end_image, start_image; accepts quality: pro; resolution: 1080p | 4K
- * (5) requires: aspect_ratio, duration_ms, prompt, resolution, start_image; must omit: end_image; accepts quality: pro; resolution: 1080p | 4K
- * (6) requires: aspect_ratio, duration_ms, prompt, start_image; must omit: end_image; accepts quality: standard; resolution: 720p
+ * (1) requires: aspect_ratio, duration_ms, prompt, resolution, start_image; must omit: end_image; accepts quality: pro; resolution: 1080p | 4K
+ * (2) requires: aspect_ratio, duration_ms, end_image, prompt, resolution, start_image; accepts quality: pro; resolution: 1080p | 4K
+ * (3) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: end_image, start_image; accepts quality: pro; resolution: 1080p | 4K
+ * (4) requires: aspect_ratio, duration_ms, prompt, start_image; must omit: end_image; accepts quality: standard; resolution: 720p
+ * (5) requires: aspect_ratio, duration_ms, end_image, prompt, start_image; accepts quality: standard; resolution: 720p
+ * (6) requires: aspect_ratio, duration_ms, prompt; must omit: end_image, start_image; accepts quality: standard; resolution: 720p
  */
 export interface InputKlingV3 {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -30,10 +30,10 @@ export interface InputKlingV3 {
     duration_ms: number;
     /** Start frame (image-to-video). */
     start_image?: Hedra.InputKlingV3StartImage | undefined;
-    /** End frame (first-last-frame-to-video). */
-    end_image?: Hedra.InputKlingV3EndImage | undefined;
     /** How closely the model follows the prompt. */
     cfg_scale?: number | undefined;
+    /** End frame (first-last-frame-to-video). */
+    end_image?: Hedra.InputKlingV3EndImage | undefined;
     /** Quality level to generate at. */
     quality: InputKlingV3.Quality;
 }

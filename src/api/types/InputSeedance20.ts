@@ -6,8 +6,8 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `seedance-20`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, duration_ms, prompt, resolution; accepts quality: fast; resolution: 480p | 720p
- * (2) requires: aspect_ratio, duration_ms, prompt, resolution; accepts quality: standard
+ * (1) requires: aspect_ratio, duration_ms, prompt, resolution; accepts quality: standard
+ * (2) requires: aspect_ratio, duration_ms, prompt, resolution; accepts quality: fast; resolution: 480p | 720p
  */
 export interface InputSeedance20 {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -49,9 +49,9 @@ export namespace InputSeedance20 {
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Output resolution. */
     export const Resolution = {
+        FourK: "4K",
         FourHundredEightyP: "480p",
         SevenHundredTwentyP: "720p",
-        FourK: "4K",
         OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];

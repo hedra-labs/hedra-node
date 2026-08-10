@@ -6,8 +6,8 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `pixverse-v6`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: start_image
- * (2) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio
+ * (1) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio
+ * (2) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: start_image
  */
 export interface InputPixverseV6 {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -24,10 +24,10 @@ export interface InputPixverseV6 {
     negative_prompt?: string | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** Output aspect ratio. */
-    aspect_ratio?: InputPixverseV6.AspectRatio | undefined;
     /** Start frame (image-to-video). */
     start_image?: Hedra.InputPixverseV6StartImage | undefined;
+    /** Output aspect ratio. */
+    aspect_ratio?: InputPixverseV6.AspectRatio | undefined;
 }
 
 export namespace InputPixverseV6 {

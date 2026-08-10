@@ -6,8 +6,8 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `kling-o1`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, duration_ms, images, prompt
- * (2) requires: aspect_ratio, duration_ms, prompt, start_image
+ * (1) requires: aspect_ratio, duration_ms, prompt, start_image
+ * (2) requires: aspect_ratio, duration_ms, images, prompt
  */
 export interface InputKlingO1 {
     /** Number of outputs generated per job. Only 1 is supported. */

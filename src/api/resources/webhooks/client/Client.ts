@@ -2,8 +2,9 @@
 
 import type { BaseClientOptions, BaseRequestOptions } from "../../../../BaseClient.js";
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "../../../../BaseClient.js";
-import { mergeHeaders } from "../../../../core/headers.js";
+import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../core/headers.js";
 import * as core from "../../../../core/index.js";
+import { mergeAdditionalBodyParameters } from "../../../../core/requestBody.js";
 import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
 import * as errors from "../../../../errors/index.js";
@@ -74,6 +75,8 @@ export class WebhooksClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.webhooks.getPublicKey()
@@ -87,7 +90,11 @@ export class WebhooksClient {
     private async __getPublicKey(
         requestOptions?: WebhooksClient.RequestOptions,
     ): Promise<core.WithRawResponse<Hedra.WebhookPublicKey>> {
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            requestOptions?.headers,
+        );
         const _response = await core.fetcher({
             url: core.url.join(
                 (await core.Supplier.get(this._options.baseUrl)) ??
@@ -147,6 +154,8 @@ export class WebhooksClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.webhooks.getDefault()
@@ -164,6 +173,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -231,6 +241,8 @@ export class WebhooksClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.webhooks.putDefault({
@@ -252,6 +264,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -266,7 +279,7 @@ export class WebhooksClient {
             contentType: "application/json",
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
-            body: request,
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -321,6 +334,8 @@ export class WebhooksClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.webhooks.deleteDefault()
@@ -334,6 +349,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -400,6 +416,8 @@ export class WebhooksClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.webhooks.testDefault()
@@ -417,6 +435,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -484,6 +503,8 @@ export class WebhooksClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.webhooks.listDeliveries()
@@ -505,6 +526,7 @@ export class WebhooksClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -614,6 +636,8 @@ export class WebhooksClient {
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
      * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
      *
      * @example
      *     await client.webhooks.redeliver("job_id")
@@ -635,6 +659,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({

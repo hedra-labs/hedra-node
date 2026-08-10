@@ -6,8 +6,8 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `flux-kontext-max`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, prompt; must omit: images
- * (2) requires: images, prompt; must omit: aspect_ratio, resolution
+ * (1) requires: images, prompt; must omit: aspect_ratio, resolution
+ * (2) requires: aspect_ratio, prompt; must omit: images
  */
 export interface InputFluxKontextMax {
     /** Generation prompt. */
@@ -16,19 +16,25 @@ export interface InputFluxKontextMax {
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
-    /** Output aspect ratio. */
-    aspect_ratio?: InputFluxKontextMax.AspectRatio | undefined;
-    /** Output resolution. */
-    resolution?: InputFluxKontextMax.Resolution | undefined;
+    /** The single source image to edit. */
+    images?: Hedra.InputFluxKontextMaxImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputFluxKontextMax.OutputFormat | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** The single source image to edit. */
-    images?: Hedra.InputFluxKontextMaxImagesItem[] | undefined;
+    /** Output aspect ratio. */
+    aspect_ratio?: InputFluxKontextMax.AspectRatio | undefined;
+    /** Output resolution. */
+    resolution?: InputFluxKontextMax.Resolution | undefined;
 }
 
 export namespace InputFluxKontextMax {
+    /** Output image format. */
+    export const OutputFormat = {
+        Jpeg: "jpeg",
+        Png: "png",
+    } as const;
+    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Sixteen9: "16:9",
@@ -47,10 +53,4 @@ export namespace InputFluxKontextMax {
         Fixed: "fixed",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** Output image format. */
-    export const OutputFormat = {
-        Jpeg: "jpeg",
-        Png: "png",
-    } as const;
-    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
 }
