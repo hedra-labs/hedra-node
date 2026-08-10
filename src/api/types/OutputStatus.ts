@@ -2,8 +2,8 @@
 
 /** The state of a single output within a job's result. */
 export const OutputStatus = {
-    Completed: "COMPLETED",
-    Failed: "FAILED",
-    Expired: "EXPIRED",
-} as const;
-export type OutputStatus = (typeof OutputStatus)[keyof typeof OutputStatus];
+        Completed: "COMPLETED",
+        Failed: "FAILED",
+        Expired: "EXPIRED"
+    } as const;
+export type OutputStatus = typeof OutputStatus[keyof typeof OutputStatus];

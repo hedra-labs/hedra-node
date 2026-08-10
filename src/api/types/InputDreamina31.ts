@@ -21,22 +21,22 @@ export interface InputDreamina31 {
 export namespace InputDreamina31 {
     /** Output aspect ratio. */
     export const AspectRatio = {
-        Sixteen9: "16:9",
-        Nine16: "9:16",
-        One1: "1:1",
-        Four3: "4:3",
-        Three4: "3:4",
-        Sixteen10: "16:10",
-        Ten16: "10:16",
-        Three2: "3:2",
-        Two3: "2:3",
-    } as const;
-    export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+            Sixteen9: "16:9",
+            Nine16: "9:16",
+            One1: "1:1",
+            Four3: "4:3",
+            Three4: "3:4",
+            Sixteen10: "16:10",
+            Ten16: "10:16",
+            Three2: "3:2",
+            Two3: "2:3"
+        } as const;
+    export type AspectRatio = typeof AspectRatio[keyof typeof AspectRatio];
     /** Output resolution. */
     export const Resolution = {
-        FiveHundredFortyP: "540p",
-        SevenHundredTwentyP: "720p",
-        OneThousandEightyP: "1080p",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+            FiveHundredFortyP: "540p",
+            SevenHundredTwentyP: "720p",
+            OneThousandEightyP: "1080p"
+        } as const;
+    export type Resolution = typeof Resolution[keyof typeof Resolution];
 }

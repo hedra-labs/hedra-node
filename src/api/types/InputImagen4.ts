@@ -19,17 +19,17 @@ export interface InputImagen4 {
 export namespace InputImagen4 {
     /** Output aspect ratio. */
     export const AspectRatio = {
-        Sixteen9: "16:9",
-        Nine16: "9:16",
-        Four3: "4:3",
-        Three4: "3:4",
-        One1: "1:1",
-    } as const;
-    export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+            Sixteen9: "16:9",
+            Nine16: "9:16",
+            Four3: "4:3",
+            Three4: "3:4",
+            One1: "1:1"
+        } as const;
+    export type AspectRatio = typeof AspectRatio[keyof typeof AspectRatio];
     /** Output resolution. */
     export const Resolution = {
-        OneK: "1K",
-        TwoK: "2K",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+            OneK: "1K",
+            TwoK: "2K"
+        } as const;
+    export type Resolution = typeof Resolution[keyof typeof Resolution];
 }

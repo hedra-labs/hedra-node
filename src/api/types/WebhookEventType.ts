@@ -7,7 +7,7 @@
  * status when the delivery fires.
  */
 export const WebhookEventType = {
-    JobCompleted: "job.completed",
-    JobFailed: "job.failed",
-} as const;
-export type WebhookEventType = (typeof WebhookEventType)[keyof typeof WebhookEventType];
+        JobCompleted: "job.completed",
+        JobFailed: "job.failed"
+    } as const;
+export type WebhookEventType = typeof WebhookEventType[keyof typeof WebhookEventType];

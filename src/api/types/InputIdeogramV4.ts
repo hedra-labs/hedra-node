@@ -25,31 +25,31 @@ export interface InputIdeogramV4 {
 export namespace InputIdeogramV4 {
     /** Output aspect ratio. */
     export const AspectRatio = {
-        Sixteen9: "16:9",
-        Nine16: "9:16",
-        Four3: "4:3",
-        Three4: "3:4",
-        One1: "1:1",
-    } as const;
-    export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+            Sixteen9: "16:9",
+            Nine16: "9:16",
+            Four3: "4:3",
+            Three4: "3:4",
+            One1: "1:1"
+        } as const;
+    export type AspectRatio = typeof AspectRatio[keyof typeof AspectRatio];
     /** Output resolution. */
     export const Resolution = {
-        SevenHundredTwentyP: "720p",
-        OneThousandFourHundredFortyP2KQhd: "1440p (2K QHD)",
-        TwoThousandOneHundredSixtyP4KUhd: "2160p (4K UHD)",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+            SevenHundredTwentyP: "720p",
+            OneThousandFourHundredFortyP2KQhd: "1440p (2K QHD)",
+            TwoThousandOneHundredSixtyP4KUhd: "2160p (4K UHD)"
+        } as const;
+    export type Resolution = typeof Resolution[keyof typeof Resolution];
     /** Output image format. */
     export const OutputFormat = {
-        Jpeg: "jpeg",
-        Png: "png",
-    } as const;
-    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
+            Jpeg: "jpeg",
+            Png: "png"
+        } as const;
+    export type OutputFormat = typeof OutputFormat[keyof typeof OutputFormat];
     /** Quality level to generate at. */
     export const Quality = {
-        Turbo: "turbo",
-        Balanced: "balanced",
-        Quality: "quality",
-    } as const;
-    export type Quality = (typeof Quality)[keyof typeof Quality];
+            Turbo: "turbo",
+            Balanced: "balanced",
+            Quality: "quality"
+        } as const;
+    export type Quality = typeof Quality[keyof typeof Quality];
 }

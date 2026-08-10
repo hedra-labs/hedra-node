@@ -4,4 +4,5 @@
  * @example
  *     {}
  */
-export type ModelsGetOpenapiRequest = {};
+export interface ModelsGetOpenapiRequest {
+}

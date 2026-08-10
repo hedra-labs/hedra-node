@@ -2,9 +2,9 @@
 
 /** Where a delivery stands: queued, in flight, or its terminal outcome. */
 export const WebhookDeliveryStatus = {
-    Pending: "PENDING",
-    Delivering: "DELIVERING",
-    Delivered: "DELIVERED",
-    Failed: "FAILED",
-} as const;
-export type WebhookDeliveryStatus = (typeof WebhookDeliveryStatus)[keyof typeof WebhookDeliveryStatus];
+        Pending: "PENDING",
+        Delivering: "DELIVERING",
+        Delivered: "DELIVERED",
+        Failed: "FAILED"
+    } as const;
+export type WebhookDeliveryStatus = typeof WebhookDeliveryStatus[keyof typeof WebhookDeliveryStatus];

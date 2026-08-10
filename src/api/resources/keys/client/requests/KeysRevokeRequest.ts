@@ -4,4 +4,5 @@
  * @example
  *     {}
  */
-export type KeysRevokeRequest = {};
+export interface KeysRevokeRequest {
+}

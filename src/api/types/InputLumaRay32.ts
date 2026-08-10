@@ -19,19 +19,19 @@ export interface InputLumaRay32 {
 export namespace InputLumaRay32 {
     /** Output aspect ratio. */
     export const AspectRatio = {
-        One1: "1:1",
-        Three4: "3:4",
-        Four3: "4:3",
-        Sixteen9: "16:9",
-        TwentyOne9: "21:9",
-        Nine16: "9:16",
-    } as const;
-    export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+            One1: "1:1",
+            Three4: "3:4",
+            Four3: "4:3",
+            Sixteen9: "16:9",
+            TwentyOne9: "21:9",
+            Nine16: "9:16"
+        } as const;
+    export type AspectRatio = typeof AspectRatio[keyof typeof AspectRatio];
     /** Output resolution. */
     export const Resolution = {
-        FiveHundredFortyP: "540p",
-        SevenHundredTwentyP: "720p",
-        OneThousandEightyP: "1080p",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+            FiveHundredFortyP: "540p",
+            SevenHundredTwentyP: "720p",
+            OneThousandEightyP: "1080p"
+        } as const;
+    export type Resolution = typeof Resolution[keyof typeof Resolution];
 }

@@ -4,4 +4,5 @@
  * @example
  *     {}
  */
-export type JobsGetRequest = {};
+export interface JobsGetRequest {
+}

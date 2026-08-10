@@ -23,26 +23,26 @@ export interface InputFlux11Ultra {
 export namespace InputFlux11Ultra {
     /** Output aspect ratio. */
     export const AspectRatio = {
-        Sixteen9: "16:9",
-        Nine16: "9:16",
-        One1: "1:1",
-        Four3: "4:3",
-        Three4: "3:4",
-        TwentyOne9: "21:9",
-        Nine21: "9:21",
-        Three2: "3:2",
-        Two3: "2:3",
-    } as const;
-    export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+            Sixteen9: "16:9",
+            Nine16: "9:16",
+            One1: "1:1",
+            Four3: "4:3",
+            Three4: "3:4",
+            TwentyOne9: "21:9",
+            Nine21: "9:21",
+            Three2: "3:2",
+            Two3: "2:3"
+        } as const;
+    export type AspectRatio = typeof AspectRatio[keyof typeof AspectRatio];
     /** Output resolution. */
     export const Resolution = {
-        Fixed: "fixed",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+            Fixed: "fixed"
+        } as const;
+    export type Resolution = typeof Resolution[keyof typeof Resolution];
     /** Output image format. */
     export const OutputFormat = {
-        Jpeg: "jpeg",
-        Png: "png",
-    } as const;
-    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
+            Jpeg: "jpeg",
+            Png: "png"
+        } as const;
+    export type OutputFormat = typeof OutputFormat[keyof typeof OutputFormat];
 }

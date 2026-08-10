@@ -4,4 +4,5 @@
  * @example
  *     {}
  */
-export type LogDrainsDeleteLogDrainRequest = {};
+export interface LogDrainsDeleteLogDrainRequest {
+}

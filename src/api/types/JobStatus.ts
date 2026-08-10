@@ -2,9 +2,9 @@
 
 /** The four states a job can be in. */
 export const JobStatus = {
-    InQueue: "IN_QUEUE",
-    InProgress: "IN_PROGRESS",
-    Completed: "COMPLETED",
-    Failed: "FAILED",
-} as const;
-export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus];
+        InQueue: "IN_QUEUE",
+        InProgress: "IN_PROGRESS",
+        Completed: "COMPLETED",
+        Failed: "FAILED"
+    } as const;
+export type JobStatus = typeof JobStatus[keyof typeof JobStatus];

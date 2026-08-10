@@ -5,947 +5,909 @@ import { HedraClient } from "../../src/Client";
 import { mockServerPool } from "../mock-server/MockServerPool";
 
 describe("WebhooksClient", () => {
+    
     test("getPublicKey (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { algorithm: "algorithm", public_key: "public_key" };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "algorithm" : "algorithm" , "public_key" : "public_key" };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/public-key")
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/public-key").respondWith()
+            .statusCode(200).jsonBody(rawResponseBody)
+                .build();
 
-        const response = await client.webhooks.getPublicKey();
-        expect(response).toEqual(rawResponseBody);
+        
+                        
+                                const response = await client.webhooks.getPublicKey();
+                                expect(response).toEqual(rawResponseBody);
+                              
+                    
     });
-
+          
     test("getPublicKey (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/public-key")
-            .respondWith()
-            .statusCode(400)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/public-key").respondWith()
+            .statusCode(400).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.getPublicKey();
-        }).rejects.toThrow(Hedra.BadRequestError);
+        
+            await expect(async () => {
+                return await client.webhooks.getPublicKey()
+            }).rejects.toThrow(Hedra.BadRequestError);
     });
-
+          
     test("getPublicKey (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/public-key")
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/public-key").respondWith()
+            .statusCode(403).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.getPublicKey();
-        }).rejects.toThrow(Hedra.ForbiddenError);
+        
+            await expect(async () => {
+                return await client.webhooks.getPublicKey()
+            }).rejects.toThrow(Hedra.ForbiddenError);
     });
-
+          
     test("getPublicKey (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/public-key")
-            .respondWith()
-            .statusCode(404)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/public-key").respondWith()
+            .statusCode(404).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.getPublicKey();
-        }).rejects.toThrow(Hedra.NotFoundError);
+        
+            await expect(async () => {
+                return await client.webhooks.getPublicKey()
+            }).rejects.toThrow(Hedra.NotFoundError);
     });
-
+          
     test("getPublicKey (5)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/public-key")
-            .respondWith()
-            .statusCode(429)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/public-key").respondWith()
+            .statusCode(429).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.getPublicKey();
-        }).rejects.toThrow(Hedra.TooManyRequestsError);
+        
+            await expect(async () => {
+                return await client.webhooks.getPublicKey()
+            }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
-
+          
     test("getPublicKey (6)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/public-key")
-            .respondWith()
-            .statusCode(500)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/public-key").respondWith()
+            .statusCode(500).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.getPublicKey();
-        }).rejects.toThrow(Hedra.InternalServerError);
+        
+            await expect(async () => {
+                return await client.webhooks.getPublicKey()
+            }).rejects.toThrow(Hedra.InternalServerError);
     });
-
+          
     test("getDefault (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "url" : "url" , "enabled" : true , "updated_at" : "2024-01-15T09:30:00Z" , "updated_by_key_id" : "updated_by_key_id" };
+        
+        server
+            .mockEndpoint()
+            .get("/webhooks/default").respondWith()
+            .statusCode(200).jsonBody(rawResponseBody)
+                .build();
 
-        const rawResponseBody = {
-            url: "url",
-            enabled: true,
-            updated_at: "2024-01-15T09:30:00Z",
-            updated_by_key_id: "updated_by_key_id",
-        };
-
-        server.mockEndpoint().get("/webhooks/default").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
-
-        const response = await client.webhooks.getDefault();
-        expect(response).toEqual(rawResponseBody);
+        
+                        
+                                const response = await client.webhooks.getDefault();
+                                expect(response).toEqual(rawResponseBody);
+                              
+                    
     });
-
+          
     test("getDefault (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
+        server
+            .mockEndpoint()
+            .get("/webhooks/default").respondWith()
+            .statusCode(400).jsonBody(rawResponseBody)
+                .build();
 
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
-        server.mockEndpoint().get("/webhooks/default").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
-
-        await expect(async () => {
-            return await client.webhooks.getDefault();
-        }).rejects.toThrow(Hedra.BadRequestError);
+        
+            await expect(async () => {
+                return await client.webhooks.getDefault()
+            }).rejects.toThrow(Hedra.BadRequestError);
     });
-
+          
     test("getDefault (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
+        server
+            .mockEndpoint()
+            .get("/webhooks/default").respondWith()
+            .statusCode(401).jsonBody(rawResponseBody)
+                .build();
 
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
-        server.mockEndpoint().get("/webhooks/default").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
-
-        await expect(async () => {
-            return await client.webhooks.getDefault();
-        }).rejects.toThrow(Hedra.UnauthorizedError);
+        
+            await expect(async () => {
+                return await client.webhooks.getDefault()
+            }).rejects.toThrow(Hedra.UnauthorizedError);
     });
-
+          
     test("getDefault (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
+        server
+            .mockEndpoint()
+            .get("/webhooks/default").respondWith()
+            .statusCode(403).jsonBody(rawResponseBody)
+                .build();
 
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
-        server.mockEndpoint().get("/webhooks/default").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
-
-        await expect(async () => {
-            return await client.webhooks.getDefault();
-        }).rejects.toThrow(Hedra.ForbiddenError);
+        
+            await expect(async () => {
+                return await client.webhooks.getDefault()
+            }).rejects.toThrow(Hedra.ForbiddenError);
     });
-
+          
     test("getDefault (5)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
+        server
+            .mockEndpoint()
+            .get("/webhooks/default").respondWith()
+            .statusCode(404).jsonBody(rawResponseBody)
+                .build();
 
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
-        server.mockEndpoint().get("/webhooks/default").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
-
-        await expect(async () => {
-            return await client.webhooks.getDefault();
-        }).rejects.toThrow(Hedra.NotFoundError);
+        
+            await expect(async () => {
+                return await client.webhooks.getDefault()
+            }).rejects.toThrow(Hedra.NotFoundError);
     });
-
+          
     test("getDefault (6)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
+        server
+            .mockEndpoint()
+            .get("/webhooks/default").respondWith()
+            .statusCode(429).jsonBody(rawResponseBody)
+                .build();
 
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
-        server.mockEndpoint().get("/webhooks/default").respondWith().statusCode(429).jsonBody(rawResponseBody).build();
-
-        await expect(async () => {
-            return await client.webhooks.getDefault();
-        }).rejects.toThrow(Hedra.TooManyRequestsError);
+        
+            await expect(async () => {
+                return await client.webhooks.getDefault()
+            }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
-
+          
     test("getDefault (7)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
+        server
+            .mockEndpoint()
+            .get("/webhooks/default").respondWith()
+            .statusCode(500).jsonBody(rawResponseBody)
+                .build();
 
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
-        server.mockEndpoint().get("/webhooks/default").respondWith().statusCode(500).jsonBody(rawResponseBody).build();
-
-        await expect(async () => {
-            return await client.webhooks.getDefault();
-        }).rejects.toThrow(Hedra.InternalServerError);
+        
+            await expect(async () => {
+                return await client.webhooks.getDefault()
+            }).rejects.toThrow(Hedra.InternalServerError);
     });
-
+          
     test("putDefault (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { url: "url" };
-        const rawResponseBody = {
-            url: "url",
-            enabled: true,
-            updated_at: "2024-01-15T09:30:00Z",
-            updated_by_key_id: "updated_by_key_id",
-        };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        const rawRequestBody = { "url" : "url" };
+        const rawResponseBody = { "url" : "url" , "enabled" : true , "updated_at" : "2024-01-15T09:30:00Z" , "updated_by_key_id" : "updated_by_key_id" };
+        
         server
             .mockEndpoint()
-            .put("/webhooks/default")
-            .jsonBody(rawRequestBody)
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
+            .put("/webhooks/default").jsonBody(rawRequestBody)
+                .respondWith()
+            .statusCode(200).jsonBody(rawResponseBody)
+                .build();
 
-        const response = await client.webhooks.putDefault({
-            url: "url",
-        });
-        expect(response).toEqual(rawResponseBody);
+        
+                        
+                                const response = await client.webhooks.putDefault({
+    url: "url"
+});
+                                expect(response).toEqual(rawResponseBody);
+                              
+                    
     });
-
+          
     test("putDefault (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { url: "x" };
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        const rawRequestBody = { "url" : "x" };
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .put("/webhooks/default")
-            .jsonBody(rawRequestBody)
-            .respondWith()
-            .statusCode(400)
-            .jsonBody(rawResponseBody)
-            .build();
+            .put("/webhooks/default").jsonBody(rawRequestBody)
+                .respondWith()
+            .statusCode(400).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.putDefault({
-                url: "x",
-            });
-        }).rejects.toThrow(Hedra.BadRequestError);
+        
+            await expect(async () => {
+                return await client.webhooks.putDefault({
+    url: "x"
+})
+            }).rejects.toThrow(Hedra.BadRequestError);
     });
-
+          
     test("putDefault (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { url: "x" };
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        const rawRequestBody = { "url" : "x" };
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .put("/webhooks/default")
-            .jsonBody(rawRequestBody)
-            .respondWith()
-            .statusCode(401)
-            .jsonBody(rawResponseBody)
-            .build();
+            .put("/webhooks/default").jsonBody(rawRequestBody)
+                .respondWith()
+            .statusCode(401).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.putDefault({
-                url: "x",
-            });
-        }).rejects.toThrow(Hedra.UnauthorizedError);
+        
+            await expect(async () => {
+                return await client.webhooks.putDefault({
+    url: "x"
+})
+            }).rejects.toThrow(Hedra.UnauthorizedError);
     });
-
+          
     test("putDefault (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { url: "x" };
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        const rawRequestBody = { "url" : "x" };
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .put("/webhooks/default")
-            .jsonBody(rawRequestBody)
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
+            .put("/webhooks/default").jsonBody(rawRequestBody)
+                .respondWith()
+            .statusCode(403).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.putDefault({
-                url: "x",
-            });
-        }).rejects.toThrow(Hedra.ForbiddenError);
+        
+            await expect(async () => {
+                return await client.webhooks.putDefault({
+    url: "x"
+})
+            }).rejects.toThrow(Hedra.ForbiddenError);
     });
-
+          
     test("putDefault (5)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { url: "x" };
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        const rawRequestBody = { "url" : "x" };
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .put("/webhooks/default")
-            .jsonBody(rawRequestBody)
-            .respondWith()
-            .statusCode(404)
-            .jsonBody(rawResponseBody)
-            .build();
+            .put("/webhooks/default").jsonBody(rawRequestBody)
+                .respondWith()
+            .statusCode(404).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.putDefault({
-                url: "x",
-            });
-        }).rejects.toThrow(Hedra.NotFoundError);
+        
+            await expect(async () => {
+                return await client.webhooks.putDefault({
+    url: "x"
+})
+            }).rejects.toThrow(Hedra.NotFoundError);
     });
-
+          
     test("putDefault (6)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { url: "x" };
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        const rawRequestBody = { "url" : "x" };
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .put("/webhooks/default")
-            .jsonBody(rawRequestBody)
-            .respondWith()
-            .statusCode(429)
-            .jsonBody(rawResponseBody)
-            .build();
+            .put("/webhooks/default").jsonBody(rawRequestBody)
+                .respondWith()
+            .statusCode(429).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.putDefault({
-                url: "x",
-            });
-        }).rejects.toThrow(Hedra.TooManyRequestsError);
+        
+            await expect(async () => {
+                return await client.webhooks.putDefault({
+    url: "x"
+})
+            }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
-
+          
     test("putDefault (7)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = { url: "x" };
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        const rawRequestBody = { "url" : "x" };
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .put("/webhooks/default")
-            .jsonBody(rawRequestBody)
-            .respondWith()
-            .statusCode(500)
-            .jsonBody(rawResponseBody)
-            .build();
+            .put("/webhooks/default").jsonBody(rawRequestBody)
+                .respondWith()
+            .statusCode(500).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.putDefault({
-                url: "x",
-            });
-        }).rejects.toThrow(Hedra.InternalServerError);
+        
+            await expect(async () => {
+                return await client.webhooks.putDefault({
+    url: "x"
+})
+            }).rejects.toThrow(Hedra.InternalServerError);
     });
-
+          
     test("deleteDefault (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        
+        
+        server
+            .mockEndpoint()
+            .delete("/webhooks/default").respondWith()
+            .statusCode(200).build();
 
-        server.mockEndpoint().delete("/webhooks/default").respondWith().statusCode(200).build();
-
-        const response = await client.webhooks.deleteDefault();
-        expect(response).toEqual(undefined);
+        
+                        
+                                const response = await client.webhooks.deleteDefault();
+                                expect(response).toEqual(undefined);
+                              
+                    
     });
-
+          
     test("deleteDefault (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .delete("/webhooks/default")
-            .respondWith()
-            .statusCode(400)
-            .jsonBody(rawResponseBody)
-            .build();
+            .delete("/webhooks/default").respondWith()
+            .statusCode(400).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.deleteDefault();
-        }).rejects.toThrow(Hedra.BadRequestError);
+        
+            await expect(async () => {
+                return await client.webhooks.deleteDefault()
+            }).rejects.toThrow(Hedra.BadRequestError);
     });
-
+          
     test("deleteDefault (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .delete("/webhooks/default")
-            .respondWith()
-            .statusCode(401)
-            .jsonBody(rawResponseBody)
-            .build();
+            .delete("/webhooks/default").respondWith()
+            .statusCode(401).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.deleteDefault();
-        }).rejects.toThrow(Hedra.UnauthorizedError);
+        
+            await expect(async () => {
+                return await client.webhooks.deleteDefault()
+            }).rejects.toThrow(Hedra.UnauthorizedError);
     });
-
+          
     test("deleteDefault (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .delete("/webhooks/default")
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
+            .delete("/webhooks/default").respondWith()
+            .statusCode(403).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.deleteDefault();
-        }).rejects.toThrow(Hedra.ForbiddenError);
+        
+            await expect(async () => {
+                return await client.webhooks.deleteDefault()
+            }).rejects.toThrow(Hedra.ForbiddenError);
     });
-
+          
     test("deleteDefault (5)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .delete("/webhooks/default")
-            .respondWith()
-            .statusCode(404)
-            .jsonBody(rawResponseBody)
-            .build();
+            .delete("/webhooks/default").respondWith()
+            .statusCode(404).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.deleteDefault();
-        }).rejects.toThrow(Hedra.NotFoundError);
+        
+            await expect(async () => {
+                return await client.webhooks.deleteDefault()
+            }).rejects.toThrow(Hedra.NotFoundError);
     });
-
+          
     test("deleteDefault (6)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .delete("/webhooks/default")
-            .respondWith()
-            .statusCode(429)
-            .jsonBody(rawResponseBody)
-            .build();
+            .delete("/webhooks/default").respondWith()
+            .statusCode(429).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.deleteDefault();
-        }).rejects.toThrow(Hedra.TooManyRequestsError);
+        
+            await expect(async () => {
+                return await client.webhooks.deleteDefault()
+            }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
-
+          
     test("deleteDefault (7)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .delete("/webhooks/default")
-            .respondWith()
-            .statusCode(500)
-            .jsonBody(rawResponseBody)
-            .build();
+            .delete("/webhooks/default").respondWith()
+            .statusCode(500).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.deleteDefault();
-        }).rejects.toThrow(Hedra.InternalServerError);
+        
+            await expect(async () => {
+                return await client.webhooks.deleteDefault()
+            }).rejects.toThrow(Hedra.InternalServerError);
     });
-
+          
     test("testDefault (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { ok: true, response_status: 1, error: "error" };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "ok" : true , "response_status" : 1 , "error" : "error" };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/default/test")
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/default/test").respondWith()
+            .statusCode(200).jsonBody(rawResponseBody)
+                .build();
 
-        const response = await client.webhooks.testDefault();
-        expect(response).toEqual(rawResponseBody);
+        
+                        
+                                const response = await client.webhooks.testDefault();
+                                expect(response).toEqual(rawResponseBody);
+                              
+                    
     });
-
+          
     test("testDefault (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/default/test")
-            .respondWith()
-            .statusCode(400)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/default/test").respondWith()
+            .statusCode(400).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.testDefault();
-        }).rejects.toThrow(Hedra.BadRequestError);
+        
+            await expect(async () => {
+                return await client.webhooks.testDefault()
+            }).rejects.toThrow(Hedra.BadRequestError);
     });
-
+          
     test("testDefault (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/default/test")
-            .respondWith()
-            .statusCode(401)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/default/test").respondWith()
+            .statusCode(401).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.testDefault();
-        }).rejects.toThrow(Hedra.UnauthorizedError);
+        
+            await expect(async () => {
+                return await client.webhooks.testDefault()
+            }).rejects.toThrow(Hedra.UnauthorizedError);
     });
-
+          
     test("testDefault (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/default/test")
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/default/test").respondWith()
+            .statusCode(403).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.testDefault();
-        }).rejects.toThrow(Hedra.ForbiddenError);
+        
+            await expect(async () => {
+                return await client.webhooks.testDefault()
+            }).rejects.toThrow(Hedra.ForbiddenError);
     });
-
+          
     test("testDefault (5)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/default/test")
-            .respondWith()
-            .statusCode(404)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/default/test").respondWith()
+            .statusCode(404).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.testDefault();
-        }).rejects.toThrow(Hedra.NotFoundError);
+        
+            await expect(async () => {
+                return await client.webhooks.testDefault()
+            }).rejects.toThrow(Hedra.NotFoundError);
     });
-
+          
     test("testDefault (6)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/default/test")
-            .respondWith()
-            .statusCode(429)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/default/test").respondWith()
+            .statusCode(429).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.testDefault();
-        }).rejects.toThrow(Hedra.TooManyRequestsError);
+        
+            await expect(async () => {
+                return await client.webhooks.testDefault()
+            }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
-
+          
     test("testDefault (7)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/default/test")
-            .respondWith()
-            .statusCode(500)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/default/test").respondWith()
+            .statusCode(500).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.testDefault();
-        }).rejects.toThrow(Hedra.InternalServerError);
+        
+            await expect(async () => {
+                return await client.webhooks.testDefault()
+            }).rejects.toThrow(Hedra.InternalServerError);
     });
-
+          
     test("listDeliveries (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {
-            data: [
-                {
-                    job_id: "job_id",
-                    job_accessible: true,
-                    model: "model",
-                    event_type: "job.completed",
-                    status: "PENDING",
-                    source: "per_job",
-                    attempts: 1,
-                    redelivery_count: 1,
-                    redeliveries: [{ requested_at: "2024-01-15T09:30:00Z", status: "PENDING", attempts: 1 }],
-                    last_response_status: 1,
-                    last_error: { code: "UNKNOWN", message: "message" },
-                    webhook_url: "webhook_url",
-                    created_at: "2024-01-15T09:30:00Z",
-                    last_attempt_at: "2024-01-15T09:30:00Z",
-                },
-            ],
-            next_cursor: "next_cursor",
-        };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "data" : [ { "job_id" : "job_id" , "job_accessible" : true , "model" : "model" , "event_type" : "job.completed" , "status" : "PENDING" , "source" : "per_job" , "attempts" : 1 , "redelivery_count" : 1 , "redeliveries" : [ { "requested_at" : "2024-01-15T09:30:00Z" , "status" : "PENDING" , "attempts" : 1 } ] , "last_response_status" : 1 , "last_error" : { "code" : "UNKNOWN" , "message" : "message" } , "webhook_url" : "webhook_url" , "created_at" : "2024-01-15T09:30:00Z" , "last_attempt_at" : "2024-01-15T09:30:00Z" } ] , "next_cursor" : "next_cursor" };
+        
         server
             .mockEndpoint({ once: false })
-            .get("/webhooks/deliveries")
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/deliveries").respondWith()
+            .statusCode(200).jsonBody(rawResponseBody)
+                .build();
 
-        const expected = rawResponseBody;
-        const page = await client.webhooks.listDeliveries();
-
-        expect(expected.data).toEqual(page.data);
-        expect(page.hasNextPage()).toBe(true);
-        const nextPage = await page.getNextPage();
-        expect(expected.data).toEqual(nextPage.data);
+        
+                        
+                const expected = rawResponseBody;
+                const page = await client.webhooks.listDeliveries();
+                
+                            expect(expected.data).toEqual(page.data);
+                            expect(page.hasNextPage()).toBe(true);
+                            const nextPage = await page.getNextPage();
+                            expect(expected.data).toEqual(nextPage.data);
+                        
+                
+                    
     });
-
+          
     test("listDeliveries (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/deliveries")
-            .respondWith()
-            .statusCode(400)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/deliveries").respondWith()
+            .statusCode(400).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.listDeliveries();
-        }).rejects.toThrow(Hedra.BadRequestError);
+        
+            await expect(async () => {
+                return await client.webhooks.listDeliveries()
+            }).rejects.toThrow(Hedra.BadRequestError);
     });
-
+          
     test("listDeliveries (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/deliveries")
-            .respondWith()
-            .statusCode(401)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/deliveries").respondWith()
+            .statusCode(401).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.listDeliveries();
-        }).rejects.toThrow(Hedra.UnauthorizedError);
+        
+            await expect(async () => {
+                return await client.webhooks.listDeliveries()
+            }).rejects.toThrow(Hedra.UnauthorizedError);
     });
-
+          
     test("listDeliveries (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/deliveries")
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/deliveries").respondWith()
+            .statusCode(403).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.listDeliveries();
-        }).rejects.toThrow(Hedra.ForbiddenError);
+        
+            await expect(async () => {
+                return await client.webhooks.listDeliveries()
+            }).rejects.toThrow(Hedra.ForbiddenError);
     });
-
+          
     test("listDeliveries (5)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/deliveries")
-            .respondWith()
-            .statusCode(404)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/deliveries").respondWith()
+            .statusCode(404).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.listDeliveries();
-        }).rejects.toThrow(Hedra.NotFoundError);
+        
+            await expect(async () => {
+                return await client.webhooks.listDeliveries()
+            }).rejects.toThrow(Hedra.NotFoundError);
     });
-
+          
     test("listDeliveries (6)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/deliveries")
-            .respondWith()
-            .statusCode(429)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/deliveries").respondWith()
+            .statusCode(429).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.listDeliveries();
-        }).rejects.toThrow(Hedra.TooManyRequestsError);
+        
+            await expect(async () => {
+                return await client.webhooks.listDeliveries()
+            }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
-
+          
     test("listDeliveries (7)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .get("/webhooks/deliveries")
-            .respondWith()
-            .statusCode(500)
-            .jsonBody(rawResponseBody)
-            .build();
+            .get("/webhooks/deliveries").respondWith()
+            .statusCode(500).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.listDeliveries();
-        }).rejects.toThrow(Hedra.InternalServerError);
+        
+            await expect(async () => {
+                return await client.webhooks.listDeliveries()
+            }).rejects.toThrow(Hedra.InternalServerError);
     });
-
+          
     test("redeliver (1)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {
-            job_id: "job_id",
-            job_accessible: true,
-            model: "model",
-            event_type: "job.completed",
-            status: "PENDING",
-            source: "per_job",
-            attempts: 1,
-            redelivery_count: 1,
-            redeliveries: [
-                {
-                    requested_at: "2024-01-15T09:30:00Z",
-                    status: "PENDING",
-                    attempts: 1,
-                    last_response_status: 1,
-                    last_error: { code: "UNKNOWN", message: "message" },
-                    last_attempt_at: "2024-01-15T09:30:00Z",
-                },
-            ],
-            last_response_status: 1,
-            last_error: {
-                code: "UNKNOWN",
-                message: "message",
-                retryable: true,
-                retry_after: 1,
-                param: "param",
-                details: [{ field: "field", message: "message" }],
-                replaced_by: "replaced_by",
-                billing: { balance: 1.1, required: 1.1, currency: "currency", funding_url: "funding_url" },
-            },
-            webhook_url: "webhook_url",
-            created_at: "2024-01-15T09:30:00Z",
-            last_attempt_at: "2024-01-15T09:30:00Z",
-        };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "job_id" : "job_id" , "job_accessible" : true , "model" : "model" , "event_type" : "job.completed" , "status" : "PENDING" , "source" : "per_job" , "attempts" : 1 , "redelivery_count" : 1 , "redeliveries" : [ { "requested_at" : "2024-01-15T09:30:00Z" , "status" : "PENDING" , "attempts" : 1 , "last_response_status" : 1 , "last_error" : { "code" : "UNKNOWN" , "message" : "message" } , "last_attempt_at" : "2024-01-15T09:30:00Z" } ] , "last_response_status" : 1 , "last_error" : { "code" : "UNKNOWN" , "message" : "message" , "retryable" : true , "retry_after" : 1 , "param" : "param" , "details" : [ { "field" : "field" , "message" : "message" } ] , "replaced_by" : "replaced_by" , "billing" : { "balance" : 1.1 , "required" : 1.1 , "currency" : "currency" , "funding_url" : "funding_url" } } , "webhook_url" : "webhook_url" , "created_at" : "2024-01-15T09:30:00Z" , "last_attempt_at" : "2024-01-15T09:30:00Z" };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/deliveries/job_id/redeliver")
-            .respondWith()
-            .statusCode(200)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/deliveries/job_id/redeliver").respondWith()
+            .statusCode(200).jsonBody(rawResponseBody)
+                .build();
 
-        const response = await client.webhooks.redeliver("job_id");
-        expect(response).toEqual(rawResponseBody);
+        
+                        
+                                const response = await client.webhooks.redeliver("job_id");
+                                expect(response).toEqual(rawResponseBody);
+                              
+                    
     });
-
+          
     test("redeliver (2)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/deliveries/job_id/redeliver")
-            .respondWith()
-            .statusCode(400)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/deliveries/job_id/redeliver").respondWith()
+            .statusCode(400).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.redeliver("job_id");
-        }).rejects.toThrow(Hedra.BadRequestError);
+        
+            await expect(async () => {
+                return await client.webhooks.redeliver("job_id")
+            }).rejects.toThrow(Hedra.BadRequestError);
     });
-
+          
     test("redeliver (3)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/deliveries/job_id/redeliver")
-            .respondWith()
-            .statusCode(401)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/deliveries/job_id/redeliver").respondWith()
+            .statusCode(401).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.redeliver("job_id");
-        }).rejects.toThrow(Hedra.UnauthorizedError);
+        
+            await expect(async () => {
+                return await client.webhooks.redeliver("job_id")
+            }).rejects.toThrow(Hedra.UnauthorizedError);
     });
-
+          
     test("redeliver (4)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/deliveries/job_id/redeliver")
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/deliveries/job_id/redeliver").respondWith()
+            .statusCode(403).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.redeliver("job_id");
-        }).rejects.toThrow(Hedra.ForbiddenError);
+        
+            await expect(async () => {
+                return await client.webhooks.redeliver("job_id")
+            }).rejects.toThrow(Hedra.ForbiddenError);
     });
-
+          
     test("redeliver (5)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/deliveries/job_id/redeliver")
-            .respondWith()
-            .statusCode(404)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/deliveries/job_id/redeliver").respondWith()
+            .statusCode(404).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.redeliver("job_id");
-        }).rejects.toThrow(Hedra.NotFoundError);
+        
+            await expect(async () => {
+                return await client.webhooks.redeliver("job_id")
+            }).rejects.toThrow(Hedra.NotFoundError);
     });
-
+          
     test("redeliver (6)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/deliveries/job_id/redeliver")
-            .respondWith()
-            .statusCode(429)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/deliveries/job_id/redeliver").respondWith()
+            .statusCode(429).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.redeliver("job_id");
-        }).rejects.toThrow(Hedra.TooManyRequestsError);
+        
+            await expect(async () => {
+                return await client.webhooks.redeliver("job_id")
+            }).rejects.toThrow(Hedra.TooManyRequestsError);
     });
-
+          
     test("redeliver (7)", async () => {
         const server = mockServerPool.createServer();
-        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
-
+        const client = new HedraClient({ "maxRetries" : 0 , "apiKey" : "test" , "environment" : server.baseUrl });
+        
+        const rawResponseBody = { "error" : { "code" : "UNKNOWN" , "message" : "message" } };
+        
         server
             .mockEndpoint()
-            .post("/webhooks/deliveries/job_id/redeliver")
-            .respondWith()
-            .statusCode(500)
-            .jsonBody(rawResponseBody)
-            .build();
+            .post("/webhooks/deliveries/job_id/redeliver").respondWith()
+            .statusCode(500).jsonBody(rawResponseBody)
+                .build();
 
-        await expect(async () => {
-            return await client.webhooks.redeliver("job_id");
-        }).rejects.toThrow(Hedra.InternalServerError);
+        
+            await expect(async () => {
+                return await client.webhooks.redeliver("job_id")
+            }).rejects.toThrow(Hedra.InternalServerError);
     });
+          
 });

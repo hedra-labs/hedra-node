@@ -27,32 +27,32 @@ export interface InputFluxDev {
 export namespace InputFluxDev {
     /** Output aspect ratio. */
     export const AspectRatio = {
-        One1: "1:1",
-        One3: "1:3",
-        Two3: "2:3",
-        Three1: "3:1",
-        Three2: "3:2",
-        Three4: "3:4",
-        Four3: "4:3",
-        Sixteen9: "16:9",
-        Nine16: "9:16",
-        Ten16: "10:16",
-        Sixteen10: "16:10",
-    } as const;
-    export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+            One1: "1:1",
+            One3: "1:3",
+            Two3: "2:3",
+            Three1: "3:1",
+            Three2: "3:2",
+            Three4: "3:4",
+            Four3: "4:3",
+            Sixteen9: "16:9",
+            Nine16: "9:16",
+            Ten16: "10:16",
+            Sixteen10: "16:10"
+        } as const;
+    export type AspectRatio = typeof AspectRatio[keyof typeof AspectRatio];
     /** Output resolution. */
     export const Resolution = {
-        FiveHundredFortyP: "540p",
-        SevenHundredTwentyP: "720p",
-        OneThousandEightyP: "1080p",
-        OneThousandFourHundredFortyP2KQhd: "1440p (2K QHD)",
-        TwoThousandOneHundredSixtyP4KUhd: "2160p (4K UHD)",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+            FiveHundredFortyP: "540p",
+            SevenHundredTwentyP: "720p",
+            OneThousandEightyP: "1080p",
+            OneThousandFourHundredFortyP2KQhd: "1440p (2K QHD)",
+            TwoThousandOneHundredSixtyP4KUhd: "2160p (4K UHD)"
+        } as const;
+    export type Resolution = typeof Resolution[keyof typeof Resolution];
     /** Output image format. */
     export const OutputFormat = {
-        Jpeg: "jpeg",
-        Png: "png",
-    } as const;
-    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
+            Jpeg: "jpeg",
+            Png: "png"
+        } as const;
+    export type OutputFormat = typeof OutputFormat[keyof typeof OutputFormat];
 }

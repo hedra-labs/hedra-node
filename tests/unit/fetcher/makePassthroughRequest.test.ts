@@ -1,5 +1,5 @@
-import type { Mock } from "vitest";
 import { makePassthroughRequest } from "../../../src/core/fetcher/makePassthroughRequest";
+import { Mock } from "vitest";
 
 describe("makePassthroughRequest", () => {
     let mockFetch: Mock;
@@ -89,6 +89,7 @@ describe("makePassthroughRequest", () => {
                     headers: { "X-Custom": "from-init", Authorization: "from-init" },
                 },
                 {
+                    baseUrl: "https://api.example.com",
                     headers: {
                         "X-Custom": "from-sdk",
                         "X-SDK-Only": "sdk-value",
@@ -108,7 +109,7 @@ describe("makePassthroughRequest", () => {
             const headers = calledOptions.headers;
 
             // requestOptions.headers wins for Authorization (highest priority)
-            expect(headers.authorization).toBe("from-request-options");
+            expect(headers["authorization"]).toBe("from-request-options");
             // init.headers wins over SDK defaults for X-Custom
             expect(headers["x-custom"]).toBe("from-init");
             // SDK-only header is preserved
@@ -139,7 +140,11 @@ describe("makePassthroughRequest", () => {
         it("should handle Headers object in init", async () => {
             const initHeaders = new Headers();
             initHeaders.set("X-From-Headers-Object", "value");
-            await makePassthroughRequest("https://api.example.com", { headers: initHeaders }, { fetch: mockFetch });
+            await makePassthroughRequest(
+                "https://api.example.com",
+                { headers: initHeaders },
+                { fetch: mockFetch },
+            );
             const [, calledOptions] = mockFetch.mock.calls[0];
             expect(calledOptions.headers["x-from-headers-object"]).toBe("value");
         });
@@ -168,11 +173,12 @@ describe("makePassthroughRequest", () => {
     describe("auth headers", () => {
         it("should include auth headers when getAuthHeaders is provided", async () => {
             await makePassthroughRequest("https://api.example.com", undefined, {
+                baseUrl: "https://api.example.com",
                 getAuthHeaders: async () => ({ Authorization: "Bearer my-token" }),
                 fetch: mockFetch,
             });
             const [, calledOptions] = mockFetch.mock.calls[0];
-            expect(calledOptions.headers.authorization).toBe("Bearer my-token");
+            expect(calledOptions.headers["authorization"]).toBe("Bearer my-token");
         });
 
         it("should work without auth headers", async () => {
@@ -180,7 +186,7 @@ describe("makePassthroughRequest", () => {
                 fetch: mockFetch,
             });
             const [, calledOptions] = mockFetch.mock.calls[0];
-            expect(calledOptions.headers.authorization).toBeUndefined();
+            expect(calledOptions.headers["authorization"]).toBeUndefined();
         });
 
         it("should allow init headers to override auth headers", async () => {
@@ -188,12 +194,89 @@ describe("makePassthroughRequest", () => {
                 "https://api.example.com",
                 { headers: { Authorization: "Bearer override" } },
                 {
+                    baseUrl: "https://api.example.com",
                     getAuthHeaders: async () => ({ Authorization: "Bearer sdk-auth" }),
                     fetch: mockFetch,
                 },
             );
             const [, calledOptions] = mockFetch.mock.calls[0];
-            expect(calledOptions.headers.authorization).toBe("Bearer override");
+            expect(calledOptions.headers["authorization"]).toBe("Bearer override");
+        });
+    });
+
+    describe("auth header origin scoping", () => {
+        it("should attach auth headers to relative paths resolved against baseUrl", async () => {
+            await makePassthroughRequest("/v1/users", undefined, {
+                baseUrl: "https://api.example.com",
+                getAuthHeaders: async () => ({ Authorization: "Bearer my-token" }),
+                fetch: mockFetch,
+            });
+            const [, calledOptions] = mockFetch.mock.calls[0];
+            expect(calledOptions.headers["authorization"]).toBe("Bearer my-token");
+        });
+
+        it("should attach auth headers to same-origin absolute URLs", async () => {
+            await makePassthroughRequest("https://api.example.com/v1/users", undefined, {
+                baseUrl: "https://api.example.com",
+                getAuthHeaders: async () => ({ Authorization: "Bearer my-token" }),
+                fetch: mockFetch,
+            });
+            const [, calledOptions] = mockFetch.mock.calls[0];
+            expect(calledOptions.headers["authorization"]).toBe("Bearer my-token");
+        });
+
+        it("should attach auth headers when the absolute URL matches the environment origin", async () => {
+            await makePassthroughRequest("https://env.example.com/v1/users", undefined, {
+                environment: "https://env.example.com",
+                getAuthHeaders: async () => ({ Authorization: "Bearer my-token" }),
+                fetch: mockFetch,
+            });
+            const [, calledOptions] = mockFetch.mock.calls[0];
+            expect(calledOptions.headers["authorization"]).toBe("Bearer my-token");
+        });
+
+        it("should NOT attach auth headers to a cross-origin absolute URL", async () => {
+            await makePassthroughRequest("https://evil.example.com/steal", undefined, {
+                baseUrl: "https://api.example.com",
+                getAuthHeaders: async () => ({ Authorization: "Bearer my-token" }),
+                fetch: mockFetch,
+            });
+            const [, calledOptions] = mockFetch.mock.calls[0];
+            expect(calledOptions.headers["authorization"]).toBeUndefined();
+        });
+
+        it("should NOT attach auth headers to a cross-origin URL differing only by port", async () => {
+            await makePassthroughRequest("https://api.example.com:9999/steal", undefined, {
+                baseUrl: "https://api.example.com",
+                getAuthHeaders: async () => ({ Authorization: "Bearer my-token" }),
+                fetch: mockFetch,
+            });
+            const [, calledOptions] = mockFetch.mock.calls[0];
+            expect(calledOptions.headers["authorization"]).toBeUndefined();
+        });
+
+        it("should NOT attach auth headers when no baseUrl or environment is configured", async () => {
+            await makePassthroughRequest("https://api.example.com/v1/users", undefined, {
+                getAuthHeaders: async () => ({ Authorization: "Bearer my-token" }),
+                fetch: mockFetch,
+            });
+            const [, calledOptions] = mockFetch.mock.calls[0];
+            expect(calledOptions.headers["authorization"]).toBeUndefined();
+        });
+
+        it("should still allow explicit init headers on cross-origin requests", async () => {
+            await makePassthroughRequest(
+                "https://evil.example.com/steal",
+                { headers: { "X-Custom": "keep-me" } },
+                {
+                    baseUrl: "https://api.example.com",
+                    getAuthHeaders: async () => ({ Authorization: "Bearer my-token" }),
+                    fetch: mockFetch,
+                },
+            );
+            const [, calledOptions] = mockFetch.mock.calls[0];
+            expect(calledOptions.headers["authorization"]).toBeUndefined();
+            expect(calledOptions.headers["x-custom"]).toBe("keep-me");
         });
     });
 
@@ -297,19 +380,19 @@ describe("makePassthroughRequest", () => {
 
     describe("credentials", () => {
         it("should pass credentials include when set", async () => {
-            await makePassthroughRequest("https://api.example.com", { credentials: "include" }, { fetch: mockFetch });
+            await makePassthroughRequest(
+                "https://api.example.com",
+                { credentials: "include" },
+                { fetch: mockFetch },
+            );
             const [, calledOptions] = mockFetch.mock.calls[0];
             expect(calledOptions.credentials).toBe("include");
         });
 
         it("should not pass credentials when not set to include", async () => {
-            await makePassthroughRequest(
-                "https://api.example.com",
-                { credentials: "same-origin" },
-                {
-                    fetch: mockFetch,
-                },
-            );
+            await makePassthroughRequest("https://api.example.com", { credentials: "same-origin" }, {
+                fetch: mockFetch,
+            });
             const [, calledOptions] = mockFetch.mock.calls[0];
             expect(calledOptions.credentials).toBeUndefined();
         });
@@ -393,6 +476,33 @@ describe("makePassthroughRequest", () => {
             const [, calledOptions] = mockFetch.mock.calls[0];
             expect(calledOptions.headers["x-static"]).toBe("static-value");
             expect(calledOptions.headers["x-dynamic"]).toBe("dynamic-value");
+        });
+    });
+
+    describe("debug logging", () => {
+        it("should redact credentials in the logged request URL", async () => {
+            const mockLogger = {
+                debug: vi.fn(),
+                info: vi.fn(),
+                warn: vi.fn(),
+                error: vi.fn(),
+            };
+            await makePassthroughRequest("https://user:password@api.example.com/v1/users?token=secret", undefined, {
+                fetch: mockFetch,
+                logging: {
+                    level: "debug",
+                    logger: mockLogger,
+                    silent: false,
+                },
+            });
+
+            const loggedUrls = mockLogger.debug.mock.calls.map(([, meta]) => (meta as { url: string }).url);
+            expect(loggedUrls.length).toBeGreaterThan(0);
+            for (const loggedUrl of loggedUrls) {
+                expect(loggedUrl).toBe("https://[REDACTED]@api.example.com/v1/users?token=[REDACTED]");
+                expect(loggedUrl).not.toContain("password");
+                expect(loggedUrl).not.toContain("secret");
+            }
         });
     });
 });

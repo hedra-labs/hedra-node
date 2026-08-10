@@ -4,4 +4,5 @@
  * @example
  *     {}
  */
-export type WebhooksRedeliverRequest = {};
+export interface WebhooksRedeliverRequest {
+}

@@ -12,20 +12,20 @@
  *     https://grpc.io/docs/guides/status-codes/ for details.
  */
 export const ErrorCode = {
-    Unknown: "UNKNOWN",
-    InvalidArgument: "INVALID_ARGUMENT",
-    NotFound: "NOT_FOUND",
-    Gone: "GONE",
-    AlreadyExists: "ALREADY_EXISTS",
-    AlreadyInProgress: "ALREADY_IN_PROGRESS",
-    Unauthorized: "UNAUTHORIZED",
-    PermissionDenied: "PERMISSION_DENIED",
-    InsufficientBalance: "INSUFFICIENT_BALANCE",
-    ModerationFailed: "MODERATION_FAILED",
-    FailedPrecondition: "FAILED_PRECONDITION",
-    DeadlineExceeded: "DEADLINE_EXCEEDED",
-    ResourceExhausted: "RESOURCE_EXHAUSTED",
-    Unavailable: "UNAVAILABLE",
-    Internal: "INTERNAL",
-} as const;
-export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];
+        Unknown: "UNKNOWN",
+        InvalidArgument: "INVALID_ARGUMENT",
+        NotFound: "NOT_FOUND",
+        Gone: "GONE",
+        AlreadyExists: "ALREADY_EXISTS",
+        AlreadyInProgress: "ALREADY_IN_PROGRESS",
+        Unauthorized: "UNAUTHORIZED",
+        PermissionDenied: "PERMISSION_DENIED",
+        InsufficientBalance: "INSUFFICIENT_BALANCE",
+        ModerationFailed: "MODERATION_FAILED",
+        FailedPrecondition: "FAILED_PRECONDITION",
+        DeadlineExceeded: "DEADLINE_EXCEEDED",
+        ResourceExhausted: "RESOURCE_EXHAUSTED",
+        Unavailable: "UNAVAILABLE",
+        Internal: "INTERNAL"
+    } as const;
+export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode];

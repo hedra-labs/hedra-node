@@ -2,7 +2,7 @@
 
 /** Personal keys die with the member; service keys belong to the workspace. */
 export const ApiKeyKind = {
-    Personal: "personal",
-    Service: "service",
-} as const;
-export type ApiKeyKind = (typeof ApiKeyKind)[keyof typeof ApiKeyKind];
+        Personal: "personal",
+        Service: "service"
+    } as const;
+export type ApiKeyKind = typeof ApiKeyKind[keyof typeof ApiKeyKind];

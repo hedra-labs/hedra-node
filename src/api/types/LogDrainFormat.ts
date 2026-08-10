@@ -2,7 +2,7 @@
 
 /** Wire encoding for one log drain endpoint's HTTP posts. */
 export const LogDrainFormat = {
-    Ndjson: "ndjson",
-    Otlp: "otlp",
-} as const;
-export type LogDrainFormat = (typeof LogDrainFormat)[keyof typeof LogDrainFormat];
+        Ndjson: "ndjson",
+        Otlp: "otlp"
+    } as const;
+export type LogDrainFormat = typeof LogDrainFormat[keyof typeof LogDrainFormat];

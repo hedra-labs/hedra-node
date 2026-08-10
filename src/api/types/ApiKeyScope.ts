@@ -8,13 +8,13 @@
  * without a database-enum migration.
  */
 export const ApiKeyScope = {
-    JobsRead: "jobs:read",
-    JobsWrite: "jobs:write",
-    ModelsRead: "models:read",
-    FilesWrite: "files:write",
-    WebhooksManage: "webhooks:manage",
-    LogDrainsManage: "log_drains:manage",
-    UsageRead: "usage:read",
-    KeysManage: "keys:manage",
-} as const;
-export type ApiKeyScope = (typeof ApiKeyScope)[keyof typeof ApiKeyScope];
+        JobsRead: "jobs:read",
+        JobsWrite: "jobs:write",
+        ModelsRead: "models:read",
+        FilesWrite: "files:write",
+        WebhooksManage: "webhooks:manage",
+        LogDrainsManage: "log_drains:manage",
+        UsageRead: "usage:read",
+        KeysManage: "keys:manage"
+    } as const;
+export type ApiKeyScope = typeof ApiKeyScope[keyof typeof ApiKeyScope];

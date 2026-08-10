@@ -4,4 +4,5 @@
  * @example
  *     {}
  */
-export type ModelsGetRequest = {};
+export interface ModelsGetRequest {
+}

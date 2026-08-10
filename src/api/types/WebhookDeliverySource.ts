@@ -2,7 +2,7 @@
 
 /** Which URL resolution created this delivery. */
 export const WebhookDeliverySource = {
-    PerJob: "per_job",
-    Default: "default",
-} as const;
-export type WebhookDeliverySource = (typeof WebhookDeliverySource)[keyof typeof WebhookDeliverySource];
+        PerJob: "per_job",
+        Default: "default"
+    } as const;
+export type WebhookDeliverySource = typeof WebhookDeliverySource[keyof typeof WebhookDeliverySource];

@@ -2,8 +2,8 @@
 
 /** The kind of output a model produces — the axis `?modality=` filters on. */
 export const Modality = {
-    Image: "image",
-    Video: "video",
-    Audio: "audio",
-} as const;
-export type Modality = (typeof Modality)[keyof typeof Modality];
+        Image: "image",
+        Video: "video",
+        Audio: "audio"
+    } as const;
+export type Modality = typeof Modality[keyof typeof Modality];
