@@ -16,6 +16,10 @@ on:
         description: "Version to publish, e.g. 1.0.0 (required: a manual run has no release tag to derive it from)"
         required: true
         type: string
+      dry_run:
+        description: "Build, test and pack, but stop short of uploading to npm"
+        type: boolean
+        default: false
 
 jobs:
   publish:
@@ -99,7 +103,20 @@ jobs:
       - name: Test
         run: pnpm test
 
+      # `npm publish --dry-run` runs the full pack-and-validate path and reports
+      # exactly what would be uploaded, without uploading. A `release: published`
+      # run supplies no inputs, so DRY_RUN is the empty string and the real
+      # publish is what happens -- the default must stay false.
       - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN || secrets.HEDRA_NPM_TOKEN }}
-        run: npm publish --access public
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          if [ "${DRY_RUN}" = "true" ]; then
+            echo "::notice::Dry run - packing only; nothing is uploaded to npm."
+            npm publish --access public --dry-run
+          else
+            echo "::notice::Publishing to npm for real."
+            npm publish --access public
+          fi
