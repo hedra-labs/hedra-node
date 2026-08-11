@@ -42,7 +42,13 @@ generations:
     cli_version: unknown
     generator_versions:
       fernapi/fern-typescript-sdk: 3.87.2
-current_generation: d1ae0a4cb7413a65420d13cde63c4016c6f0a30e
+  - commit_sha: 27a7baa3a2b9669ee41f344ca3e10badb91b0b9f
+    tree_hash: c7231beac614987311f2b59b737d838e58d945fb
+    timestamp: 2026-08-11T22:37:33.509Z
+    cli_version: unknown
+    generator_versions:
+      fernapi/fern-typescript-sdk: 3.87.2
+current_generation: 27a7baa3a2b9669ee41f344ca3e10badb91b0b9f
 patches:
   - id: patch-9801bb25
     content_hash: sha256:21baec3972afba59a30bd04069b78028389944f961bae1441d6c834865df1537
@@ -271,7 +277,7 @@ patches:
     original_commit: 6170698baf8c39ec78a09cf0dea43c9136dfe250
     original_message: Update .gitignore (#42)
     original_author: Mihai Claudiu Toader <mihai@hedra.com>
-    base_generation: d1ae0a4cb7413a65420d13cde63c4016c6f0a30e
+    base_generation: 27a7baa3a2b9669ee41f344ca3e10badb91b0b9f
     files:
       - .gitignore
     patch_content: |
