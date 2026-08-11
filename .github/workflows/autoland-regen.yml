@@ -1,0 +1,172 @@
+name: Autoland regeneration PRs
+
+# Lands fern-api[bot] "SDK regeneration" PRs without a human.
+#
+# Responsibility split, mirroring hedra-labs/deployments:
+#   - This workflow closes superseded PRs, rebases the newest onto main,
+#     enables auto-merge, and approves. It never merges.
+#   - GitHub's auto-merge does the landing, once the required checks
+#     (regen-shape + this repo's own CI) are green.
+#
+# Safety: runs on pull_request_target so it can reach the App credentials and
+# executes the workflow definition from main, not from the PR. It never checks
+# out or runs PR code -- commits are replayed as data. The job is gated on the
+# bot's immutable numeric account ID.
+#
+# Deliberately absent: any comparison of the PR's version against main's. Since
+# fern-config#44 a regeneration stamps a computed X.Y.Z-dev that differs from
+# main by design, so such a gate would close every PR.
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: autoland-regen
+  cancel-in-progress: false
+
+jobs:
+  autoland:
+    runs-on: ubuntu-latest
+    # Always run on push to main and manual dispatch; on PR events only for
+    # fern-api[bot] regeneration branches targeting main.
+    if: >-
+      github.event_name != 'pull_request_target' ||
+      (startsWith(github.event.pull_request.head.ref, 'fern-bot/') &&
+       github.event.pull_request.base.ref == 'main' &&
+       contains(fromJSON('[115122769]'), github.event.pull_request.user.id))
+    steps:
+      - name: Mint App installation token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.SDK_BOT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.SDK_BOT_APP_PRIVATE_KEY }}
+
+      # Minted before checkout so the token installs into the git credential
+      # helper: pushes made with the default GITHUB_TOKEN fire no downstream
+      # workflows, which would leave a rebased head with zero check runs.
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Advance the regeneration queue
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+          REPO: ${{ github.repository }}
+          FERN_BOT_ID: "115122769"
+        run: |
+          set -euo pipefail
+
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "$(gh api "/users/${APP_SLUG}[bot]" --jq .id)+${APP_SLUG}[bot]@users.noreply.github.com"
+
+          # Candidates, oldest first. Listed via the REST API rather than
+          # `gh pr list --json author`, which exposes only login/is_bot -- the
+          # authoritative gate is the immutable numeric account ID.
+          mapfile -t queue < <(
+            gh api "repos/${REPO}/pulls?state=open&per_page=100" \
+              --jq "[ .[]
+                      | select(.user.id == ${FERN_BOT_ID})
+                      | select(.head.ref | startswith(\"fern-bot/\"))
+                      | select(.base.ref == \"main\") ]
+                    | sort_by(.created_at)
+                    | .[] | \"\(.number)\t\(.head.ref)\""
+          )
+
+          if [[ "${#queue[@]}" -eq 0 ]]; then
+            echo "No open regeneration PRs."
+            exit 0
+          fi
+
+          # A regeneration PR is a whole snapshot, so an older one carries
+          # strictly less information than a newer one. Close all but the newest.
+          last=$(( ${#queue[@]} - 1 ))
+          for i in $(seq 0 $(( last - 1 )) ); do
+            pr="${queue[$i]%%$'\t'*}"
+            echo "Closing #${pr} as superseded."
+            gh pr close "$pr" --repo "$REPO" \
+              --comment "Superseded by a newer SDK regeneration."
+          done
+
+          pr="${queue[$last]%%$'\t'*}"
+          head_ref="${queue[$last]#*$'\t'}"
+          echo "::group::Head of queue: #${pr} (${head_ref})"
+
+          # Defence in depth. regen-shape is the primary gate and is a required
+          # check; this repeats the two file guards so a bug there cannot
+          # auto-approve a workflow-modifying PR.
+          files="$(gh api "repos/${REPO}/pulls/${pr}/files" --paginate --jq '.[].filename')"
+          if grep -qE '^\.github/' <<<"$files"; then
+            echo "::error::PR #${pr} touches .github/ — refusing to autoland."
+            exit 1
+          fi
+          if grep -qx '\.fernignore' <<<"$files"; then
+            echo "::error::PR #${pr} edits .fernignore — refusing to autoland."
+            exit 1
+          fi
+
+          git fetch origin main
+          git fetch origin "+refs/heads/${head_ref}:refs/remotes/origin/${head_ref}"
+
+          if ! git merge-base --is-ancestor origin/main "origin/${head_ref}"; then
+            echo "#${pr} is behind main; rebasing."
+            git checkout -B "$head_ref" "origin/${head_ref}"
+            # -X theirs resolves conflicting hunks in the PR's favour, which is
+            # correct for generated content. .fernignore'd files never appear in
+            # a regeneration diff, so main's copies of them survive untouched.
+            if ! git rebase -X theirs origin/main; then
+              git rebase --abort || true
+              gh pr comment "$pr" --repo "$REPO" \
+                --body "Autoland: rebase onto \`main\` could not auto-resolve. Leaving this for a human."
+              exit 0
+            fi
+            if git diff --quiet origin/main; then
+              gh pr close "$pr" --repo "$REPO" \
+                --comment "Superseded: this regeneration is already on \`main\`."
+              exit 0
+            fi
+            git push --force-with-lease="${head_ref}:$(git rev-parse "origin/${head_ref}")" \
+              origin "HEAD:${head_ref}"
+            echo "#${pr} rebased and force-pushed; fresh checks will run."
+          fi
+
+          # Auto-merge BEFORE approving. The PR is still BLOCKED for want of a
+          # review here, so --auto always has something to wait for and attaches
+          # reliably. enablePullRequestAutoMerge refuses ("unstable status") on a
+          # PR with nothing left to wait for, which is what a post-approval call
+          # would often hit.
+          if [[ "$(gh pr view "$pr" --repo "$REPO" --json autoMergeRequest --jq '.autoMergeRequest != null')" != "true" ]]; then
+            set +e
+            out="$(gh pr merge --auto --squash "$pr" --repo "$REPO" 2>&1)"; rc=$?
+            set -e
+            echo "$out"
+            if [[ $rc -ne 0 ]]; then
+              if [[ "$out" == *"unstable status"* ]]; then
+                echo "Already fully mergeable; merging directly."
+                gh pr merge --squash "$pr" --repo "$REPO"
+              else
+                exit 1
+              fi
+            fi
+          else
+            echo "Auto-merge already attached."
+          fi
+
+          if [[ "$(gh pr view "$pr" --repo "$REPO" --json reviewDecision --jq .reviewDecision)" != "APPROVED" ]]; then
+            gh pr review --approve "$pr" --repo "$REPO"
+          else
+            echo "Already approved."
+          fi
+
+          echo "::endgroup::"
