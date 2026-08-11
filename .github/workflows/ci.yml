@@ -1,6 +1,13 @@
 name: ci
 
-on: [push]
+# A required status check must not depend on event ordering this repo does not
+# control. Checks appear on regeneration PRs today only because Fern pushes the
+# branch before opening the PR; `pull_request` makes that guaranteed instead of
+# incidental. Same-repo branches get two runs per push as a result -- accepted,
+# and harmless because `cancel-in-progress` is false below.
+on:
+  push:
+  pull_request:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -47,3 +54,66 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+  # Contract for what a fern-api[bot] regeneration may change. Required status
+  # check; autoland-regen.yml will not merge a PR without it. Always runs and
+  # no-ops off fern-bot/ branches so it stays satisfiable on human PRs.
+  #
+  # The version rule is a consistency rule, not a no-change rule: it asserts
+  # that package.json and src/version.ts carry the same string, never what that
+  # string should be. compute_version.py in fern-config owns the number, and
+  # since fern-config#44 regeneration is the mechanism by which versions move
+  # at all -- a rule forbidding the version to change would freeze it forever.
+  regen-shape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Validate regeneration diff shape
+        env:
+          EVENT: ${{ github.event_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$EVENT" != "pull_request" ]]; then
+            echo "Not a pull_request event — nothing to check."
+            exit 0
+          fi
+          if [[ "$HEAD_REF" != fern-bot/* ]]; then
+            echo "Branch '$HEAD_REF' is not under fern-bot/ — shape check skipped."
+            exit 0
+          fi
+
+          git fetch --no-tags origin main
+          base="$(git merge-base origin/main HEAD)"
+          mapfile -t changed < <(git diff --name-only "$base" HEAD)
+          echo "Changed files (${#changed[@]}):"
+          printf '  %s\n' "${changed[@]}"
+
+          fail=0
+          for f in "${changed[@]}"; do
+            case "$f" in
+              .github/*)
+                echo "FAIL: regeneration must not touch .github/ ($f)"; fail=1 ;;
+              .fernignore)
+                echo "FAIL: regeneration must not edit .fernignore"; fail=1 ;;
+            esac
+          done
+          [[ "$fail" -eq 0 ]]
+
+          manifest="$(jq -r .version package.json)"
+          constant="$(sed -n 's/.*SDK_VERSION[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' src/version.ts | head -1)"
+          if [[ -z "$constant" ]]; then
+            echo "FAIL: could not read SDK_VERSION from src/version.ts"; exit 1
+          fi
+          if [[ "$manifest" != "$constant" ]]; then
+            echo "FAIL: package.json says '$manifest', src/version.ts says '$constant'"
+            exit 1
+          fi
+          echo "OK: every version-bearing file agrees on '$manifest'"
+
+          echo "OK: regeneration shape check passed."
