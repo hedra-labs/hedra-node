@@ -32,7 +32,7 @@ jobs:
     environment: npm-publish
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Resolves from the release tag on a `release` run, or from the input on a
       # manual one. Fails loudly rather than falling back to package.json, so a
@@ -58,12 +58,12 @@ jobs:
           echo "Publishing version $version (from '$raw')."
 
       - name: Set up node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           registry-url: "https://registry.npmjs.org"
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
