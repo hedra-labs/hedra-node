@@ -53,7 +53,7 @@ jobs:
       # Minted before checkout so the token installs into the git credential
       # helper: pushes made with the default GITHUB_TOKEN fire no downstream
       # workflows, which would leave a rebased head with zero check runs.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: main
           fetch-depth: 0
