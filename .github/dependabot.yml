@@ -1,0 +1,97 @@
+version: 2
+updates:
+  # Free of any Fern interaction, and doubly so here: `.github/` is
+  # `.fernignore`d, AND ci.yml's `regen-shape` job fails any fern-bot PR that
+  # touches `.github/`. Same grouped weekly schedule as hedra-cli and
+  # hedra-python.
+  #
+  # This is the entry that matters. Without it the pins go stale silently and
+  # get corrected a workflow at a time by hand: when this was written the repo
+  # still carried actions/checkout@v6 in four places (v7 is out, and #53 had
+  # just bumped the fifth by hand), actions/setup-node@v6 in three (v7 is out)
+  # and pnpm/action-setup@v4 in three (v6 is out) -- while hedra-cli, which has
+  # had this file since June, was already on checkout@v7 everywhere.
+  # autoland-regen.yml is unattended by construction, so its
+  # actions/create-github-app-token and actions/checkout pins are precisely the
+  # ones no human is otherwise looking at.
+  #
+  # A Dependabot PR is satisfiable against this repo's branch protection:
+  # `compile` and `test` run because ci.yml is `on: [push]`; `regen-shape`
+  # short-circuits to success off a `pull_request` event and off `fern-bot/`
+  # branches; `autoland` is gated on fern-api[bot]'s numeric account ID and
+  # skips. The one required review stays human, as in hedra-cli#54.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    groups:
+      actions:
+        patterns:
+          - "*"
+    schedule:
+      interval: "weekly"
+
+  # npm updates are restricted to the lockfile, because the two files involved
+  # have opposite owners:
+  #
+  #   package.json     Fern     NOT `.fernignore`d, so the generator rewrites
+  #                             it wholesale. It authored the entire
+  #                             devDependencies block -- 8ff840a (the Stainless
+  #                             -> Fern migration) replaced Stainless's 17 dev
+  #                             deps with Fern's 7. On top of that,
+  #                             .fern/replay.yml lists package.json under
+  #                             `exclude:`, so a hand patch to it is detected
+  #                             and then deliberately NOT re-applied. Both
+  #                             mechanisms point the same way: an edit here is
+  #                             reverted on the next regeneration.
+  #   pnpm-lock.yaml   hand     `.fernignore`d for exactly this reason. Before
+  #                             it was ignored, regeneration ate a merged
+  #                             fast-uri security bump within a day (1dfc681 on
+  #                             2026-07-30, reverted by 11519b2 on 2026-07-31).
+  #
+  # So the durable half of an npm update is the lock, and `lockfile-only` is
+  # what confines Dependabot to it. Measured 2026-08-11 (dependabot-cli
+  # v1.92.0 driving the real updater against this repo at aca8f79):
+  #
+  #   default strategy   6 PRs -- webpack, vitest, msw, @types/node,
+  #                      typescript, @biomejs/biome -- and all 6 of 6 rewrite
+  #                      package.json *and* pnpm-lock.yaml. It raises the
+  #                      manifest floor even when it does not have to --
+  #                      "webpack": "^5.105.4" -> "^5.109.2", though the
+  #                      existing range already admitted 5.109.2. Landing that
+  #                      half buys a revert at the next regeneration.
+  #   lockfile-only      2 PRs (webpack, vitest), touching pnpm-lock.yaml
+  #                      alone; package.json is never in the file set (the
+  #                      updater shells out to
+  #                      `pnpm update <dep> --lockfile-only --no-save`).
+  #
+  # The four the restriction drops are the four that cannot be expressed in the
+  # lock: typescript (~5.9.3 -> 7.0.2) and @types/node (^20.0.0 -> 26.2.0) are
+  # majors outside the generated range, and msw/@biomejs/biome are exact pins
+  # (below). Every one of those needs the manifest, so every one would be
+  # reverted -- and the two majors would break the build meanwhile.
+  #
+  # This is the outcome hedra-python wanted and could not get -- there the pip
+  # updater rewrote pyproject.toml regardless, so version updates are disabled
+  # outright with `open-pull-requests-limit: 0`. npm honours the restriction,
+  # so the updates stay on here.
+  #
+  # Two consequences worth knowing rather than rediscovering:
+  #
+  #   - Exact-pinned devDeps cannot move. msw ("2.11.2") and @biomejs/biome
+  #     ("2.4.10") carry no range, so there is no lock-only bump to make and
+  #     the updater logs "No update possible" for them. That is correct: those
+  #     numbers are the generator's, and moving them is a fern-config change.
+  #   - `versioning-strategy` governs version updates. A *security* update
+  #     whose fix falls outside the generated range would still want the
+  #     manifest, and should be taken as a notification -- land its lock half
+  #     only. Nothing does today: repo-level "Dependabot security updates" is
+  #     off, and the package ships zero runtime dependencies, so the exposed
+  #     surface is the CI build/test toolchain rather than anything published.
+  - package-ecosystem: "npm"
+    directory: "/"
+    versioning-strategy: lockfile-only
+    groups:
+      npm:
+        patterns:
+          - "*"
+    schedule:
+      interval: "weekly"
