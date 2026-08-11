@@ -51,15 +51,23 @@ updates:
   # what confines Dependabot to it. Measured 2026-08-11 (dependabot-cli
   # v1.92.0 driving the real updater against this repo at aca8f79):
   #
-  #   default strategy   3 PRs (webpack, vitest, msw), every one rewriting
+  #   default strategy   6 PRs -- webpack, vitest, msw, @types/node,
+  #                      typescript, @biomejs/biome -- and all 6 of 6 rewrite
   #                      package.json *and* pnpm-lock.yaml. It raises the
   #                      manifest floor even when it does not have to --
   #                      "webpack": "^5.105.4" -> "^5.109.2", though the
   #                      existing range already admitted 5.109.2. Landing that
   #                      half buys a revert at the next regeneration.
-  #   lockfile-only      PRs touching pnpm-lock.yaml alone; package.json is
-  #                      never in the file set (the updater shells out to
+  #   lockfile-only      2 PRs (webpack, vitest), touching pnpm-lock.yaml
+  #                      alone; package.json is never in the file set (the
+  #                      updater shells out to
   #                      `pnpm update <dep> --lockfile-only --no-save`).
+  #
+  # The four the restriction drops are the four that cannot be expressed in the
+  # lock: typescript (~5.9.3 -> 7.0.2) and @types/node (^20.0.0 -> 26.2.0) are
+  # majors outside the generated range, and msw/@biomejs/biome are exact pins
+  # (below). Every one of those needs the manifest, so every one would be
+  # reverted -- and the two majors would break the build meanwhile.
   #
   # This is the outcome hedra-python wanted and could not get -- there the pip
   # updater rewrote pyproject.toml regardless, so version updates are disabled
