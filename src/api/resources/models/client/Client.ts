@@ -58,7 +58,7 @@ export class ModelsClient {
         };
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -146,7 +146,7 @@ export class ModelsClient {
     ): Promise<core.WithRawResponse<Hedra.ModelDetail>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -232,7 +232,7 @@ export class ModelsClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.3" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -316,7 +316,7 @@ export class ModelsClient {
     }
 
     /**
-     * Voices this model accepts — scoped to the model's voice provider.
+     * Voices this model accepts — scoped to the model's voice provider. fern-config end-to-end regeneration probe 20260811-050507.
      *
      * @param {string} model - The model's public id (`GET /v3/models`).
      * @param {Hedra.ModelsListVoicesRequest} request
@@ -348,7 +348,7 @@ export class ModelsClient {
     ): Promise<core.WithRawResponse<Hedra.VoiceListResponse>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -434,7 +434,7 @@ export class ModelsClient {
     ): Promise<core.WithRawResponse<Record<string, unknown>>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -521,7 +521,7 @@ export class ModelsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
