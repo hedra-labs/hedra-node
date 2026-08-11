@@ -6,8 +6,8 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `grok-video`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, duration_ms, prompt, resolution, start_image
- * (2) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: start_image; accepts aspect_ratio: 16:9 | 4:3 | 3:2 | 1:1 | 2:3 | 3:4 | 9:16
+ * (1) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: start_image; accepts aspect_ratio: 1:1 | 4:3 | 3:4 | 16:9 | 9:16 | 3:2 | 2:3
+ * (2) requires: aspect_ratio, duration_ms, prompt, resolution, start_image
  */
 export interface InputGrokVideo {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -27,14 +27,14 @@ export interface InputGrokVideo {
 export namespace InputGrokVideo {
     /** Output aspect ratio. */
     export const AspectRatio = {
-        Auto: "auto",
-        Sixteen9: "16:9",
-        Four3: "4:3",
-        Three2: "3:2",
         One1: "1:1",
-        Two3: "2:3",
+        Four3: "4:3",
         Three4: "3:4",
+        Sixteen9: "16:9",
         Nine16: "9:16",
+        Three2: "3:2",
+        Two3: "2:3",
+        Auto: "auto",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Output resolution. */

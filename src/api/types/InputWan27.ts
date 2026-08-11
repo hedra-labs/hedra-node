@@ -6,9 +6,9 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `wan-2-7`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio, images
- * (2) requires: aspect_ratio, duration_ms, images, prompt, resolution; must omit: end_image, start_image; accepts duration_ms: 2000 | 3000 | 4000 | 5000 | 6000 | 7000 | 8000 | 9000 | 10000
- * (3) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: end_image, images, start_image
+ * (1) requires: aspect_ratio, duration_ms, images, prompt, resolution; must omit: end_image, start_image; accepts duration_ms: 2000 | 3000 | 4000 | 5000 | 6000 | 7000 | 8000 | 9000 | 10000
+ * (2) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: end_image, images, start_image
+ * (3) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio, images
  */
 export interface InputWan27 {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -19,27 +19,21 @@ export interface InputWan27 {
     negative_prompt?: string | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
+    /** Output aspect ratio. */
+    aspect_ratio?: InputWan27.AspectRatio | undefined;
     /** Output resolution. */
     resolution: InputWan27.Resolution;
     /** Duration in ms. */
     duration_ms: number;
+    /** Reference images. */
+    images?: Hedra.InputWan27ImagesItem[] | undefined;
     /** Start frame (image-to-video). */
     start_image?: Hedra.InputWan27StartImage | undefined;
     /** End frame (first-last-frame-to-video). */
     end_image?: Hedra.InputWan27EndImage | undefined;
-    /** Output aspect ratio. */
-    aspect_ratio?: InputWan27.AspectRatio | undefined;
-    /** Reference images. */
-    images?: Hedra.InputWan27ImagesItem[] | undefined;
 }
 
 export namespace InputWan27 {
-    /** Output resolution. */
-    export const Resolution = {
-        SevenHundredTwentyP: "720p",
-        OneThousandEightyP: "1080p",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Sixteen9: "16:9",
@@ -49,4 +43,10 @@ export namespace InputWan27 {
         One1: "1:1",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+    /** Output resolution. */
+    export const Resolution = {
+        SevenHundredTwentyP: "720p",
+        OneThousandEightyP: "1080p",
+    } as const;
+    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
 }

@@ -6,10 +6,10 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `minimax-h3`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio, audios, end_image, images, videos
- * (2) requires: duration_ms, end_image, prompt, resolution, start_image; must omit: aspect_ratio, audios, images, videos
- * (3) requires: aspect_ratio, duration_ms, images, prompt, resolution; must omit: end_image, start_image
- * (4) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: audios, end_image, images, start_image, videos; accepts aspect_ratio: 1:1 | 3:4 | 4:3 | 16:9 | 21:9 | 9:16
+ * (1) requires: aspect_ratio, duration_ms, images, prompt, resolution; must omit: end_image, start_image
+ * (2) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: audios, end_image, images, start_image, videos; accepts aspect_ratio: 1:1 | 3:4 | 4:3 | 16:9 | 21:9 | 9:16
+ * (3) requires: duration_ms, end_image, prompt, resolution, start_image; must omit: aspect_ratio, audios, images, videos
+ * (4) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio, audios, end_image, images, videos
  */
 export interface InputMinimaxH3 {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -20,10 +20,6 @@ export interface InputMinimaxH3 {
     resolution: InputMinimaxH3.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). */
-    start_image?: Hedra.InputMinimaxH3StartImage | undefined;
-    /** End frame (first-last-frame-to-video). */
-    end_image?: Hedra.InputMinimaxH3EndImage | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputMinimaxH3.AspectRatio | undefined;
     /** Reference images. */
@@ -32,6 +28,10 @@ export interface InputMinimaxH3 {
     videos?: Hedra.InputMinimaxH3VideosItem[] | undefined;
     /** Reference audios. */
     audios?: Hedra.InputMinimaxH3AudiosItem[] | undefined;
+    /** Start frame (image-to-video). */
+    start_image?: Hedra.InputMinimaxH3StartImage | undefined;
+    /** End frame (first-last-frame-to-video). */
+    end_image?: Hedra.InputMinimaxH3EndImage | undefined;
 }
 
 export namespace InputMinimaxH3 {
@@ -39,7 +39,6 @@ export namespace InputMinimaxH3 {
     export const Resolution = {
         SevenHundredSixtyEightP: "768p",
         TwoK: "2K",
-        FourK: "4K",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Output aspect ratio. */

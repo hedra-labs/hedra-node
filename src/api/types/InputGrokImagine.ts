@@ -6,8 +6,8 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `grok-imagine`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: images, prompt; must omit: aspect_ratio
- * (2) requires: aspect_ratio, prompt; must omit: images
+ * (1) requires: aspect_ratio, prompt; must omit: images
+ * (2) requires: images, prompt; must omit: aspect_ratio
  */
 export interface InputGrokImagine {
     /** Generation prompt. */
@@ -16,22 +16,15 @@ export interface InputGrokImagine {
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
-    /** Images to edit or blend. */
-    images?: Hedra.InputGrokImagineImagesItem[] | undefined;
-    /** Output image format. */
-    output_format?: InputGrokImagine.OutputFormat | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputGrokImagine.AspectRatio | undefined;
+    /** Output image format. */
+    output_format?: InputGrokImagine.OutputFormat | undefined;
+    /** Images to edit or blend. */
+    images?: Hedra.InputGrokImagineImagesItem[] | undefined;
 }
 
 export namespace InputGrokImagine {
-    /** Output image format. */
-    export const OutputFormat = {
-        Jpeg: "jpeg",
-        Png: "png",
-        Webp: "webp",
-    } as const;
-    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Sixteen9: "16:9",
@@ -39,4 +32,11 @@ export namespace InputGrokImagine {
         One1: "1:1",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+    /** Output image format. */
+    export const OutputFormat = {
+        Jpeg: "jpeg",
+        Png: "png",
+        Webp: "webp",
+    } as const;
+    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
 }

@@ -6,7 +6,6 @@ import type * as Hedra from "../../../../index.js";
  * @example
  *     {
  *         input: {
- *             resolution: "720p",
  *             start_image: {
  *                 source: "url",
  *                 url: "url"

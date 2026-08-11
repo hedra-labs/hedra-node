@@ -6,18 +6,20 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `minimax-hailuo-02`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: prompt, start_image; must omit: aspect_ratio, end_image; accepts duration_ms: 6000; quality: pro; resolution: 1080p
- * (2) requires: end_image, prompt, start_image; must omit: aspect_ratio; accepts duration_ms: 6000; quality: pro; resolution: 1080p
- * (3) requires: prompt; must omit: end_image, start_image; accepts duration_ms: 6000; quality: pro; resolution: 1080p
- * (4) requires: duration_ms, prompt, start_image; must omit: aspect_ratio, end_image; accepts quality: standard; resolution: 768p
- * (5) requires: duration_ms, end_image, prompt, start_image; must omit: aspect_ratio; accepts quality: standard; resolution: 768p
- * (6) requires: duration_ms, prompt; must omit: end_image, start_image; accepts quality: standard; resolution: 768p
+ * (1) requires: duration_ms, end_image, prompt, start_image; must omit: aspect_ratio; accepts quality: standard; resolution: 768p
+ * (2) requires: duration_ms, prompt; must omit: end_image, start_image; accepts quality: standard; resolution: 768p
+ * (3) requires: duration_ms, prompt, start_image; must omit: aspect_ratio, end_image; accepts quality: standard; resolution: 768p
+ * (4) requires: end_image, prompt, start_image; must omit: aspect_ratio; accepts duration_ms: 6000; quality: pro; resolution: 1080p
+ * (5) requires: prompt; must omit: end_image, start_image; accepts duration_ms: 6000; quality: pro; resolution: 1080p
+ * (6) requires: prompt, start_image; must omit: aspect_ratio, end_image; accepts duration_ms: 6000; quality: pro; resolution: 1080p
  */
 export interface InputMinimaxHailuo02 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;
+    /** Output aspect ratio. */
+    aspect_ratio?: InputMinimaxHailuo02.AspectRatio | undefined;
     /** Output resolution. */
     resolution?: InputMinimaxHailuo02.Resolution | undefined;
     /** Duration in ms. */
@@ -26,24 +28,22 @@ export interface InputMinimaxHailuo02 {
     start_image?: Hedra.InputMinimaxHailuo02StartImage | undefined;
     /** End frame (first-last-frame-to-video). */
     end_image?: Hedra.InputMinimaxHailuo02EndImage | undefined;
-    /** Output aspect ratio. */
-    aspect_ratio?: InputMinimaxHailuo02.AspectRatio | undefined;
     /** Quality level to generate at. */
     quality: InputMinimaxHailuo02.Quality;
 }
 
 export namespace InputMinimaxHailuo02 {
-    /** Output resolution. */
-    export const Resolution = {
-        OneThousandEightyP: "1080p",
-        SevenHundredSixtyEightP: "768p",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Sixteen9: "16:9",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+    /** Output resolution. */
+    export const Resolution = {
+        SevenHundredSixtyEightP: "768p",
+        OneThousandEightyP: "1080p",
+    } as const;
+    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Quality level to generate at. */
     export const Quality = {
         Standard: "standard",

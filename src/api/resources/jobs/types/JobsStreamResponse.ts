@@ -3,6 +3,6 @@
 import type * as Hedra from "../../../index.js";
 
 /**
- * The payload of one frame's `data:` line, selected by the frame's `event:` type — `status` carries a `StatusResponse`, `log` a `JobLogItem`. The terminating `done` frame is not covered here: its `data:` line is the literal token `[STREAM_DONE]`, not JSON.
+ * The payload of one frame's `data:` line, selected by the frame's `event:` type — `status` or `log`.
  */
 export type JobsStreamResponse = Hedra.StatusResponse | Hedra.JobLogItem;

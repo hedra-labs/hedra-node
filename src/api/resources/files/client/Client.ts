@@ -66,7 +66,7 @@ export class FilesClient {
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.2",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.2.3",
                 ..._maybeEncodedRequest.headers,
             }),
             requestOptions?.headers,

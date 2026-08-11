@@ -6,40 +6,40 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `minimax-hailuo-23`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: prompt, start_image; must omit: aspect_ratio; accepts duration_ms: 6000; quality: pro | fast-pro; resolution: 1080p
+ * (1) requires: duration_ms, prompt; must omit: start_image; accepts quality: standard; resolution: 768p
  * (2) requires: duration_ms, prompt, start_image; must omit: aspect_ratio; accepts quality: standard | fast-standard; resolution: 768p
  * (3) requires: prompt; must omit: start_image; accepts duration_ms: 6000; quality: pro; resolution: 1080p
- * (4) requires: duration_ms, prompt; must omit: start_image; accepts quality: standard; resolution: 768p
+ * (4) requires: prompt, start_image; must omit: aspect_ratio; accepts duration_ms: 6000; quality: pro | fast-pro; resolution: 1080p
  */
 export interface InputMinimaxHailuo23 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. */
     prompt: string;
+    /** Output aspect ratio. */
+    aspect_ratio?: InputMinimaxHailuo23.AspectRatio | undefined;
     /** Output resolution. */
     resolution?: InputMinimaxHailuo23.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
     /** Start frame (image-to-video). The output video follows this image's aspect ratio. */
     start_image?: Hedra.InputMinimaxHailuo23StartImage | undefined;
-    /** Output aspect ratio. */
-    aspect_ratio?: InputMinimaxHailuo23.AspectRatio | undefined;
     /** Quality level to generate at. */
     quality: InputMinimaxHailuo23.Quality;
 }
 
 export namespace InputMinimaxHailuo23 {
-    /** Output resolution. */
-    export const Resolution = {
-        OneThousandEightyP: "1080p",
-        SevenHundredSixtyEightP: "768p",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Sixteen9: "16:9",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+    /** Output resolution. */
+    export const Resolution = {
+        SevenHundredSixtyEightP: "768p",
+        OneThousandEightyP: "1080p",
+    } as const;
+    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Quality level to generate at. */
     export const Quality = {
         Standard: "standard",

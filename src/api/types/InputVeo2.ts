@@ -6,8 +6,8 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `veo-2`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: prompt, start_image; must omit: negative_prompt, seed
- * (2) requires: prompt; must omit: start_image
+ * (1) requires: prompt; must omit: start_image
+ * (2) requires: prompt, start_image; must omit: negative_prompt, seed
  */
 export interface InputVeo2 {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -20,12 +20,12 @@ export interface InputVeo2 {
     resolution?: InputVeo2.Resolution | undefined;
     /** Duration in ms. */
     duration_ms?: number | undefined;
-    /** Start frame (image-to-video). */
-    start_image?: Hedra.InputVeo2StartImage | undefined;
     /** What to avoid in the generated video. */
     negative_prompt?: string | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
+    /** Start frame (image-to-video). */
+    start_image?: Hedra.InputVeo2StartImage | undefined;
 }
 
 export namespace InputVeo2 {

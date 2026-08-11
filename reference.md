@@ -1664,7 +1664,7 @@ Submits an asynchronous job and returns `202` with a job id. Fetch the result at
 await client.jobs.submitGrokVideo({
     input: {
         prompt: "prompt",
-        aspect_ratio: "auto",
+        aspect_ratio: "1:1",
         resolution: "480p",
         duration_ms: 1
     }
@@ -1736,7 +1736,7 @@ Submits an asynchronous job and returns `202` with a job id. Fetch the result at
 await client.jobs.submitHappyHorse({
     input: {
         prompt: "prompt",
-        aspect_ratio: "21:9",
+        aspect_ratio: "16:9",
         resolution: "720p",
         duration_ms: 1
     }
@@ -2497,83 +2497,6 @@ await client.jobs.submitKling25Turbo({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitKling26MotionControl</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Transfer movements from a reference video to any character image. Cost-effective mode for motion transfer, perfect for portraits and simple animations.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitKling26MotionControl({
-    input: {
-        start_image: {
-            source: "url",
-            url: "url"
-        },
-        source_video: {
-            source: "url",
-            url: "url"
-        },
-        resolution: "720p"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyKling26MotionControl` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitKling26Pro</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -2866,154 +2789,6 @@ await client.jobs.submitKlingO3({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitKlingO3Edit</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Edit videos using natural language.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitKlingO3Edit({
-    input: {
-        prompt: "prompt",
-        source_video: {
-            source: "url",
-            url: "url"
-        },
-        resolution: "720p"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyKlingO3Edit` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitKlingO3Reference</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Input a reference video and preserve motion and camera style.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitKlingO3Reference({
-    input: {
-        prompt: "prompt",
-        source_video: {
-            source: "url",
-            url: "url"
-        },
-        resolution: "720p"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyKlingO3Reference` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitKlingV3</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -3086,83 +2861,6 @@ await client.jobs.submitKlingV3({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitKlingV3MotionControl</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Animate a character image to match the motion of a reference video. Standard tier for cost-effective generation.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitKlingV3MotionControl({
-    input: {
-        start_image: {
-            source: "url",
-            url: "url"
-        },
-        source_video: {
-            source: "url",
-            url: "url"
-        },
-        resolution: "720p"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyKlingV3MotionControl` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitLtx23</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -3197,7 +2895,7 @@ await client.jobs.submitLtx23({
         prompt: "prompt",
         resolution: "1080p",
         duration_ms: 1,
-        aspect_ratio: "auto",
+        aspect_ratio: "16:9",
         quality: "fast"
     }
 });
@@ -3976,7 +3674,6 @@ Submits an asynchronous job and returns `202` with a job id. Fetch the result at
 ```typescript
 await client.jobs.submitOmnihuman15({
     input: {
-        resolution: "720p",
         start_image: {
             source: "url",
             url: "url"
@@ -4630,7 +4327,7 @@ await client.jobs.submitSeedance20({
     input: {
         prompt: "prompt",
         aspect_ratio: "1:1",
-        resolution: "4K",
+        resolution: "480p",
         duration_ms: 1,
         quality: "standard"
     }
@@ -4723,78 +4420,6 @@ await client.jobs.submitSeedance20Mini({
 <dd>
 
 **request:** `Hedra.SubmitBodySeedance20Mini` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitSeedance25</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-ByteDance Seedance 2.5 video generation model
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitSeedance25({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "1:1",
-        resolution: "480p",
-        duration_ms: 1
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodySeedance25` 
     
 </dd>
 </dl>
@@ -5949,7 +5574,7 @@ const response = page.response;
 <dl>
 <dd>
 
-Voices this model accepts — scoped to the model's voice provider.
+Voices this model accepts — scoped to the model's voice provider. fern-config end-to-end regeneration probe 20260811-000134.
 </dd>
 </dl>
 </dd>
