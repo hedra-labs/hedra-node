@@ -21,6 +21,12 @@ on:
         type: boolean
         default: false
 
+# `contents: write` is for attaching the packed tarball to the GitHub Release
+# (see the pack/upload steps); npm itself is authenticated with NODE_AUTH_TOKEN,
+# not with the workflow token.
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -102,6 +108,51 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      # npm publishes straight from the working tree, so unlike the Python job
+      # there is no dist/ full of artifacts to attach -- the tarball has to be
+      # made. `npm pack --silent` prints the filename it wrote.
+      - name: Pack the tarball
+        id: pack
+        run: |
+          set -euo pipefail
+          tarball="$(npm pack --silent)"
+          echo "tarball=${tarball}" >> "$GITHUB_OUTPUT"
+          echo "::notice::Packed ${tarball} ($(du -h "${tarball}" | cut -f1))."
+
+      # Attach it to the GitHub Release. npm remains the package's home -- this
+      # is for provenance, attestation checks, and air-gapped installs that
+      # cannot reach the registry.
+      #
+      # Ordered BEFORE the publish deliberately, exactly as in hedra-python#67:
+      # an upload failure here leaves a fully recoverable state, because nothing
+      # is on npm yet and re-running the whole job fixes it. Failing *after* the
+      # publish would leave a split state a re-run cannot repair, since npm
+      # rejects re-publishing a version that already exists.
+      - name: Attach the tarball to the GitHub Release
+        if: ${{ inputs.dry_run != true }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          INPUT_VERSION: ${{ inputs.version }}
+          TARBALL: ${{ steps.pack.outputs.tarball }}
+        run: |
+          set -euo pipefail
+          raw="${RELEASE_TAG:-${INPUT_VERSION:-}}"
+          if [ -z "$raw" ]; then
+            echo "::error::No release tag or version input; cannot locate the Release to upload to."
+            exit 1
+          fi
+          case "$raw" in
+            v*) tag="$raw" ;;
+            *)  tag="v${raw}" ;;
+          esac
+          if ! gh release view "$tag" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            echo "::notice::No GitHub Release ${tag} exists; skipping asset upload."
+            exit 0
+          fi
+          gh release upload "$tag" "$TARBALL" --repo "${{ github.repository }}" --clobber
+          echo "::notice::Attached ${TARBALL} to ${tag}."
 
       # `npm publish --dry-run` runs the full pack-and-validate path and reports
       # exactly what would be uploaded, without uploading. A `release: published`
