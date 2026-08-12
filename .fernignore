@@ -1,7 +1,7 @@
 # Files Fern must NOT overwrite when it regenerates this SDK (via PR from the
 # hedra-labs/fern-config repo). See https://buildwithfern.com/learn/sdks/capabilities/customize-files
 
-# README install/imports use the hedra-node package name
+# README install/imports use the @hedra/sdk package name
 README.md
 
 # Hand-maintained docs / history

@@ -1,7 +1,7 @@
 # Hedra TypeScript Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=Hedra%2FTypeScript)
-[![npm shield](https://img.shields.io/npm/v/hedra-node)](https://www.npmjs.com/package/hedra-node)
+[![npm shield](https://img.shields.io/npm/v/@hedra/sdk)](https://www.npmjs.com/package/@hedra/sdk)
 
 The Hedra TypeScript library provides convenient access to the Hedra APIs from TypeScript.
 
@@ -30,7 +30,7 @@ The Hedra TypeScript library provides convenient access to the Hedra APIs from T
 ## Installation
 
 ```sh
-npm i -s hedra-node
+npm i -s @hedra/sdk
 ```
 
 ## Reference
@@ -42,7 +42,7 @@ A full reference for this library is available [here](./reference.md).
 Instantiate and use the client with the following:
 
 ```typescript
-import { HedraClient } from "hedra-node";
+import { HedraClient } from "@hedra/sdk";
 
 const client = new HedraClient({ apiKey: "YOUR_API_KEY" });
 
@@ -83,7 +83,7 @@ The client targets `https://api.hedra.com/v3`. Pass a URL as `environment` to po
 elsewhere (e.g. a mock server in tests):
 
 ```typescript
-import { HedraClient } from "hedra-node";
+import { HedraClient } from "@hedra/sdk";
 
 const client = new HedraClient({
     environment: "http://localhost:8000/v3",
@@ -96,7 +96,7 @@ The SDK exports all request and response types as TypeScript interfaces. Simply 
 following namespace:
 
 ```typescript
-import { Hedra } from "hedra-node";
+import { Hedra } from "@hedra/sdk";
 
 const request: Hedra.SubmitBodyKlingO3 = {
     ...
@@ -121,7 +121,7 @@ When the API returns a non-success status code (4xx or 5xx response), a subclass
 will be thrown.
 
 ```typescript
-import { HedraError } from "hedra-node";
+import { HedraError } from "@hedra/sdk";
 
 try {
     await client.jobs.submitKlingO3(...);
@@ -141,7 +141,7 @@ You can upload files using the client:
 
 ```typescript
 import * as fs from "fs";
-import { HedraClient } from "hedra-node";
+import { HedraClient } from "@hedra/sdk";
 
 const client = new HedraClient({ apiKey: "YOUR_API_KEY" });
 await client.files.upload({
@@ -157,7 +157,7 @@ The client accepts a variety of types for file upload parameters:
 You can configure metadata when uploading a file:
 ```typescript
 import { createReadStream } from "fs";
-import { Uploadable } from "hedra-node";
+import { Uploadable } from "@hedra/sdk";
 
 const file: Uploadable.WithMetadata = {
     data: createReadStream("path/to/file"),
@@ -169,7 +169,7 @@ const file: Uploadable.WithMetadata = {
 
 Alternatively, you can upload a file directly from a file path:
 ```typescript
-import { Uploadable } from "hedra-node";
+import { Uploadable } from "@hedra/sdk";
 
 const file: Uploadable.FromPath = {
     path: "path/to/file",
@@ -190,7 +190,7 @@ For example, `fs.ReadStream` has a `path` property which the SDK uses to retriev
 If you would like to send additional headers as part of the request, use the `headers` request option.
 
 ```typescript
-import { HedraClient } from "hedra-node";
+import { HedraClient } from "@hedra/sdk";
 
 const client = new HedraClient({
     ...
@@ -285,7 +285,7 @@ console.log(rawResponse.headers['X-My-Header']);
 The SDK supports logging. You can configure the logger by passing in a `logging` object to the client options.
 
 ```typescript
-import { HedraClient, logging } from "hedra-node";
+import { HedraClient, logging } from "@hedra/sdk";
 
 const client = new HedraClient({
     ...
@@ -355,7 +355,7 @@ a default-constructed client a relative path reaches `fetch()` unresolved and th
 `TypeError: Failed to parse URL`.
 
 ```typescript
-import { HedraClient, HedraEnvironment } from "hedra-node";
+import { HedraClient, HedraEnvironment } from "@hedra/sdk";
 
 const client = new HedraClient({
     apiKey: "YOUR_API_KEY",
