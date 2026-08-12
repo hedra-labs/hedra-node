@@ -180,17 +180,20 @@ jobs:
             echo "#${pr} is behind main; merging main in."
             git checkout -B "$head_ref" "origin/${head_ref}"
             # MERGE, not rebase (ENG-10280). A rebase rewrites every commit on
-            # this branch — including the one Fern recorded as the generation —
-            # so the recorded SHA is orphaned regardless of how the PR is later
-            # landed. A merge leaves the original commits in place and reachable.
+            # this branch — including the one Fern Replay recorded as the
+            # generation — so the recorded SHA is orphaned regardless of how the
+            # PR is later landed, and Replay then persists `user_owned: true`
+            # onto patches whose ownership it merely could not verify. That
+            # write is irreversible. A merge leaves the original commits in
+            # place and reachable.
             #
             # THE FLAG INVERTS BETWEEN THE TWO COMMANDS. `rebase -X theirs` and
             # `merge -X ours` both mean "resolve conflicting hunks in the PR's
             # favour", which is what generated content wants; the ours/theirs
             # roles swap because rebase replays our commits onto upstream.
-            # Measured in a scratch repo, not reasoned about. .fernignore'd files
-            # never appear in a regeneration diff either way, so main's copies of
-            # them survive untouched.
+            # Measured in a scratch repo, not reasoned about. .fernignore'd
+            # files never appear in a regeneration diff either way, so main's
+            # copies of them survive untouched.
             if ! git merge -X ours --no-edit origin/main; then
               git merge --abort || true
               gh pr comment "$pr" --repo "$REPO" \
@@ -209,24 +212,21 @@ jobs:
 
           # Land regeneration PRs with a MERGE COMMIT, not a squash (ENG-10280).
           # A squash writes a brand-new commit to main and the branch is then
-          # deleted, so the SHA Fern recorded as the generation is orphaned —
-          # which is why every regeneration logged "Base generation <sha> is
-          # unreachable", and, worse, why Replay persisted `user_owned: true`
-          # onto patches whose ownership it merely could not verify. That write
-          # is not reversible. ENG-10280 and hedra-labs/hedra-cli#71 carry the
-          # measurement; do not "fix" the warning by fetching deeper, the clone
-          # is complete and the object is gone.
+          # deleted, so the SHA Fern Replay recorded as the generation is
+          # orphaned — which is why every regeneration logged "Base generation
+          # <sha> is unreachable", and why Replay then wrote `user_owned: true`
+          # onto patches it merely could not verify. Do not "fix" that warning
+          # by fetching deeper: the clone is complete, the object is gone.
           #
-          # This needs `allow_merge_commit: true` on the repo. Squash can stay
+          # Needs `allow_merge_commit: true` on the repo. Squash can stay
           # enabled for humans — this only picks the strategy for regeneration
-          # PRs. If merge commits are disabled we fall back rather than stall
-          # regeneration entirely, but loudly, because the fallback re-opens
-          # ENG-10280.
+          # PRs. Where merge commits are disabled we fall back rather than stall
+          # regeneration, but loudly, because the fallback re-opens ENG-10280.
           if [[ "$(gh api "repos/${REPO}" --jq '.allow_merge_commit')" == "true" ]]; then
             strategy="--merge"
           else
             strategy="--squash"
-            echo "::warning::merge commits are disabled on ${REPO}; falling back to --squash. Recorded generation SHAs will be orphaned — see ENG-10280 and hedra-labs/hedra-cli#71."
+            echo "::warning::merge commits are disabled on ${REPO}; falling back to --squash. Recorded generation SHAs will be orphaned — see ENG-10280."
           fi
 
           # Auto-merge BEFORE approving. The PR is still BLOCKED for want of a
