@@ -27,6 +27,25 @@ on:
 permissions:
   contents: write
 
+# Keyed on the VERSION, not just the workflow. Two runs for the same version
+# must not interleave their `npm version` writes over one checkout, and an npm
+# publish is irreversible -- that is what this group is for. It is scoped by
+# version from the start so it can never cause the deadlock a workflow-wide
+# group caused in hedra-python: there a publish parked at its environment gate
+# held every later publish behind it forever (measured 2026-08-12: v1.0.0's run
+# sat `pending` behind v2.0.0's held run and only moved once the held run was
+# cancelled). Here, distinct versions queue independently.
+#
+# `github.event.release.tag_name || inputs.version` covers both trigger paths:
+# a `release: published` run has the tag, a `workflow_dispatch` run has the
+# input. Tags are `v`-prefixed and the input is bare, so one version reached
+# both ways yields two group names -- acceptable, since the risk guarded against
+# is two *concurrent* runs, and the realistic collisions (a re-run of the same
+# release, or two dispatches of the same version) stay covered. See ENG-10281.
+concurrency:
+  group: publish-npm-${{ github.event.release.tag_name || inputs.version }}
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
