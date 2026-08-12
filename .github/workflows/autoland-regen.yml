@@ -177,15 +177,27 @@ jobs:
           git fetch origin "+refs/heads/${head_ref}:refs/remotes/origin/${head_ref}"
 
           if ! git merge-base --is-ancestor origin/main "origin/${head_ref}"; then
-            echo "#${pr} is behind main; rebasing."
+            echo "#${pr} is behind main; merging main in."
             git checkout -B "$head_ref" "origin/${head_ref}"
-            # -X theirs resolves conflicting hunks in the PR's favour, which is
-            # correct for generated content. .fernignore'd files never appear in
-            # a regeneration diff, so main's copies of them survive untouched.
-            if ! git rebase -X theirs origin/main; then
-              git rebase --abort || true
+            # MERGE, not rebase (ENG-10280). A rebase rewrites every commit on
+            # this branch — including the one Fern Replay recorded as the
+            # generation — so the recorded SHA is orphaned regardless of how the
+            # PR is later landed, and Replay then persists `user_owned: true`
+            # onto patches whose ownership it merely could not verify. That
+            # write is irreversible. A merge leaves the original commits in
+            # place and reachable.
+            #
+            # THE FLAG INVERTS BETWEEN THE TWO COMMANDS. `rebase -X theirs` and
+            # `merge -X ours` both mean "resolve conflicting hunks in the PR's
+            # favour", which is what generated content wants; the ours/theirs
+            # roles swap because rebase replays our commits onto upstream.
+            # Measured in a scratch repo, not reasoned about. .fernignore'd
+            # files never appear in a regeneration diff either way, so main's
+            # copies of them survive untouched.
+            if ! git merge -X ours --no-edit origin/main; then
+              git merge --abort || true
               gh pr comment "$pr" --repo "$REPO" \
-                --body "Autoland: rebase onto \`main\` could not auto-resolve. Leaving this for a human."
+                --body "Autoland: merging \`main\` into this branch could not auto-resolve. Leaving this for a human."
               exit 0
             fi
             if git diff --quiet origin/main; then
@@ -195,7 +207,26 @@ jobs:
             fi
             git push --force-with-lease="${head_ref}:$(git rev-parse "origin/${head_ref}")" \
               origin "HEAD:${head_ref}"
-            echo "#${pr} rebased and force-pushed; fresh checks will run."
+            echo "#${pr} has main merged in and was pushed; fresh checks will run."
+          fi
+
+          # Land regeneration PRs with a MERGE COMMIT, not a squash (ENG-10280).
+          # A squash writes a brand-new commit to main and the branch is then
+          # deleted, so the SHA Fern Replay recorded as the generation is
+          # orphaned — which is why every regeneration logged "Base generation
+          # <sha> is unreachable", and why Replay then wrote `user_owned: true`
+          # onto patches it merely could not verify. Do not "fix" that warning
+          # by fetching deeper: the clone is complete, the object is gone.
+          #
+          # Needs `allow_merge_commit: true` on the repo. Squash can stay
+          # enabled for humans — this only picks the strategy for regeneration
+          # PRs. Where merge commits are disabled we fall back rather than stall
+          # regeneration, but loudly, because the fallback re-opens ENG-10280.
+          if [[ "$(gh api "repos/${REPO}" --jq '.allow_merge_commit')" == "true" ]]; then
+            strategy="--merge"
+          else
+            strategy="--squash"
+            echo "::warning::merge commits are disabled on ${REPO}; falling back to --squash. Recorded generation SHAs will be orphaned — see ENG-10280."
           fi
 
           # Auto-merge BEFORE approving. The PR is still BLOCKED for want of a
@@ -205,13 +236,13 @@ jobs:
           # would often hit.
           if [[ "$(gh pr view "$pr" --repo "$REPO" --json autoMergeRequest --jq '.autoMergeRequest != null')" != "true" ]]; then
             set +e
-            out="$(gh pr merge --auto --squash "$pr" --repo "$REPO" 2>&1)"; rc=$?
+            out="$(gh pr merge --auto "$strategy" "$pr" --repo "$REPO" 2>&1)"; rc=$?
             set -e
             echo "$out"
             if [[ $rc -ne 0 ]]; then
               if [[ "$out" == *"unstable status"* ]]; then
                 echo "Already fully mergeable; merging directly."
-                gh pr merge --squash "$pr" --repo "$REPO"
+                gh pr merge "$strategy" "$pr" --repo "$REPO"
               else
                 exit 1
               fi
