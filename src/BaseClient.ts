@@ -68,9 +68,9 @@ export function normalizeClientOptions<T extends BaseClientOptions = BaseClientO
     const headers = mergeHeaders(
         {
             "X-Fern-Language": "JavaScript",
-            "X-Fern-SDK-Name": "hedra-node",
-            "X-Fern-SDK-Version": "2.0.0",
-            "User-Agent": "hedra-node/2.0.0",
+            "X-Fern-SDK-Name": "@hedra/sdk",
+            "X-Fern-SDK-Version": "2.0.1-dev",
+            "User-Agent": "@hedra/sdk/2.0.1-dev",
             "X-Fern-Runtime": core.RUNTIME.type,
             "X-Fern-Runtime-Version": core.RUNTIME.version,
             "X-Hedra-Spec-Version": options?.specVersion ?? "3.3.0",
