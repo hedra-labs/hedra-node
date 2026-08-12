@@ -117,3 +117,220 @@ jobs:
           echo "OK: every version-bearing file agrees on '$manifest'"
 
           echo "OK: regeneration shape check passed."
+
+  # Nothing else in this workflow reads .github/ -- compile, test and
+  # regen-shape all stop at the TypeScript. So a workflow with broken YAML, or
+  # a `run:` block with broken shell, merged green and surfaced only when that
+  # workflow next fired: for publish-npm.yml that is a release being cut, and
+  # for autoland-regen.yml a regeneration being landed. Both are the most
+  # expensive moments to discover it.
+  #
+  # Validate only, never rewrite. autoland-regen.yml must stay byte-identical
+  # across all three SDK repos and autoland-drift-check.yml enforces that, so a
+  # formatter here would actively break landing.
+  config-syntax:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      - name: Set up python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Install PyYAML
+        run: python -m pip install --quiet pyyaml
+
+      - name: Validate config syntax (JSON + YAML)
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          import sys
+
+          import yaml
+
+          # git ls-files, not glob: glob("**/*.yml") skips dot-prefixed path
+          # components, so every .github/ workflow goes unparsed -- which is
+          # precisely the hole this job closes. fern-config shipped that bug
+          # and fixed it this way (ENG-10238). Tracked-only also keeps
+          # node_modules/ out should an install step ever land above this one.
+          tracked = subprocess.run(
+              ["git", "ls-files", "-z", "*.json", "*.yml", "*.yaml"],
+              check=True,
+              stdout=subprocess.PIPE,
+              text=True,
+          ).stdout
+          paths = sorted(p for p in tracked.split("\0") if p)
+
+          # A pathspec that matches nothing would otherwise pass green, which
+          # is the exact shape of the bug above.
+          if not paths:
+              sys.exit("::error::no tracked config files enumerated")
+
+          errors = 0
+          for path in paths:
+              try:
+                  with open(path, encoding="utf-8") as fh:
+                      if path.endswith(".json"):
+                          json.load(fh)
+                      else:
+                          list(yaml.safe_load_all(fh))
+              except Exception as exc:  # noqa: BLE001 - report and continue
+                  print(f"::error file={path}::{exc}")
+                  errors += 1
+
+          if errors:
+              sys.exit(1)
+          print(f"OK: parsed {len(paths)} config file(s)")
+          PY
+
+      # A YAML parse says nothing about the shell inside a run: block, and
+      # publish-npm.yml and autoland-regen.yml are mostly shell inside YAML.
+      - name: Shell-syntax-check every run block
+        run: |
+          python - <<'PY'
+          import re
+          import subprocess
+          import sys
+
+          import yaml
+
+          # GitHub substitutes its own expressions before any shell sees them,
+          # so they are not shell syntax. Reduce each to one plain word,
+          # preserving line count (backslash-newline continues the line) so the
+          # line numbers reported below still point at the right source line.
+          EXPR = re.compile(r"\$\{\{.*?\}\}", re.S)
+
+
+          class Src(str):
+              """A YAML string that remembers which line it came from."""
+
+              line = 0
+              block = False
+
+
+          def _scalar(loader, node):
+              s = Src(loader.construct_scalar(node))
+              s.line = node.start_mark.line
+              s.block = node.style in ("|", ">")
+              return s
+
+
+          class Loader(yaml.SafeLoader):
+              pass
+
+
+          Loader.add_constructor("tag:yaml.org,2002:str", _scalar)
+
+          CHECKERS = {"bash": ["bash", "-n"], "sh": ["sh", "-n"]}
+
+
+          def default_shell(runs_on):
+              # GitHub's own default: bash on Linux and macOS, pwsh on Windows.
+              return "pwsh" if "windows" in str(runs_on).lower() else "bash"
+
+
+          def step_lists(doc):
+              # Both shapes that carry steps[]: a workflow and a composite
+              # action. Enumerating every tracked YAML rather than a fixed
+              # path means a workflow added somewhere new cannot go unchecked.
+              jobs = doc.get("jobs")
+              if isinstance(jobs, dict):
+                  for name, job in jobs.items():
+                      if isinstance(job, dict):
+                          yield name, job
+              runs = doc.get("runs")
+              if isinstance(runs, dict) and "steps" in runs:
+                  yield "runs", runs
+
+
+          tracked = subprocess.run(
+              ["git", "ls-files", "-z", "*.yml", "*.yaml"],
+              check=True,
+              stdout=subprocess.PIPE,
+              text=True,
+          ).stdout
+          paths = sorted(p for p in tracked.split("\0") if p)
+
+          errors = 0
+          checked = 0
+          skipped = []
+
+          for path in paths:
+              try:
+                  with open(path, encoding="utf-8") as fh:
+                      doc = yaml.load(fh, Loader=Loader)
+              except Exception as exc:  # noqa: BLE001 - prior step has detail
+                  print(f"::error file={path}::unparseable, cannot walk it: {exc}")
+                  errors += 1
+                  continue
+              if not isinstance(doc, dict):
+                  continue
+              wf_default = ((doc.get("defaults") or {}).get("run") or {}).get("shell")
+
+              for job_name, job in step_lists(doc):
+                  steps = job.get("steps")
+                  if not isinstance(steps, list):
+                      continue
+                  job_default = ((job.get("defaults") or {}).get("run") or {}).get("shell")
+                  for i, step in enumerate(steps):
+                      if not isinstance(step, dict):
+                          continue
+                      run = step.get("run")
+                      if not isinstance(run, str):
+                          continue
+                      where = f"{path}:{job_name}:steps[{i}]"
+                      shell = (
+                          step.get("shell")
+                          or job_default
+                          or wf_default
+                          or default_shell(job.get("runs-on"))
+                      )
+                      if shell not in CHECKERS:
+                          skipped.append(f"{where} (shell: {shell})")
+                          continue
+
+                      first = getattr(run, "line", 0) + 1
+                      if getattr(run, "block", False):
+                          first += 1  # a block scalar starts the line after run:
+                      script = EXPR.sub(
+                          lambda m: "__GHA_EXPR__" + "\\\n" * m.group(0).count("\n"),
+                          run,
+                      )
+
+                      # Fed on stdin, never written to disk: this job validates,
+                      # and must not be able to touch a file under .github/.
+                      proc = subprocess.run(
+                          CHECKERS[shell],
+                          input=script,
+                          stderr=subprocess.PIPE,
+                          text=True,
+                      )
+                      checked += 1
+                      if proc.returncode == 0:
+                          continue
+                      errors += 1
+                      # Rewrite "bash: line N: ..." into the real file:line.
+                      for raw in proc.stderr.strip().splitlines():
+                          msg = re.sub(r"^\w+: ", "", raw)
+                          m = re.match(r"line (\d+): (.*)", msg)
+                          if m:
+                              line = first + int(m.group(1)) - 1
+                              print(f"::error file={path},line={line}::{where}: {m.group(2)}")
+                          else:
+                              print(f"::error file={path}::{where}: {msg}")
+
+          for s in skipped:
+              print(f"note: not a POSIX shell, skipped: {s}")
+
+          # A walk that matches nothing must not pass green -- that silent-skip
+          # shape is the whole reason this job exists.
+          if not checked:
+              sys.exit("::error::no run blocks were found to check")
+          if errors:
+              sys.exit(f"{errors} error(s); see the annotations above")
+          print(f"OK: shell-parsed {checked} run block(s) across {len(paths)} YAML file(s)")
+          PY
