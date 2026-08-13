@@ -316,7 +316,7 @@ export class ModelsClient {
     }
 
     /**
-     * Voices this model accepts — scoped to the model's voice provider.
+     * Voices this model accepts — scoped to the model's voice provider. fern-config end-to-end regeneration probe 20260813-234824.
      *
      * @param {string} model - The model's public id (`GET /v3/models`).
      * @param {Hedra.ModelsListVoicesRequest} request
