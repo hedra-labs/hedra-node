@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * End frame (first-last-frame-to-video).
+ * End frame (first-last-frame-to-video). At most 20 MB.
  */
 export type InputMinimaxHailuo02EndImage =
     /**

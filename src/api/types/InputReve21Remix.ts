@@ -6,7 +6,7 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `reve-21-remix`.
  */
 export interface InputReve21Remix {
-    /** Generation prompt. */
+    /** Generation prompt. From 1 to 4000 characters. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
@@ -14,7 +14,7 @@ export interface InputReve21Remix {
     enhance_prompt?: boolean | undefined;
     /** Output aspect ratio. */
     aspect_ratio: InputReve21Remix.AspectRatio;
-    /** Images to edit or blend. */
+    /** Images to edit or blend. 1 to 8 images, each at most 30 MB. */
     images: Hedra.InputReve21RemixImagesItem[];
     /** Output image format. */
     output_format?: InputReve21Remix.OutputFormat | undefined;

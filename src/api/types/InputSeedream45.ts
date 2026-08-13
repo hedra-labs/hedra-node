@@ -20,7 +20,7 @@ export interface InputSeedream45 {
     aspect_ratio: InputSeedream45.AspectRatio;
     /** Output resolution. */
     resolution: InputSeedream45.Resolution;
-    /** Images to edit or blend. */
+    /** Images to edit or blend. 1 to 14 images, each at most 30 MB. */
     images?: Hedra.InputSeedream45ImagesItem[] | undefined;
 }
 

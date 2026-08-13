@@ -14,11 +14,11 @@ export interface InputHedraAvatar {
     aspect_ratio: InputHedraAvatar.AspectRatio;
     /** Output resolution. */
     resolution: InputHedraAvatar.Resolution;
-    /** Duration in ms. */
+    /** Duration in ms. At most 600000. */
     duration_ms?: number | undefined;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image: Hedra.InputHedraAvatarStartImage;
-    /** Driving audio: a single reference, or a list of up to 4 references for multi-speaker generation — one audio per speaker, played in list order. */
+    /** Driving audio: a single reference, or a list of references for multi-speaker generation — one audio per speaker, played in list order. 1 to 4 audio files, each from 0.5s to 600s and at most 104.8 MB. */
     audio: InputHedraAvatar.Audio;
     /** Speaker position(s) in the start frame, as normalized [x, y] image coordinates (0-1 from the top-left). */
     bounding_box_target?: InputHedraAvatar.BoundingBoxTarget | undefined;
@@ -44,7 +44,7 @@ export namespace InputHedraAvatar {
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /**
-     * Driving audio: a single reference, or a list of up to 4 references for multi-speaker generation — one audio per speaker, played in list order.
+     * Driving audio: a single reference, or a list of references for multi-speaker generation — one audio per speaker, played in list order. 1 to 4 audio files, each from 0.5s to 600s and at most 104.8 MB.
      */
     export type Audio = Hedra.InputHedraAvatarAudioZero | Hedra.InputHedraAvatarAudioOneItem[];
     /**

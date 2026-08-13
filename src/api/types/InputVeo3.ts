@@ -12,7 +12,7 @@ import type * as Hedra from "../index.js";
 export interface InputVeo3 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 20000 characters. */
     prompt: string;
     /** Output aspect ratio. */
     aspect_ratio: InputVeo3.AspectRatio;
@@ -22,7 +22,7 @@ export interface InputVeo3 {
     duration_ms: number;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 8 MB. */
     start_image?: Hedra.InputVeo3StartImage | undefined;
     /** What to avoid in the generated video. */
     negative_prompt?: string | undefined;

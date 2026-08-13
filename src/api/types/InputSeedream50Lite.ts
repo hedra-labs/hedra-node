@@ -20,7 +20,7 @@ export interface InputSeedream50Lite {
     aspect_ratio: InputSeedream50Lite.AspectRatio;
     /** Output resolution. */
     resolution: InputSeedream50Lite.Resolution;
-    /** Images to edit or blend. */
+    /** Images to edit or blend. 1 to 14 images, each at most 30 MB. */
     images?: Hedra.InputSeedream50LiteImagesItem[] | undefined;
 }
 

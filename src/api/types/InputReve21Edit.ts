@@ -6,7 +6,7 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `reve-21-edit`.
  */
 export interface InputReve21Edit {
-    /** Generation prompt. */
+    /** Generation prompt. From 1 to 4000 characters. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
@@ -14,7 +14,7 @@ export interface InputReve21Edit {
     enhance_prompt?: boolean | undefined;
     /** Output aspect ratio. */
     aspect_ratio: InputReve21Edit.AspectRatio;
-    /** The single source image to edit. */
+    /** The single source image to edit. Exactly 1 image, at most 30 MB. */
     images: Hedra.InputReve21EditImagesItem[];
     /** Output image format. */
     output_format?: InputReve21Edit.OutputFormat | undefined;

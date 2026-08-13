@@ -13,7 +13,7 @@ import type * as Hedra from "../index.js";
 export interface InputViduQ3 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2000 characters. */
     prompt: string;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
@@ -21,9 +21,9 @@ export interface InputViduQ3 {
     resolution: InputViduQ3.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image?: Hedra.InputViduQ3StartImage | undefined;
-    /** End frame (first-last-frame-to-video). */
+    /** End frame (first-last-frame-to-video). At most 10.4 MB. */
     end_image?: Hedra.InputViduQ3EndImage | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputViduQ3.AspectRatio | undefined;

@@ -18,9 +18,9 @@ export interface InputFluxDev {
     output_format?: InputFluxDev.OutputFormat | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** How closely the model follows the prompt. */
+    /** How closely the model follows the prompt. From 1 to 20. */
     guidance_scale?: number | undefined;
-    /** Denoising steps to run. */
+    /** Denoising steps to run. From 1 to 50. */
     num_inference_steps?: number | undefined;
 }
 

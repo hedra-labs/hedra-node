@@ -10,7 +10,7 @@ import type * as Hedra from "../index.js";
  * (2) requires: aspect_ratio, prompt; must omit: images
  */
 export interface InputGptImage15 {
-    /** Generation prompt. */
+    /** Generation prompt. At most 32000 characters. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
@@ -20,7 +20,7 @@ export interface InputGptImage15 {
     aspect_ratio: InputGptImage15.AspectRatio;
     /** Output resolution. */
     resolution?: InputGptImage15.Resolution | undefined;
-    /** Images to edit or blend. */
+    /** Images to edit or blend. 1 to 16 images, each at most 30 MB. */
     images?: Hedra.InputGptImage15ImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputGptImage15.OutputFormat | undefined;

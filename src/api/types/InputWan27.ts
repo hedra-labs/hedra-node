@@ -13,23 +13,23 @@ import type * as Hedra from "../index.js";
 export interface InputWan27 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 5000 characters. */
     prompt: string;
-    /** What to avoid in the generated video. */
+    /** What to avoid in the generated video. At most 500 characters. */
     negative_prompt?: string | undefined;
-    /** Seed for reproducible output; omit for a random seed. */
+    /** Seed for reproducible output; omit for a random seed. From 0 to 2147483647. */
     seed?: number | undefined;
     /** Output resolution. */
     resolution: InputWan27.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 20 MB. */
     start_image?: Hedra.InputWan27StartImage | undefined;
-    /** End frame (first-last-frame-to-video). */
+    /** End frame (first-last-frame-to-video). At most 20 MB. */
     end_image?: Hedra.InputWan27EndImage | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputWan27.AspectRatio | undefined;
-    /** Reference images. */
+    /** Reference images. 1 to 4 images, each at most 20 MB. */
     images?: Hedra.InputWan27ImagesItem[] | undefined;
 }
 

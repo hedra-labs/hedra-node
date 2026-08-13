@@ -18,7 +18,7 @@ export interface InputFlux2Max {
     enhance_prompt?: boolean | undefined;
     /** Output aspect ratio. */
     aspect_ratio: InputFlux2Max.AspectRatio;
-    /** Images to edit or blend. */
+    /** Images to edit or blend. 1 to 8 images, each at most 30 MB. */
     images?: Hedra.InputFlux2MaxImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputFlux2Max.OutputFormat | undefined;

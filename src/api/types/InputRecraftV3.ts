@@ -4,7 +4,7 @@
  * Model-specific inputs for `recraft-v3`.
  */
 export interface InputRecraftV3 {
-    /** Generation prompt. */
+    /** Generation prompt. At most 1000 characters. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;

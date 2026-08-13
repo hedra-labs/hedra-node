@@ -16,7 +16,7 @@ import type * as Hedra from "../index.js";
 export interface InputKlingO3 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2500 characters. */
     prompt: string;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
@@ -26,11 +26,11 @@ export interface InputKlingO3 {
     resolution?: InputKlingO3.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image?: Hedra.InputKlingO3StartImage | undefined;
-    /** End frame (first-last-frame-to-video). */
+    /** End frame (first-last-frame-to-video). At most 10.4 MB. */
     end_image?: Hedra.InputKlingO3EndImage | undefined;
-    /** Reference images. */
+    /** Reference images. 1 to 3 images, each at most 10.4 MB. */
     images?: Hedra.InputKlingO3ImagesItem[] | undefined;
     /** Quality level to generate at. */
     quality: InputKlingO3.Quality;

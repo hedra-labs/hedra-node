@@ -10,7 +10,7 @@ import type * as Hedra from "../index.js";
  * (2) requires: aspect_ratio, prompt; must omit: images
  */
 export interface InputMaiImage25 {
-    /** Generation prompt. */
+    /** Generation prompt. From 3 to 5000 characters. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
@@ -18,7 +18,7 @@ export interface InputMaiImage25 {
     enhance_prompt?: boolean | undefined;
     /** Output aspect ratio. */
     aspect_ratio: InputMaiImage25.AspectRatio;
-    /** The single source image to edit. */
+    /** The single source image to edit. Exactly 1 image, at most 30 MB. */
     images?: Hedra.InputMaiImage25ImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputMaiImage25.OutputFormat | undefined;

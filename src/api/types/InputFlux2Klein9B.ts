@@ -18,7 +18,7 @@ export interface InputFlux2Klein9B {
     enhance_prompt?: boolean | undefined;
     /** Output aspect ratio. */
     aspect_ratio: InputFlux2Klein9B.AspectRatio;
-    /** Images to edit or blend. */
+    /** Images to edit or blend. 1 to 4 images, each at most 30 MB. */
     images?: Hedra.InputFlux2Klein9BImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputFlux2Klein9B.OutputFormat | undefined;
@@ -26,9 +26,9 @@ export interface InputFlux2Klein9B {
     negative_prompt?: string | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** How closely the model follows the prompt. */
+    /** How closely the model follows the prompt. From 0 to 20. */
     guidance_scale?: number | undefined;
-    /** Denoising steps to run. */
+    /** Denoising steps to run. From 4 to 50. */
     num_inference_steps?: number | undefined;
 }
 

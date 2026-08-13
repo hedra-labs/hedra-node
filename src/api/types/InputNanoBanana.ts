@@ -16,7 +16,7 @@ export interface InputNanoBanana {
     aspect_ratio: InputNanoBanana.AspectRatio;
     /** Output resolution. */
     resolution: InputNanoBanana.Resolution;
-    /** Images to edit or blend, up to 3 in total. */
+    /** Images to edit or blend. 1 to 3 images, each at most 30 MB. */
     images?: Hedra.InputNanoBananaImagesItem[] | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;

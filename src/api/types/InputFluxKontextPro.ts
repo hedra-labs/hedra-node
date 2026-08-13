@@ -16,7 +16,7 @@ export interface InputFluxKontextPro {
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
-    /** The single source image to edit. */
+    /** The single source image to edit. Exactly 1 image, at most 30 MB. */
     images?: Hedra.InputFluxKontextProImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputFluxKontextPro.OutputFormat | undefined;

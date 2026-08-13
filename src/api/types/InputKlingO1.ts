@@ -12,7 +12,7 @@ import type * as Hedra from "../index.js";
 export interface InputKlingO1 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2500 characters. */
     prompt: string;
     /** Output aspect ratio. */
     aspect_ratio: InputKlingO1.AspectRatio;
@@ -20,11 +20,11 @@ export interface InputKlingO1 {
     resolution?: InputKlingO1.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image?: Hedra.InputKlingO1StartImage | undefined;
-    /** End frame (first-last-frame-to-video). */
+    /** End frame (first-last-frame-to-video). At most 10.4 MB. */
     end_image?: Hedra.InputKlingO1EndImage | undefined;
-    /** Reference images. */
+    /** Reference images. 1 to 3 images, each at most 10.4 MB. */
     images?: Hedra.InputKlingO1ImagesItem[] | undefined;
 }
 

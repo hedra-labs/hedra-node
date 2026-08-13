@@ -12,7 +12,7 @@ import type * as Hedra from "../index.js";
 export interface InputPixverseV6 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2048 characters. */
     prompt: string;
     /** Output resolution. */
     resolution: InputPixverseV6.Resolution;
@@ -20,11 +20,11 @@ export interface InputPixverseV6 {
     duration_ms: number;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
-    /** What to avoid in the generated video. */
+    /** What to avoid in the generated video. At most 2048 characters. */
     negative_prompt?: string | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image?: Hedra.InputPixverseV6StartImage | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputPixverseV6.AspectRatio | undefined;

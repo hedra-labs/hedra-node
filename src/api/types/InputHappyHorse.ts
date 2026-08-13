@@ -12,7 +12,7 @@ import type * as Hedra from "../index.js";
 export interface InputHappyHorse {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2500 characters. */
     prompt: string;
     /** Output aspect ratio. */
     aspect_ratio: InputHappyHorse.AspectRatio;
@@ -20,11 +20,11 @@ export interface InputHappyHorse {
     resolution: InputHappyHorse.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At least 300px on each side and at most 10 MB. */
     start_image?: Hedra.InputHappyHorseStartImage | undefined;
-    /** Reference images. */
+    /** Reference images. 1 to 9 images, each at least 400px on each side and at most 10 MB. */
     images?: Hedra.InputHappyHorseImagesItem[] | undefined;
-    /** Seed for reproducible output; omit for a random seed. */
+    /** Seed for reproducible output; omit for a random seed. From 0 to 2147483647. */
     seed?: number | undefined;
 }
 

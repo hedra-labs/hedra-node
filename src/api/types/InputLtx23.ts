@@ -14,7 +14,7 @@ import type * as Hedra from "../index.js";
 export interface InputLtx23 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. From 1 to 5000 characters. */
     prompt: string;
     /** Output resolution. */
     resolution: InputLtx23.Resolution;
@@ -24,9 +24,9 @@ export interface InputLtx23 {
     duration_ms: number;
     /** Output aspect ratio. */
     aspect_ratio: InputLtx23.AspectRatio;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image?: Hedra.InputLtx23StartImage | undefined;
-    /** End frame (first-last-frame-to-video). */
+    /** End frame (first-last-frame-to-video). At most 10.4 MB. */
     end_image?: Hedra.InputLtx23EndImage | undefined;
     /** Quality level to generate at. */
     quality: InputLtx23.Quality;

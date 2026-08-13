@@ -12,7 +12,7 @@ import type * as Hedra from "../index.js";
 export interface InputGrokVideo {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 4096 characters. */
     prompt: string;
     /** Output aspect ratio. */
     aspect_ratio: InputGrokVideo.AspectRatio;
@@ -20,7 +20,7 @@ export interface InputGrokVideo {
     resolution: InputGrokVideo.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image?: Hedra.InputGrokVideoStartImage | undefined;
 }
 
