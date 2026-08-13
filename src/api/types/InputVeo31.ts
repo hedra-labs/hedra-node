@@ -20,15 +20,15 @@ export interface InputVeo31 {
     generate_audio?: boolean | undefined;
     /** What to avoid in the generated video. */
     negative_prompt?: string | undefined;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 20 MB. */
     start_image?: Hedra.InputVeo31StartImage | undefined;
-    /** End frame (first-last-frame-to-video). */
+    /** End frame (first-last-frame-to-video). At most 20 MB. */
     end_image?: Hedra.InputVeo31EndImage | undefined;
-    /** Source video (video-to-video). */
+    /** Source video (video-to-video). From 1s to 30s and at most 524.2 MB. */
     source_video?: Hedra.InputVeo31SourceVideo | undefined;
-    /** Reference images. */
+    /** Reference images. 1 to 3 images, each at most 20 MB. */
     images?: Hedra.InputVeo31ImagesItem[] | undefined;
-    /** Seed for reproducible output; omit for a random seed. */
+    /** Seed for reproducible output; omit for a random seed. From 0 to 4294967295. */
     seed?: number | undefined;
     /** Quality level to generate at. */
     quality: InputVeo31.Quality;

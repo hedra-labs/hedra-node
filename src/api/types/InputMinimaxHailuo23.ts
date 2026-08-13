@@ -14,13 +14,13 @@ import type * as Hedra from "../index.js";
 export interface InputMinimaxHailuo23 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2000 characters. */
     prompt: string;
     /** Output resolution. */
     resolution?: InputMinimaxHailuo23.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). The output video follows this image's aspect ratio. */
+    /** Start frame (image-to-video). The output video follows this image's aspect ratio. At most 20 MB. */
     start_image?: Hedra.InputMinimaxHailuo23StartImage | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputMinimaxHailuo23.AspectRatio | undefined;

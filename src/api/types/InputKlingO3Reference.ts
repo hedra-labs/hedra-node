@@ -8,11 +8,11 @@ import type * as Hedra from "../index.js";
 export interface InputKlingO3Reference {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2500 characters. */
     prompt: string;
-    /** Source video (video-to-video). */
+    /** Source video (video-to-video). From 3s to 15s and at most 524.2 MB. */
     source_video: Hedra.InputKlingO3ReferenceSourceVideo;
-    /** Reference images. */
+    /** Reference images. 1 to 4 images, each at least 300px on each side and at most 10.4 MB. */
     images?: Hedra.InputKlingO3ReferenceImagesItem[] | undefined;
     /** Output resolution to generate at. */
     resolution: InputKlingO3Reference.Resolution;

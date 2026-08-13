@@ -8,7 +8,7 @@ import type * as Hedra from "../index.js";
 export interface InputViduQ3Reference {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2000 characters. */
     prompt: string;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
@@ -18,7 +18,7 @@ export interface InputViduQ3Reference {
     resolution: InputViduQ3Reference.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Reference images. */
+    /** Reference images. 1 to 4 images, each at most 10.4 MB. */
     images: Hedra.InputViduQ3ReferenceImagesItem[];
 }
 

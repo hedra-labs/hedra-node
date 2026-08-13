@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Driving audio.
+ * Driving audio. At most 104.8 MB.
  */
 export type InputVeedFabric10Audio =
     /**

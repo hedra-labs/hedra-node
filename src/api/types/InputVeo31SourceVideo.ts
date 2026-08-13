@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Source video (video-to-video).
+ * Source video (video-to-video). From 1s to 30s and at most 524.2 MB.
  */
 export type InputVeo31SourceVideo =
     /**

@@ -10,7 +10,7 @@ import type * as Hedra from "../index.js";
  * (2) requires: aspect_ratio, prompt, resolution; must omit: images
  */
 export interface InputQwenImage2 {
-    /** Generation prompt. */
+    /** Generation prompt. At least 1 character. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
@@ -22,11 +22,11 @@ export interface InputQwenImage2 {
     resolution: InputQwenImage2.Resolution;
     /** Output image format. */
     output_format?: InputQwenImage2.OutputFormat | undefined;
-    /** What to avoid in the generated image. */
+    /** What to avoid in the generated image. At most 500 characters. */
     negative_prompt?: string | undefined;
-    /** Images to edit or blend. */
+    /** Images to edit or blend. 1 to 3 images, each at most 30 MB. */
     images?: Hedra.InputQwenImage2ImagesItem[] | undefined;
-    /** Seed for reproducible output; omit for a random seed. */
+    /** Seed for reproducible output; omit for a random seed. From 0 to 2147483647. */
     seed?: number | undefined;
     /** Quality level to generate at. */
     quality: InputQwenImage2.Quality;

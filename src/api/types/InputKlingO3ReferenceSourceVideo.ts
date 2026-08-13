@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Source video (video-to-video).
+ * Source video (video-to-video). From 3s to 15s and at most 524.2 MB.
  */
 export type InputKlingO3ReferenceSourceVideo =
     /**

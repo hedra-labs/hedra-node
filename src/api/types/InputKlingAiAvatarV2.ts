@@ -8,15 +8,15 @@ import type * as Hedra from "../index.js";
 export interface InputKlingAiAvatarV2 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2500 characters. */
     prompt?: string | undefined;
     /** Output aspect ratio. */
     aspect_ratio: InputKlingAiAvatarV2.AspectRatio;
     /** Output resolution. */
     resolution?: InputKlingAiAvatarV2.Resolution | undefined;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image: Hedra.InputKlingAiAvatarV2StartImage;
-    /** Driving audio. */
+    /** Driving audio. At most 104.8 MB. */
     audio: Hedra.InputKlingAiAvatarV2Audio;
     /** Quality level to generate at. */
     quality: InputKlingAiAvatarV2.Quality;

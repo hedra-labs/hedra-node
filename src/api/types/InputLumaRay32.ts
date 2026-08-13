@@ -6,7 +6,7 @@
 export interface InputLumaRay32 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 6000 characters. */
     prompt: string;
     /** Output aspect ratio. */
     aspect_ratio: InputLumaRay32.AspectRatio;

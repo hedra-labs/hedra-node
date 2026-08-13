@@ -18,11 +18,11 @@ export interface InputSeedance15Pro {
     duration_ms: number;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). With an aspect ratio from 0.4 to 2.5 and at most 30 MB. */
     start_image?: Hedra.InputSeedance15ProStartImage | undefined;
-    /** End frame (first-last-frame-to-video). */
+    /** End frame (first-last-frame-to-video). With an aspect ratio from 0.4 to 2.5 and at most 30 MB. */
     end_image?: Hedra.InputSeedance15ProEndImage | undefined;
-    /** Seed for reproducible output; omit for a random seed. */
+    /** Seed for reproducible output; omit for a random seed. From 0 to 4294967295. */
     seed?: number | undefined;
 }
 

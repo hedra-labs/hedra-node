@@ -10,7 +10,7 @@ import type * as Hedra from "../index.js";
  * (2) requires: aspect_ratio, prompt, resolution; must omit: images
  */
 export interface InputHidreamO1Image {
-    /** Generation prompt. */
+    /** Generation prompt. At least 1 character. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
@@ -18,15 +18,15 @@ export interface InputHidreamO1Image {
     enhance_prompt?: boolean | undefined;
     /** Output aspect ratio. */
     aspect_ratio: InputHidreamO1Image.AspectRatio;
-    /** Images to edit or blend. */
+    /** Images to edit or blend. 1 to 10 images, each at most 30 MB. */
     images?: Hedra.InputHidreamO1ImageImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputHidreamO1Image.OutputFormat | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** How closely the model follows the prompt. */
+    /** How closely the model follows the prompt. From 0 to 20. */
     guidance_scale?: number | undefined;
-    /** Denoising steps to run. */
+    /** Denoising steps to run. From 1 to 50. */
     num_inference_steps?: number | undefined;
     /** Output resolution. */
     resolution?: InputHidreamO1Image.Resolution | undefined;

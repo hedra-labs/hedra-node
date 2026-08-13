@@ -16,15 +16,15 @@ import type * as Hedra from "../index.js";
 export interface InputMinimaxHailuo02 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2000 characters. */
     prompt: string;
     /** Output resolution. */
     resolution?: InputMinimaxHailuo02.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). The output video follows this image's aspect ratio. */
+    /** Start frame (image-to-video). The output video follows this image's aspect ratio. At most 20 MB. */
     start_image?: Hedra.InputMinimaxHailuo02StartImage | undefined;
-    /** End frame (first-last-frame-to-video). */
+    /** End frame (first-last-frame-to-video). At most 20 MB. */
     end_image?: Hedra.InputMinimaxHailuo02EndImage | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputMinimaxHailuo02.AspectRatio | undefined;

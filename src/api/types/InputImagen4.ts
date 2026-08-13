@@ -4,7 +4,7 @@
  * Model-specific inputs for `imagen4`.
  */
 export interface InputImagen4 {
-    /** Generation prompt. */
+    /** Generation prompt. At most 5000 characters. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;

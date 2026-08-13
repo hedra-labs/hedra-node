@@ -10,13 +10,13 @@ import type * as Hedra from "../index.js";
  * (2) requires: aspect_ratio, prompt; must omit: images
  */
 export interface InputGrokImagine {
-    /** Generation prompt. */
+    /** Generation prompt. At most 8000 characters. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
-    /** Images to edit or blend. */
+    /** Images to edit or blend. 1 to 3 images, each at most 30 MB. */
     images?: Hedra.InputGrokImagineImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputGrokImagine.OutputFormat | undefined;

@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Start frame (image-to-video).
+ * Start frame (image-to-video). With an aspect ratio from 0.4 to 2.5 and at most 30 MB.
  */
 export type InputSeedance20MiniStartImage =
     /**

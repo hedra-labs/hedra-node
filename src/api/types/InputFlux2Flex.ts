@@ -18,15 +18,15 @@ export interface InputFlux2Flex {
     enhance_prompt?: boolean | undefined;
     /** Output aspect ratio. */
     aspect_ratio: InputFlux2Flex.AspectRatio;
-    /** Images to edit or blend. */
+    /** Images to edit or blend. 1 to 8 images, each at most 30 MB. */
     images?: Hedra.InputFlux2FlexImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputFlux2Flex.OutputFormat | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** How closely the model follows the prompt. */
+    /** How closely the model follows the prompt. From 1.5 to 10. */
     guidance?: number | undefined;
-    /** Denoising steps to run. */
+    /** Denoising steps to run. From 2 to 50. */
     steps?: number | undefined;
 }
 

@@ -14,9 +14,9 @@ export interface InputOmnihuman15 {
     aspect_ratio?: InputOmnihuman15.AspectRatio | undefined;
     /** Output resolution. */
     resolution: InputOmnihuman15.Resolution;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image: Hedra.InputOmnihuman15StartImage;
-    /** Driving audio. */
+    /** Driving audio. At most 59.88s and at most 104.8 MB. */
     audio: Hedra.InputOmnihuman15Audio;
 }
 

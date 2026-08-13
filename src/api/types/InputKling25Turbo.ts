@@ -12,7 +12,7 @@ import type * as Hedra from "../index.js";
 export interface InputKling25Turbo {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. */
+    /** Generation prompt. At most 2500 characters. */
     prompt: string;
     /** Output aspect ratio. */
     aspect_ratio: InputKling25Turbo.AspectRatio;
@@ -20,11 +20,11 @@ export interface InputKling25Turbo {
     resolution?: InputKling25Turbo.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image?: Hedra.InputKling25TurboStartImage | undefined;
-    /** What to avoid in the generated video. */
+    /** What to avoid in the generated video. At most 2500 characters. */
     negative_prompt?: string | undefined;
-    /** How closely the model follows the prompt. */
+    /** How closely the model follows the prompt. From 0 to 1. */
     cfg_scale?: number | undefined;
 }
 

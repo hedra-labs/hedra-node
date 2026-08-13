@@ -20,7 +20,7 @@ export interface InputVeo2 {
     resolution?: InputVeo2.Resolution | undefined;
     /** Duration in ms. */
     duration_ms?: number | undefined;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 8 MB. */
     start_image?: Hedra.InputVeo2StartImage | undefined;
     /** What to avoid in the generated video. */
     negative_prompt?: string | undefined;

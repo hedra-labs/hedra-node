@@ -4,7 +4,7 @@
  * Model-specific inputs for `reve-21`.
  */
 export interface InputReve21 {
-    /** Generation prompt. */
+    /** Generation prompt. From 1 to 4000 characters. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;

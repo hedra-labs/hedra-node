@@ -16,13 +16,13 @@ export interface InputGeminiOmniFlash {
     resolution?: InputGeminiOmniFlash.Resolution | undefined;
     /** Duration in ms. */
     duration_ms?: number | undefined;
-    /** Start frame (image-to-video). */
+    /** Start frame (image-to-video). At most 10.4 MB. */
     start_image?: Hedra.InputGeminiOmniFlashStartImage | undefined;
-    /** Source video (video-to-video). */
+    /** Source video (video-to-video). From 1s to 10s and at most 524.2 MB. */
     source_video?: Hedra.InputGeminiOmniFlashSourceVideo | undefined;
-    /** Reference images. */
+    /** Reference images. 1 to 10 images, each at most 10.4 MB. */
     images?: Hedra.InputGeminiOmniFlashImagesItem[] | undefined;
-    /** Reference videos. */
+    /** Reference videos. 1 to 3 videos, each at most 10s and at most 524.2 MB. */
     videos?: Hedra.InputGeminiOmniFlashVideosItem[] | undefined;
 }
 

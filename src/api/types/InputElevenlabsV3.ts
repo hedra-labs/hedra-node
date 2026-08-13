@@ -4,11 +4,11 @@
  * Model-specific inputs for `elevenlabs-v3`.
  */
 export interface InputElevenlabsV3 {
-    /** Generation prompt. */
+    /** Generation prompt. At most 5000 characters. */
     text: string;
-    /** Voice stability, from 0 to 1. Higher values give a steadier, more consistent delivery; lower values allow more expressive variation between generations. */
+    /** Voice stability. Higher values give a steadier, more consistent delivery; lower values allow more expressive variation between generations. From 0 to 1. */
     stability?: number | undefined;
-    /** Speech rate multiplier; 1.0 is the voice's natural pace. */
+    /** Speech rate multiplier; 1.0 is the voice's natural pace. From 0.7 to 1.2. */
     speed?: number | undefined;
     /** Language code; 'auto' by default. */
     language?: string | undefined;
