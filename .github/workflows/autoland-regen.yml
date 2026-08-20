@@ -222,10 +222,42 @@ jobs:
           # enabled for humans — this only picks the strategy for regeneration
           # PRs. Where merge commits are disabled we fall back rather than stall
           # regeneration, but loudly, because the fallback re-opens ENG-10280.
+          #
+          # Name the merge commit so Replay's generation scan can still find an
+          # anchor (ENG-10280, second half). ReplayDetector's
+          # findPreviousGenerationFromHistory() walks
+          # `git log --first-parent HEAD` — no --no-merges — and takes the FIRST
+          # commit that is authored by fern-api[bot] or whose SUBJECT starts with
+          # `[fern-generated]` / `[fern-replay]`. Merge landing puts the real
+          # generation on the SECOND parent, invisible to that walk, while the
+          # walk still succeeds on an older SQUASHED regeneration further back.
+          # So the anchor freezes and the detection range grows by one commit per
+          # PR forever: measured 2026-08-20, main's anchor was still
+          # `f4a1372 SDK regeneration (#72)`, fourteen first-parent commits back.
+          # Subjecting the merge commit itself puts a current, permanently
+          # reachable anchor on the first-parent chain. Detection is --no-merges,
+          # so the merge commit can never be mistaken for a customization.
+          #
+          # `[fern-replay]`, not `[fern-generated]`, and the distinction is
+          # load-bearing. Both satisfy the detector, but `[fern-generated]` would
+          # also be picked up by AutoVersionStep's own stricter first-parent walk
+          # (`startsWith("[fern-generated]")`), re-anchoring the autoversion
+          # baseline and changing the computed X.Y.Z-dev bump, and by the
+          # `PVe(u) && !KQl(u)` generation scan, which likewise does not pass
+          # --no-merges. `[fern-replay]` is inert to both. Verified against
+          # fern-api 5.100.0's cli.cjs; re-read the applicator after a CLI bump,
+          # because this rides on an undocumented predicate and will fail
+          # silently — a rotting anchor, not an error — if it changes.
+          #
+          # Subject only on the merge path. The squash fallback already matches
+          # the detector through the author clause, and prefixing it would drop
+          # it out of the `!KQl` generation scan it currently appears in.
           if [[ "$(gh api "repos/${REPO}" --jq '.allow_merge_commit')" == "true" ]]; then
             strategy="--merge"
+            subject_args=(-t "[fern-replay] SDK regeneration (#${pr})")
           else
             strategy="--squash"
+            subject_args=()
             echo "::warning::merge commits are disabled on ${REPO}; falling back to --squash. Recorded generation SHAs will be orphaned — see ENG-10280."
           fi
 
@@ -236,13 +268,13 @@ jobs:
           # would often hit.
           if [[ "$(gh pr view "$pr" --repo "$REPO" --json autoMergeRequest --jq '.autoMergeRequest != null')" != "true" ]]; then
             set +e
-            out="$(gh pr merge --auto "$strategy" "$pr" --repo "$REPO" 2>&1)"; rc=$?
+            out="$(gh pr merge --auto "$strategy" ${subject_args[@]+"${subject_args[@]}"} "$pr" --repo "$REPO" 2>&1)"; rc=$?
             set -e
             echo "$out"
             if [[ $rc -ne 0 ]]; then
               if [[ "$out" == *"unstable status"* ]]; then
                 echo "Already fully mergeable; merging directly."
-                gh pr merge "$strategy" "$pr" --repo "$REPO"
+                gh pr merge "$strategy" ${subject_args[@]+"${subject_args[@]}"} "$pr" --repo "$REPO"
               else
                 exit 1
               fi
