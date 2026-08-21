@@ -10,7 +10,16 @@ describe("ModelsClient", () => {
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
-            data: [{ id: "id", modality: "image", name: "name", description: "description", logo_url: "logo_url" }],
+            data: [
+                {
+                    id: "id",
+                    modality: "image",
+                    name: "name",
+                    description: "description",
+                    price_description: "price_description",
+                    logo_url: "logo_url",
+                },
+            ],
             next_cursor: "next_cursor",
         };
 
@@ -94,6 +103,7 @@ describe("ModelsClient", () => {
             modality: "image",
             name: "name",
             description: "description",
+            price_description: "price_description",
             logo_url: "logo_url",
             input_schema: { key: "value" },
             output_schema: { key: "value" },

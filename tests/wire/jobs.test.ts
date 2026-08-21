@@ -9518,9 +9518,7 @@ describe("JobsClient", () => {
     test("submit_kling_o3 (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = {
             job_id: "job_id",
             model: "model",
@@ -9541,7 +9539,6 @@ describe("JobsClient", () => {
 
         const response = await client.jobs.submitKlingO3({
             input: {
-                prompt: "prompt",
                 aspect_ratio: "16:9",
                 duration_ms: 1,
                 quality: "standard",
@@ -9553,9 +9550,7 @@ describe("JobsClient", () => {
     test("submit_kling_o3 (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -9570,7 +9565,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingO3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -9582,9 +9576,7 @@ describe("JobsClient", () => {
     test("submit_kling_o3 (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -9599,7 +9591,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingO3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -9611,9 +9602,7 @@ describe("JobsClient", () => {
     test("submit_kling_o3 (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -9628,7 +9617,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingO3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -9640,9 +9628,7 @@ describe("JobsClient", () => {
     test("submit_kling_o3 (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -9657,7 +9643,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingO3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -9669,9 +9654,7 @@ describe("JobsClient", () => {
     test("submit_kling_o3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -9686,7 +9669,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingO3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -9698,9 +9680,7 @@ describe("JobsClient", () => {
     test("submit_kling_o3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -9715,7 +9695,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingO3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -9727,9 +9706,7 @@ describe("JobsClient", () => {
     test("submit_kling_o3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -9744,7 +9721,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingO3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -9756,9 +9732,7 @@ describe("JobsClient", () => {
     test("submit_kling_o3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -9773,7 +9747,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingO3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -10355,9 +10328,7 @@ describe("JobsClient", () => {
     test("submit_kling_v3 (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = {
             job_id: "job_id",
             model: "model",
@@ -10378,7 +10349,6 @@ describe("JobsClient", () => {
 
         const response = await client.jobs.submitKlingV3({
             input: {
-                prompt: "prompt",
                 aspect_ratio: "16:9",
                 duration_ms: 1,
                 quality: "standard",
@@ -10390,9 +10360,7 @@ describe("JobsClient", () => {
     test("submit_kling_v3 (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -10407,7 +10375,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingV3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -10419,9 +10386,7 @@ describe("JobsClient", () => {
     test("submit_kling_v3 (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -10436,7 +10401,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingV3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -10448,9 +10412,7 @@ describe("JobsClient", () => {
     test("submit_kling_v3 (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -10465,7 +10427,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingV3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -10477,9 +10438,7 @@ describe("JobsClient", () => {
     test("submit_kling_v3 (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -10494,7 +10453,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingV3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -10506,9 +10464,7 @@ describe("JobsClient", () => {
     test("submit_kling_v3 (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -10523,7 +10479,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingV3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -10535,9 +10490,7 @@ describe("JobsClient", () => {
     test("submit_kling_v3 (7)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -10552,7 +10505,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingV3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -10564,9 +10516,7 @@ describe("JobsClient", () => {
     test("submit_kling_v3 (8)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -10581,7 +10531,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingV3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -10593,9 +10542,7 @@ describe("JobsClient", () => {
     test("submit_kling_v3 (9)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            input: { prompt: "prompt", aspect_ratio: "16:9", duration_ms: 1, quality: "standard" },
-        };
+        const rawRequestBody = { input: { aspect_ratio: "16:9", duration_ms: 1, quality: "standard" } };
         const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server
@@ -10610,7 +10557,6 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.submitKlingV3({
                 input: {
-                    prompt: "prompt",
                     aspect_ratio: "16:9",
                     duration_ms: 1,
                     quality: "standard",
@@ -18608,6 +18554,255 @@ describe("JobsClient", () => {
                         url: "url",
                     },
                     audio: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.InternalServerError);
+    });
+
+    test("submit_veed_video_background_removal (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { source_video: { source: "url", url: "url" } } };
+        const rawResponseBody = {
+            job_id: "job_id",
+            model: "model",
+            status: "IN_QUEUE",
+            status_url: "status_url",
+            result_url: "result_url",
+            estimated_completion_at: "2024-01-15T09:30:00Z",
+        };
+
+        server
+            .mockEndpoint()
+            .post("/models/veed-video-background-removal")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.jobs.submitVeedVideoBackgroundRemoval({
+            input: {
+                source_video: {
+                    source: "url",
+                    url: "url",
+                },
+            },
+        });
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("submit_veed_video_background_removal (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { source_video: { source: "url", url: "url" } } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veed-video-background-removal")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeedVideoBackgroundRemoval({
+                input: {
+                    source_video: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.BadRequestError);
+    });
+
+    test("submit_veed_video_background_removal (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { source_video: { source: "url", url: "url" } } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veed-video-background-removal")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeedVideoBackgroundRemoval({
+                input: {
+                    source_video: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.UnauthorizedError);
+    });
+
+    test("submit_veed_video_background_removal (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { source_video: { source: "url", url: "url" } } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veed-video-background-removal")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(402)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeedVideoBackgroundRemoval({
+                input: {
+                    source_video: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.PaymentRequiredError);
+    });
+
+    test("submit_veed_video_background_removal (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { source_video: { source: "url", url: "url" } } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veed-video-background-removal")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeedVideoBackgroundRemoval({
+                input: {
+                    source_video: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.ForbiddenError);
+    });
+
+    test("submit_veed_video_background_removal (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { source_video: { source: "url", url: "url" } } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veed-video-background-removal")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeedVideoBackgroundRemoval({
+                input: {
+                    source_video: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.NotFoundError);
+    });
+
+    test("submit_veed_video_background_removal (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { source_video: { source: "url", url: "url" } } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veed-video-background-removal")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeedVideoBackgroundRemoval({
+                input: {
+                    source_video: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.UnprocessableEntityError);
+    });
+
+    test("submit_veed_video_background_removal (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { source_video: { source: "url", url: "url" } } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veed-video-background-removal")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeedVideoBackgroundRemoval({
+                input: {
+                    source_video: {
+                        source: "url",
+                        url: "url",
+                    },
+                },
+            });
+        }).rejects.toThrow(Hedra.TooManyRequestsError);
+    });
+
+    test("submit_veed_video_background_removal (9)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+        const rawRequestBody = { input: { source_video: { source: "url", url: "url" } } };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/models/veed-video-background-removal")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(500)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.jobs.submitVeedVideoBackgroundRemoval({
+                input: {
+                    source_video: {
                         source: "url",
                         url: "url",
                     },

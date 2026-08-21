@@ -10,6 +10,8 @@ export interface ModelDetail {
     name?: (string | null) | undefined;
     /** One-line summary of what the model does. */
     description?: (string | null) | undefined;
+    /** Short USD pricing summary for this model. Exact cost depends on input. */
+    price_description?: string | undefined;
     /** URL of the provider's logo. */
     logo_url?: (string | null) | undefined;
     /** JSON Schema for this model's `input` object on submit — the same schema `GET /v3/models/{model}/openapi.json` embeds. */

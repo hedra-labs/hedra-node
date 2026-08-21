@@ -6,7 +6,6 @@ import type * as Hedra from "../../../../index.js";
  * @example
  *     {
  *         input: {
- *             prompt: "prompt",
  *             aspect_ratio: "16:9",
  *             duration_ms: 1,
  *             quality: "standard"

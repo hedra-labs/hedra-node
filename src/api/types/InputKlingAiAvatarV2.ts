@@ -16,7 +16,7 @@ export interface InputKlingAiAvatarV2 {
     resolution?: InputKlingAiAvatarV2.Resolution | undefined;
     /** Start frame (image-to-video). At most 10.4 MB. */
     start_image: Hedra.InputKlingAiAvatarV2StartImage;
-    /** Driving audio. At most 104.8 MB. */
+    /** Driving audio. From 2s to 60s and at most 5 MB. */
     audio: Hedra.InputKlingAiAvatarV2Audio;
     /** Quality level to generate at. */
     quality: InputKlingAiAvatarV2.Quality;

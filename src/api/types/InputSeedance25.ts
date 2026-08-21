@@ -46,6 +46,7 @@ export namespace InputSeedance25 {
     export const Resolution = {
         FourHundredEightyP: "480p",
         SevenHundredTwentyP: "720p",
+        OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
 }

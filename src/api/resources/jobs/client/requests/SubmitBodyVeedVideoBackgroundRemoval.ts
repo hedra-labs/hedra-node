@@ -6,14 +6,15 @@ import type * as Hedra from "../../../../index.js";
  * @example
  *     {
  *         input: {
- *             aspect_ratio: "16:9",
- *             duration_ms: 1,
- *             quality: "standard"
+ *             source_video: {
+ *                 source: "url",
+ *                 url: "url"
+ *             }
  *         }
  *     }
  */
-export interface SubmitBodyKlingO3 {
-    input: Hedra.InputKlingO3;
+export interface SubmitBodyVeedVideoBackgroundRemoval {
+    input: Hedra.InputVeedVideoBackgroundRemoval;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
     /** Replays the original ack for a retried submit instead of enqueueing a duplicate job. */
