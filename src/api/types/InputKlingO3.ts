@@ -6,18 +6,22 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `kling-o3`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, duration_ms, prompt, resolution, start_image; accepts quality: pro; resolution: 1080p | 4K
- * (2) requires: aspect_ratio, duration_ms, images, prompt, resolution; accepts quality: pro; resolution: 1080p | 4K
- * (3) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: end_image, images, start_image; accepts quality: pro; resolution: 1080p | 4K
- * (4) requires: aspect_ratio, duration_ms, prompt, start_image; accepts quality: standard; resolution: 720p
- * (5) requires: aspect_ratio, duration_ms, images, prompt; accepts quality: standard; resolution: 720p
- * (6) requires: aspect_ratio, duration_ms, prompt; must omit: end_image, images, start_image; accepts quality: standard; resolution: 720p
+ * (1) requires: aspect_ratio, duration_ms, resolution, start_image; accepts quality: pro; resolution: 1080p | 4K
+ * (2) requires: aspect_ratio, duration_ms, images, resolution; accepts quality: pro; resolution: 1080p | 4K
+ * (3) requires: aspect_ratio, duration_ms, resolution; must omit: end_image, images, start_image; accepts quality: pro; resolution: 1080p | 4K
+ * (4) requires: aspect_ratio, duration_ms, start_image; accepts quality: standard; resolution: 720p
+ * (5) requires: aspect_ratio, duration_ms, images; accepts quality: standard; resolution: 720p
+ * (6) requires: aspect_ratio, duration_ms; must omit: end_image, images, start_image; accepts quality: standard; resolution: 720p
  */
 export interface InputKlingO3 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. At most 2500 characters. */
-    prompt: string;
+    prompt?: string | undefined;
+    /** Multi-shot storyboard; each shot carries its own prompt and duration. Shot durations must sum to at most 15000 ms, and the storyboard replaces `prompt` — supply one or the other, never both. A shot's prompt has no length limit, unlike the single `prompt` field. 1 to 6 items. */
+    multi_prompt?: InputKlingO3.MultiPrompt.Item[] | undefined;
+    /** How a multi-shot storyboard is cut. 'customize' honours each shot's declared duration; 'intelligent' lets the model determine the shot structure. Ignored unless `multi_prompt` is supplied. */
+    shot_type?: InputKlingO3.ShotType | undefined;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
     /** Output aspect ratio. */
@@ -37,6 +41,26 @@ export interface InputKlingO3 {
 }
 
 export namespace InputKlingO3 {
+    export type MultiPrompt = MultiPrompt.Item[];
+
+    export namespace MultiPrompt {
+        /**
+         * One shot of a published multi-shot storyboard.
+         */
+        export interface Item {
+            /** The prompt for this shot. */
+            prompt: string;
+            /** Duration of this shot in milliseconds. */
+            duration_ms?: number | undefined;
+        }
+    }
+
+    /** How a multi-shot storyboard is cut. 'customize' honours each shot's declared duration; 'intelligent' lets the model determine the shot structure. Ignored unless `multi_prompt` is supplied. */
+    export const ShotType = {
+        Customize: "customize",
+        Intelligent: "intelligent",
+    } as const;
+    export type ShotType = (typeof ShotType)[keyof typeof ShotType];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Sixteen9: "16:9",

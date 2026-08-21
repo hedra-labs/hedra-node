@@ -2825,7 +2825,6 @@ Submits an asynchronous job and returns `202` with a job id. Fetch the result at
 ```typescript
 await client.jobs.submitKlingO3({
     input: {
-        prompt: "prompt",
         aspect_ratio: "16:9",
         duration_ms: 1,
         quality: "standard"
@@ -3045,7 +3044,6 @@ Submits an asynchronous job and returns `202` with a job id. Fetch the result at
 ```typescript
 await client.jobs.submitKlingV3({
     input: {
-        prompt: "prompt",
         aspect_ratio: "16:9",
         duration_ms: 1,
         quality: "standard"
@@ -5230,6 +5228,78 @@ await client.jobs.submitVeedFabric10({
 <dd>
 
 **request:** `Hedra.SubmitBodyVeedFabric10` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitVeedVideoBackgroundRemoval</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Remove a video's background and return transparent WebM.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitVeedVideoBackgroundRemoval({
+    input: {
+        source_video: {
+            source: "url",
+            url: "url"
+        }
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyVeedVideoBackgroundRemoval` 
     
 </dd>
 </dl>

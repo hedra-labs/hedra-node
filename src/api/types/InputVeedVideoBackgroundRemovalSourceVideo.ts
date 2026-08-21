@@ -3,17 +3,17 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Driving audio. From 2s to 60s and at most 5 MB.
+ * Video whose background should be made transparent. At most 120s and at most 524.2 MB.
  */
-export type InputKlingAiAvatarV2Audio =
+export type InputVeedVideoBackgroundRemovalSourceVideo =
     /**
      * A file uploaded via POST /v3/files, referenced by the returned url. */
-    | Hedra.InputKlingAiAvatarV2Audio.Url
+    | Hedra.InputVeedVideoBackgroundRemovalSourceVideo.Url
     /**
      * An existing asset you own, referenced by its id. */
-    | Hedra.InputKlingAiAvatarV2Audio.Asset;
+    | Hedra.InputVeedVideoBackgroundRemovalSourceVideo.Asset;
 
-export namespace InputKlingAiAvatarV2Audio {
+export namespace InputVeedVideoBackgroundRemovalSourceVideo {
     export interface Url {
         source: "url";
         /** A URL returned by POST /v3/files. */

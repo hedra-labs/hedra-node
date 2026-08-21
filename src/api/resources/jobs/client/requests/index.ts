@@ -73,6 +73,7 @@ export type { SubmitBodySeedream50Lite } from "./SubmitBodySeedream50Lite.js";
 export type { SubmitBodySeedream50Pro } from "./SubmitBodySeedream50Pro.js";
 export type { SubmitBodySora2Pro } from "./SubmitBodySora2Pro.js";
 export type { SubmitBodyVeedFabric10 } from "./SubmitBodyVeedFabric10.js";
+export type { SubmitBodyVeedVideoBackgroundRemoval } from "./SubmitBodyVeedVideoBackgroundRemoval.js";
 export type { SubmitBodyVeo2 } from "./SubmitBodyVeo2.js";
 export type { SubmitBodyVeo3 } from "./SubmitBodyVeo3.js";
 export type { SubmitBodyVeo31 } from "./SubmitBodyVeo31.js";

@@ -168,6 +168,8 @@ export * from "./InputSora2ProStartImage.js";
 export * from "./InputVeedFabric10.js";
 export * from "./InputVeedFabric10Audio.js";
 export * from "./InputVeedFabric10StartImage.js";
+export * from "./InputVeedVideoBackgroundRemoval.js";
+export * from "./InputVeedVideoBackgroundRemovalSourceVideo.js";
 export * from "./InputVeo2.js";
 export * from "./InputVeo2StartImage.js";
 export * from "./InputVeo3.js";
