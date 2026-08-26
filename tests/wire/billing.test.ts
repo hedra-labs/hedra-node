@@ -21,7 +21,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/balance").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
 
@@ -34,7 +34,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/balance").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
 
@@ -47,7 +47,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/balance").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
@@ -60,7 +60,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/balance").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
 
@@ -73,7 +73,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/balance").respondWith().statusCode(429).jsonBody(rawResponseBody).build();
 
@@ -86,7 +86,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/balance").respondWith().statusCode(500).jsonBody(rawResponseBody).build();
 
@@ -120,7 +120,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/usage").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
 
@@ -133,7 +133,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/usage").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
 
@@ -146,7 +146,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/usage").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
@@ -159,7 +159,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/usage").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
 
@@ -172,7 +172,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/usage").respondWith().statusCode(429).jsonBody(rawResponseBody).build();
 
@@ -185,7 +185,7 @@ describe("BillingClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
 
         server.mockEndpoint().get("/usage").respondWith().statusCode(500).jsonBody(rawResponseBody).build();
 

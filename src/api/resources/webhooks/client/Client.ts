@@ -92,7 +92,7 @@ export class WebhooksClient {
     ): Promise<core.WithRawResponse<Hedra.WebhookPublicKey>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -118,15 +118,21 @@ export class WebhooksClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 429:
-                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 500:
-                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -167,7 +173,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -193,17 +199,26 @@ export class WebhooksClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 429:
-                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 500:
-                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -249,7 +264,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -278,17 +293,26 @@ export class WebhooksClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 429:
-                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 500:
-                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -325,7 +349,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -351,17 +375,26 @@ export class WebhooksClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 429:
-                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 500:
-                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -402,7 +435,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -428,17 +461,26 @@ export class WebhooksClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 429:
-                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 500:
-                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -484,7 +526,7 @@ export class WebhooksClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.3" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -516,20 +558,35 @@ export class WebhooksClient {
                 if (_response.error.reason === "status-code") {
                     switch (_response.error.statusCode) {
                         case 400:
-                            throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                            throw new Hedra.BadRequestError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
                         case 401:
-                            throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                            throw new Hedra.UnauthorizedError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
                         case 403:
-                            throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                            throw new Hedra.ForbiddenError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
                         case 404:
-                            throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                            throw new Hedra.NotFoundError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
                         case 429:
                             throw new Hedra.TooManyRequestsError(
-                                _response.error.body as unknown,
+                                _response.error.body as Hedra.ErrorResponse,
                                 _response.rawResponse,
                             );
                         case 500:
-                            throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                            throw new Hedra.InternalServerError(
+                                _response.error.body as Hedra.ErrorResponse,
+                                _response.rawResponse,
+                            );
                         default:
                             throw new errors.HedraError({
                                 statusCode: _response.error.statusCode,
@@ -602,7 +659,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.3" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -628,17 +685,26 @@ export class WebhooksClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 429:
-                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 500:
-                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,

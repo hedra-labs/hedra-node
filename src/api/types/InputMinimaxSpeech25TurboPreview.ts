@@ -12,6 +12,6 @@ export interface InputMinimaxSpeech25TurboPreview {
     speed?: number | undefined;
     /** Language code; 'auto' by default. */
     language?: string | undefined;
-    /** Voice to speak with (`voice_<uuid>`). List the library voices at GET /v3/models/minimax-speech-25-turbo-preview/voices, or use the voice a voice-clone job returned. */
+    /** Voice to speak with (`voice_<uuid>`). List the voices you can use at GET /v3/models/minimax-speech-25-turbo-preview/voices. */
     voice_id: string;
 }
