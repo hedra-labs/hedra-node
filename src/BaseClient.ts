@@ -16,7 +16,7 @@ export type BaseClientOptions = {
     /** Specify a custom URL to connect the client to. */
     baseUrl?: core.Supplier<string>;
     /** Override the X-Hedra-Spec-Version header */
-    specVersion?: "3.13.0";
+    specVersion?: "3.13.3";
     /** Additional headers to include in requests. */
     headers?: Record<string, string | core.Supplier<string | null | undefined> | null | undefined>;
     /** The default maximum time to wait for a response in seconds. */
@@ -41,7 +41,7 @@ export interface BaseRequestOptions {
     /** A hook to abort the request. */
     abortSignal?: AbortSignal;
     /** Override the X-Hedra-Spec-Version header */
-    specVersion?: "3.13.0";
+    specVersion?: "3.13.3";
     /** Additional query string parameters to include in the request. */
     queryParams?: Record<string, unknown>;
     /** A dictionary containing additional parameters to spread into the request's body. */
@@ -73,7 +73,7 @@ export function normalizeClientOptions<T extends BaseClientOptions = BaseClientO
             "User-Agent": "@hedra/sdk/4.0.0-dev",
             "X-Fern-Runtime": core.RUNTIME.type,
             "X-Fern-Runtime-Version": core.RUNTIME.version,
-            "X-Hedra-Spec-Version": options?.specVersion ?? "3.13.0",
+            "X-Hedra-Spec-Version": options?.specVersion ?? "3.13.3",
         },
         options?.headers,
     );

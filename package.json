@@ -1,6 +1,6 @@
 {
     "name": "@hedra/sdk",
-    "version": "3.0.1-dev",
+    "version": "4.0.0-dev",
     "private": false,
     "repository": {
         "type": "git",
@@ -111,17 +111,6 @@
             },
             "default": "./dist/cjs/api/resources/logDrains/exports.js"
         },
-        "./chat": {
-            "import": {
-                "types": "./dist/esm/api/resources/chat/exports.d.mts",
-                "default": "./dist/esm/api/resources/chat/exports.mjs"
-            },
-            "require": {
-                "types": "./dist/cjs/api/resources/chat/exports.d.ts",
-                "default": "./dist/cjs/api/resources/chat/exports.js"
-            },
-            "default": "./dist/cjs/api/resources/chat/exports.js"
-        },
         "./package.json": "./package.json"
     },
     "files": [
@@ -166,6 +155,6 @@
         "node": ">=18.0.0"
     },
     "sideEffects": false,
-    "description": "The official TypeScript library for the Hedra API — API spec 3.13.0",
+    "description": "The official TypeScript library for the Hedra API — API spec 3.13.3",
     "author": "Hedra <support@hedra.com>"
 }

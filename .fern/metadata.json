@@ -6,13 +6,13 @@
         "namespaceExport": "Hedra",
         "inlinePathParameters": false,
         "packageJson": {
-            "description": "The official TypeScript library for the Hedra API — API spec 3.13.0",
+            "description": "The official TypeScript library for the Hedra API — API spec 3.13.3",
             "author": "Hedra <support@hedra.com>",
             "sideEffects": false,
             "packageManager": "pnpm@10.34.5"
         }
     },
-    "originGitCommit": "07be185cd69d933a07353db2019097d0e34fb236",
+    "originGitCommit": "c1e042634bc79f5199d894431ef3bcbdeeb9df7c",
     "originGitCommitIsDirty": false,
     "invokedBy": "ci",
     "requestedVersion": "4.0.0-dev",
