@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * End frame (first-last-frame-to-video). With an aspect ratio from 0.4 to 2.5 and at most 30 MB.
+ * End frame (first-last-frame-to-video). From 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB.
  */
 export type InputSeedance20EndImage =
     /**

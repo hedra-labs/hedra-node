@@ -12,6 +12,6 @@ export interface InputElevenlabsV3 {
     speed?: number | undefined;
     /** Language code; 'auto' by default. */
     language?: string | undefined;
-    /** Voice to speak with (`voice_<uuid>`). List valid voices at GET /v3/models/elevenlabs-v3/voices. */
+    /** Voice to speak with (`voice_<uuid>`). List the library voices at GET /v3/models/elevenlabs-v3/voices, or use the voice a voice-clone job returned. */
     voice_id: string;
 }

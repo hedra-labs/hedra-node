@@ -10,6 +10,8 @@ export interface UsageResponse {
     group_by: Hedra.UsageGroupBy;
     /** Jobs submitted across the whole window. */
     total_jobs: number;
+    /** Settled LLM chat requests across the whole window. */
+    total_requests?: number | undefined;
     /** Net amount spent across the whole window. */
     total_spent: number;
     /** ISO-4217 currency code for every amount in this response. */

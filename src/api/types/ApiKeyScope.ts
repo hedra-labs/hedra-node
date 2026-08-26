@@ -16,5 +16,6 @@ export const ApiKeyScope = {
     LogDrainsManage: "log_drains:manage",
     UsageRead: "usage:read",
     KeysManage: "keys:manage",
+    ChatWrite: "chat:write",
 } as const;
 export type ApiKeyScope = (typeof ApiKeyScope)[keyof typeof ApiKeyScope];

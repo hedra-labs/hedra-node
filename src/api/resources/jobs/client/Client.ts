@@ -57,7 +57,7 @@ export class JobsClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -86,35 +86,20 @@ export class JobsClient {
                 if (_response.error.reason === "status-code") {
                     switch (_response.error.statusCode) {
                         case 400:
-                            throw new Hedra.BadRequestError(
-                                _response.error.body as Hedra.ErrorResponse,
-                                _response.rawResponse,
-                            );
+                            throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                         case 401:
-                            throw new Hedra.UnauthorizedError(
-                                _response.error.body as Hedra.ErrorResponse,
-                                _response.rawResponse,
-                            );
+                            throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                         case 403:
-                            throw new Hedra.ForbiddenError(
-                                _response.error.body as Hedra.ErrorResponse,
-                                _response.rawResponse,
-                            );
+                            throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                         case 404:
-                            throw new Hedra.NotFoundError(
-                                _response.error.body as Hedra.ErrorResponse,
-                                _response.rawResponse,
-                            );
+                            throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                         case 429:
                             throw new Hedra.TooManyRequestsError(
-                                _response.error.body as Hedra.ErrorResponse,
+                                _response.error.body as unknown,
                                 _response.rawResponse,
                             );
                         case 500:
-                            throw new Hedra.InternalServerError(
-                                _response.error.body as Hedra.ErrorResponse,
-                                _response.rawResponse,
-                            );
+                            throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                         default:
                             throw new errors.HedraError({
                                 statusCode: _response.error.statusCode,
@@ -174,7 +159,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -200,26 +185,17 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -270,7 +246,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -300,26 +276,17 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -365,7 +332,7 @@ export class JobsClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -394,35 +361,20 @@ export class JobsClient {
                 if (_response.error.reason === "status-code") {
                     switch (_response.error.statusCode) {
                         case 400:
-                            throw new Hedra.BadRequestError(
-                                _response.error.body as Hedra.ErrorResponse,
-                                _response.rawResponse,
-                            );
+                            throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                         case 401:
-                            throw new Hedra.UnauthorizedError(
-                                _response.error.body as Hedra.ErrorResponse,
-                                _response.rawResponse,
-                            );
+                            throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                         case 403:
-                            throw new Hedra.ForbiddenError(
-                                _response.error.body as Hedra.ErrorResponse,
-                                _response.rawResponse,
-                            );
+                            throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                         case 404:
-                            throw new Hedra.NotFoundError(
-                                _response.error.body as Hedra.ErrorResponse,
-                                _response.rawResponse,
-                            );
+                            throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                         case 429:
                             throw new Hedra.TooManyRequestsError(
-                                _response.error.body as Hedra.ErrorResponse,
+                                _response.error.body as unknown,
                                 _response.rawResponse,
                             );
                         case 500:
-                            throw new Hedra.InternalServerError(
-                                _response.error.body as Hedra.ErrorResponse,
-                                _response.rawResponse,
-                            );
+                            throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                         default:
                             throw new errors.HedraError({
                                 statusCode: _response.error.statusCode,
@@ -468,7 +420,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Last-Event-Id": lastEventId ?? undefined,
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0",
             }),
             requestOptions?.headers,
         );
@@ -540,26 +492,17 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -615,7 +558,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -644,36 +587,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -684,6 +615,221 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/dreamina-31");
+    }
+
+    /**
+     * Strip background noise from a recording, keeping the speech.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyElevenlabsAudioIsolation} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitElevenlabsAudioIsolation({
+     *         input: {
+     *             audio: {
+     *                 source: "url",
+     *                 url: "url"
+     *             }
+     *         }
+     *     })
+     */
+    public submitElevenlabsAudioIsolation(
+        request: Hedra.SubmitBodyElevenlabsAudioIsolation,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitElevenlabsAudioIsolation(request, requestOptions));
+    }
+
+    private async __submitElevenlabsAudioIsolation(
+        request: Hedra.SubmitBodyElevenlabsAudioIsolation,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/elevenlabs-audio-isolation",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/elevenlabs-audio-isolation",
+        );
+    }
+
+    /**
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyElevenlabsEnglishStsV2} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitElevenlabsEnglishStsV2({
+     *         input: {
+     *             audio: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             voice_id: "voice_id"
+     *         }
+     *     })
+     */
+    public submitElevenlabsEnglishStsV2(
+        request: Hedra.SubmitBodyElevenlabsEnglishStsV2,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitElevenlabsEnglishStsV2(request, requestOptions));
+    }
+
+    private async __submitElevenlabsEnglishStsV2(
+        request: Hedra.SubmitBodyElevenlabsEnglishStsV2,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/elevenlabs-english-sts-v2",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/elevenlabs-english-sts-v2",
+        );
     }
 
     /**
@@ -728,7 +874,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -757,36 +903,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -844,7 +978,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -873,36 +1007,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -913,6 +1035,113 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/elevenlabs-flash-v2");
+    }
+
+    /**
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyElevenlabsMultilingualStsV2} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitElevenlabsMultilingualStsV2({
+     *         input: {
+     *             audio: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             voice_id: "voice_id"
+     *         }
+     *     })
+     */
+    public submitElevenlabsMultilingualStsV2(
+        request: Hedra.SubmitBodyElevenlabsMultilingualStsV2,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitElevenlabsMultilingualStsV2(request, requestOptions));
+    }
+
+    private async __submitElevenlabsMultilingualStsV2(
+        request: Hedra.SubmitBodyElevenlabsMultilingualStsV2,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/elevenlabs-multilingual-sts-v2",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/elevenlabs-multilingual-sts-v2",
+        );
     }
 
     /**
@@ -955,7 +1184,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -984,36 +1213,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -1028,6 +1245,112 @@ export class JobsClient {
             _response.rawResponse,
             "POST",
             "/models/elevenlabs-multilingual-v2",
+        );
+    }
+
+    /**
+     * Generate sound effects from text descriptions using ElevenLabs
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyElevenlabsSoundEffects} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitElevenlabsSoundEffects({
+     *         input: {
+     *             text: "text",
+     *             duration_ms: 1
+     *         }
+     *     })
+     */
+    public submitElevenlabsSoundEffects(
+        request: Hedra.SubmitBodyElevenlabsSoundEffects,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitElevenlabsSoundEffects(request, requestOptions));
+    }
+
+    private async __submitElevenlabsSoundEffects(
+        request: Hedra.SubmitBodyElevenlabsSoundEffects,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/elevenlabs-sound-effects",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/elevenlabs-sound-effects",
         );
     }
 
@@ -1073,7 +1396,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1102,36 +1425,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -1142,6 +1453,115 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/elevenlabs-v3");
+    }
+
+    /**
+     * Use an audio clip to create a new Voice.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyElevenlabsVoiceClone} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitElevenlabsVoiceClone({
+     *         input: {
+     *             audio: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             name: "name"
+     *         }
+     *     })
+     */
+    public submitElevenlabsVoiceClone(
+        request: Hedra.SubmitBodyElevenlabsVoiceClone,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitElevenlabsVoiceClone(request, requestOptions));
+    }
+
+    private async __submitElevenlabsVoiceClone(
+        request: Hedra.SubmitBodyElevenlabsVoiceClone,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/elevenlabs-voice-clone",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/elevenlabs-voice-clone",
+        );
     }
 
     /**
@@ -1187,7 +1607,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1216,36 +1636,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -1300,7 +1708,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1329,36 +1737,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -1415,7 +1811,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1444,36 +1840,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -1529,7 +1913,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1558,36 +1942,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -1641,7 +2013,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1670,36 +2042,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -1753,7 +2113,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1782,36 +2142,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -1866,7 +2214,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1895,36 +2243,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -1979,7 +2315,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2008,36 +2344,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -2092,7 +2416,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2121,36 +2445,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -2205,7 +2517,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2234,36 +2546,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -2318,7 +2618,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2347,36 +2647,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -2431,7 +2719,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2460,36 +2748,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -2546,7 +2822,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2575,36 +2851,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -2658,7 +2922,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2687,36 +2951,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -2773,7 +3025,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2802,36 +3054,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -2888,7 +3128,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2917,36 +3157,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -3010,7 +3238,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3039,36 +3267,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -3132,7 +3348,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3161,36 +3377,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -3246,7 +3450,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3275,36 +3479,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -3359,7 +3551,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3388,36 +3580,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -3474,7 +3654,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3503,36 +3683,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -3587,7 +3755,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3616,36 +3784,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -3701,7 +3857,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3730,36 +3886,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -3811,7 +3955,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3840,36 +3984,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -3925,7 +4057,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3954,36 +4086,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -4039,7 +4159,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4068,36 +4188,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -4159,7 +4267,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4188,36 +4296,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -4278,7 +4374,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4307,36 +4403,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -4399,7 +4483,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4428,36 +4512,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -4513,7 +4585,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4542,36 +4614,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -4627,7 +4687,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4656,36 +4716,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -4744,7 +4792,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4773,36 +4821,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -4861,7 +4897,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4890,36 +4926,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -4975,7 +4999,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5004,36 +5028,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -5095,7 +5107,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5124,36 +5136,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -5216,7 +5216,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5245,36 +5245,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -5331,7 +5319,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5360,36 +5348,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -5445,7 +5421,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5474,36 +5450,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -5559,7 +5523,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5588,36 +5552,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -5673,7 +5625,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5702,36 +5654,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -5787,7 +5727,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5816,36 +5756,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -5900,7 +5828,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5929,36 +5857,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -6018,7 +5934,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6047,36 +5963,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -6137,7 +6041,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6166,36 +6070,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -6251,7 +6143,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6280,36 +6172,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -6365,7 +6245,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6394,36 +6274,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -6485,7 +6353,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6514,36 +6382,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -6599,7 +6455,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6628,36 +6484,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -6714,7 +6558,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6743,36 +6587,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -6828,7 +6660,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6857,36 +6689,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -6941,7 +6761,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6970,36 +6790,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -7058,7 +6866,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7087,36 +6895,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -7175,7 +6971,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7204,36 +7000,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -7289,7 +7073,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7318,36 +7102,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -7404,7 +7176,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7433,36 +7205,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -7520,7 +7280,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7549,36 +7309,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -7635,7 +7383,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7664,36 +7412,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -7750,7 +7486,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7779,36 +7515,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -7864,7 +7588,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7893,36 +7617,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -7978,7 +7690,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8007,36 +7719,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -8092,7 +7792,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8121,36 +7821,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -8206,7 +7894,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8235,36 +7923,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -8321,7 +7997,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8350,36 +8026,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -8390,6 +8054,764 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/sora-2-pro");
+    }
+
+    /**
+     * Use the powerful and accurate Topaz image enhancer to upscale and enhance your images.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyTopazImageUpscaler} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitTopazImageUpscaler({
+     *         input: {
+     *             source_image: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             target_resolution: "1080p"
+     *         }
+     *     })
+     */
+    public submitTopazImageUpscaler(
+        request: Hedra.SubmitBodyTopazImageUpscaler,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitTopazImageUpscaler(request, requestOptions));
+    }
+
+    private async __submitTopazImageUpscaler(
+        request: Hedra.SubmitBodyTopazImageUpscaler,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/topaz-image-upscaler",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/topaz-image-upscaler");
+    }
+
+    /**
+     * Generative upscaling with realistic detail, precise text, and clean graphics — Topaz's highest-quality image upscaler.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyTopazImageUpscalerWonder} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitTopazImageUpscalerWonder({
+     *         input: {
+     *             source_image: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             target_resolution: "1080p"
+     *         }
+     *     })
+     */
+    public submitTopazImageUpscalerWonder(
+        request: Hedra.SubmitBodyTopazImageUpscalerWonder,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitTopazImageUpscalerWonder(request, requestOptions));
+    }
+
+    private async __submitTopazImageUpscalerWonder(
+        request: Hedra.SubmitBodyTopazImageUpscalerWonder,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/topaz-image-upscaler-wonder",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/topaz-image-upscaler-wonder",
+        );
+    }
+
+    /**
+     * Precision upscaling that cleans compression and noise while staying faithful to the source.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyTopazVideoUpscaler} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitTopazVideoUpscaler({
+     *         input: {
+     *             source_video: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             resolution: "1080p"
+     *         }
+     *     })
+     */
+    public submitTopazVideoUpscaler(
+        request: Hedra.SubmitBodyTopazVideoUpscaler,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitTopazVideoUpscaler(request, requestOptions));
+    }
+
+    private async __submitTopazVideoUpscaler(
+        request: Hedra.SubmitBodyTopazVideoUpscaler,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/topaz-video-upscaler",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/topaz-video-upscaler");
+    }
+
+    /**
+     * Convert SDR video to 10-bit HDR with richer highlights, color, and tonal separation. The output keeps the source resolution.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyTopazVideoUpscalerHyperion25} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitTopazVideoUpscalerHyperion25({
+     *         input: {
+     *             source_video: {
+     *                 source: "url",
+     *                 url: "url"
+     *             }
+     *         }
+     *     })
+     */
+    public submitTopazVideoUpscalerHyperion25(
+        request: Hedra.SubmitBodyTopazVideoUpscalerHyperion25,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitTopazVideoUpscalerHyperion25(request, requestOptions));
+    }
+
+    private async __submitTopazVideoUpscalerHyperion25(
+        request: Hedra.SubmitBodyTopazVideoUpscalerHyperion25,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/topaz-video-upscaler-hyperion-2-5",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/topaz-video-upscaler-hyperion-2-5",
+        );
+    }
+
+    /**
+     * Faster generative diffusion upscaling at half the cost of Starlight Precise.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyTopazVideoUpscalerStarlightFast} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitTopazVideoUpscalerStarlightFast({
+     *         input: {
+     *             source_video: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             resolution: "1080p"
+     *         }
+     *     })
+     */
+    public submitTopazVideoUpscalerStarlightFast(
+        request: Hedra.SubmitBodyTopazVideoUpscalerStarlightFast,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(
+            this.__submitTopazVideoUpscalerStarlightFast(request, requestOptions),
+        );
+    }
+
+    private async __submitTopazVideoUpscalerStarlightFast(
+        request: Hedra.SubmitBodyTopazVideoUpscalerStarlightFast,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/topaz-video-upscaler-starlight-fast",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/topaz-video-upscaler-starlight-fast",
+        );
+    }
+
+    /**
+     * Generative diffusion upscaling balancing detail and sharpness for medium-to-high quality sources.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyTopazVideoUpscalerStarlightHq} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitTopazVideoUpscalerStarlightHq({
+     *         input: {
+     *             source_video: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             resolution: "1080p"
+     *         }
+     *     })
+     */
+    public submitTopazVideoUpscalerStarlightHq(
+        request: Hedra.SubmitBodyTopazVideoUpscalerStarlightHq,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(
+            this.__submitTopazVideoUpscalerStarlightHq(request, requestOptions),
+        );
+    }
+
+    private async __submitTopazVideoUpscalerStarlightHq(
+        request: Hedra.SubmitBodyTopazVideoUpscalerStarlightHq,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/topaz-video-upscaler-starlight-hq",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/topaz-video-upscaler-starlight-hq",
+        );
+    }
+
+    /**
+     * Generative diffusion upscaling for AI-generated and archival video with realistic faces, textures, and text.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyTopazVideoUpscalerStarlightPrecise} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitTopazVideoUpscalerStarlightPrecise({
+     *         input: {
+     *             source_video: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             resolution: "1080p"
+     *         }
+     *     })
+     */
+    public submitTopazVideoUpscalerStarlightPrecise(
+        request: Hedra.SubmitBodyTopazVideoUpscalerStarlightPrecise,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(
+            this.__submitTopazVideoUpscalerStarlightPrecise(request, requestOptions),
+        );
+    }
+
+    private async __submitTopazVideoUpscalerStarlightPrecise(
+        request: Hedra.SubmitBodyTopazVideoUpscalerStarlightPrecise,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/topaz-video-upscaler-starlight-precise",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/topaz-video-upscaler-starlight-precise",
+        );
     }
 
     /**
@@ -8443,7 +8865,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8472,36 +8894,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -8558,7 +8968,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8587,36 +8997,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -8675,7 +9073,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8704,36 +9102,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -8791,7 +9177,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8820,36 +9206,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -8906,7 +9280,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8935,36 +9309,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -9021,7 +9383,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9050,36 +9412,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -9140,7 +9490,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9169,36 +9519,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -9254,7 +9592,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9283,36 +9621,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,
@@ -9323,6 +9649,110 @@ export class JobsClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/wan-2-7");
+    }
+
+    /**
+     * Wan 3.0 video with native audio, up to 30 seconds in one shot — from a text prompt, from a first frame with an optional last frame, or from reference images that keep subjects consistent
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyWan30} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitWan30({
+     *         input: {
+     *             prompt: "prompt",
+     *             aspect_ratio: "adaptive",
+     *             resolution: "480p",
+     *             duration_ms: 1,
+     *             quality: "standard"
+     *         }
+     *     })
+     */
+    public submitWan30(
+        request: Hedra.SubmitBodyWan30,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitWan30(request, requestOptions));
+    }
+
+    private async __submitWan30(
+        request: Hedra.SubmitBodyWan30,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/wan-3-0",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
+                case 402:
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
+                case 500:
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/wan-3-0");
     }
 
     /**
@@ -9371,7 +9801,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9400,36 +9830,24 @@ export class JobsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.PaymentRequiredError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Hedra.UnprocessableEntityError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,

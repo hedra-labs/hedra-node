@@ -66,7 +66,7 @@ export class FilesClient {
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.9.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.13.0",
                 ..._maybeEncodedRequest.headers,
             }),
             requestOptions?.headers,
@@ -97,26 +97,17 @@ export class FilesClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.UnauthorizedError(_response.error.body as unknown, _response.rawResponse);
                 case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                    throw new Hedra.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Hedra.InternalServerError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.HedraError({
                         statusCode: _response.error.statusCode,

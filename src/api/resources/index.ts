@@ -1,5 +1,7 @@
 export * from "./billing/client/requests/index.js";
 export * as billing from "./billing/index.js";
+export * from "./chat/client/requests/index.js";
+export * as chat from "./chat/index.js";
 export * from "./files/client/requests/index.js";
 export * as files from "./files/index.js";
 export * from "./jobs/client/requests/index.js";

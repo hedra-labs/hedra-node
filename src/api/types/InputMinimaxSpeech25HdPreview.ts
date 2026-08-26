@@ -12,6 +12,6 @@ export interface InputMinimaxSpeech25HdPreview {
     speed?: number | undefined;
     /** Language code; 'auto' by default. */
     language?: string | undefined;
-    /** Voice to speak with (`voice_<uuid>`). List valid voices at GET /v3/models/minimax-speech-25-hd-preview/voices. */
+    /** Voice to speak with (`voice_<uuid>`). List the library voices at GET /v3/models/minimax-speech-25-hd-preview/voices, or use the voice a voice-clone job returned. */
     voice_id: string;
 }
