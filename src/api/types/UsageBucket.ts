@@ -10,6 +10,8 @@ export interface UsageBucket {
     key: string;
     /** Jobs submitted in this bucket. */
     jobs: number;
+    /** Settled LLM chat requests in this bucket. Unlike `jobs` (which counts submits, charged or not), this counts requests whose usage settled — a request refused before any work never appears, and a late settlement lands in the window the request was created in. */
+    requests?: number | undefined;
     /** Net amount spent in this bucket. */
     spent: number;
 }

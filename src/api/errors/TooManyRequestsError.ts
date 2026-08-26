@@ -2,12 +2,9 @@
 
 import type * as core from "../../core/index.js";
 import * as errors from "../../errors/index.js";
-import type * as Hedra from "../index.js";
 
 export class TooManyRequestsError extends errors.HedraError {
-    public declare readonly body: Hedra.ErrorResponse;
-
-    constructor(body: Hedra.ErrorResponse, rawResponse?: core.RawResponse) {
+    constructor(body?: unknown, rawResponse?: core.RawResponse) {
         super({
             message: "TooManyRequestsError",
             statusCode: 429,

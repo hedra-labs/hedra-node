@@ -375,6 +375,149 @@ await client.jobs.submitDreamina31({
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitElevenlabsAudioIsolation</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Strip background noise from a recording, keeping the speech.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitElevenlabsAudioIsolation({
+    input: {
+        audio: {
+            source: "url",
+            url: "url"
+        }
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyElevenlabsAudioIsolation` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitElevenlabsEnglishStsV2</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitElevenlabsEnglishStsV2({
+    input: {
+        audio: {
+            source: "url",
+            url: "url"
+        },
+        voice_id: "voice_id"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyElevenlabsEnglishStsV2` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitElevenlabsFlashMultilingualV2</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -511,6 +654,77 @@ await client.jobs.submitElevenlabsFlashV2({
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitElevenlabsMultilingualStsV2</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitElevenlabsMultilingualStsV2({
+    input: {
+        audio: {
+            source: "url",
+            url: "url"
+        },
+        voice_id: "voice_id"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyElevenlabsMultilingualStsV2` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitElevenlabsMultilingualV2</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -560,6 +774,76 @@ await client.jobs.submitElevenlabsMultilingualV2({
 <dd>
 
 **request:** `Hedra.SubmitBodyElevenlabsMultilingualV2` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitElevenlabsSoundEffects</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Generate sound effects from text descriptions using ElevenLabs
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitElevenlabsSoundEffects({
+    input: {
+        text: "text",
+        duration_ms: 1
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyElevenlabsSoundEffects` 
     
 </dd>
 </dl>
@@ -630,6 +914,79 @@ await client.jobs.submitElevenlabsV3({
 <dd>
 
 **request:** `Hedra.SubmitBodyElevenlabsV3` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitElevenlabsVoiceClone</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Use an audio clip to create a new Voice.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitElevenlabsVoiceClone({
+    input: {
+        audio: {
+            source: "url",
+            url: "url"
+        },
+        name: "name"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyElevenlabsVoiceClone` 
     
 </dd>
 </dl>
@@ -5168,6 +5525,516 @@ await client.jobs.submitSora2Pro({
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitTopazImageUpscaler</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Use the powerful and accurate Topaz image enhancer to upscale and enhance your images.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitTopazImageUpscaler({
+    input: {
+        source_image: {
+            source: "url",
+            url: "url"
+        },
+        target_resolution: "1080p"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyTopazImageUpscaler` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitTopazImageUpscalerWonder</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Generative upscaling with realistic detail, precise text, and clean graphics — Topaz's highest-quality image upscaler.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitTopazImageUpscalerWonder({
+    input: {
+        source_image: {
+            source: "url",
+            url: "url"
+        },
+        target_resolution: "1080p"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyTopazImageUpscalerWonder` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitTopazVideoUpscaler</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Precision upscaling that cleans compression and noise while staying faithful to the source.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitTopazVideoUpscaler({
+    input: {
+        source_video: {
+            source: "url",
+            url: "url"
+        },
+        resolution: "1080p"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyTopazVideoUpscaler` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitTopazVideoUpscalerHyperion25</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Convert SDR video to 10-bit HDR with richer highlights, color, and tonal separation. The output keeps the source resolution.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitTopazVideoUpscalerHyperion25({
+    input: {
+        source_video: {
+            source: "url",
+            url: "url"
+        }
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyTopazVideoUpscalerHyperion25` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitTopazVideoUpscalerStarlightFast</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Faster generative diffusion upscaling at half the cost of Starlight Precise.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitTopazVideoUpscalerStarlightFast({
+    input: {
+        source_video: {
+            source: "url",
+            url: "url"
+        },
+        resolution: "1080p"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyTopazVideoUpscalerStarlightFast` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitTopazVideoUpscalerStarlightHq</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Generative diffusion upscaling balancing detail and sharpness for medium-to-high quality sources.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitTopazVideoUpscalerStarlightHq({
+    input: {
+        source_video: {
+            source: "url",
+            url: "url"
+        },
+        resolution: "1080p"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyTopazVideoUpscalerStarlightHq` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitTopazVideoUpscalerStarlightPrecise</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Generative diffusion upscaling for AI-generated and archival video with realistic faces, textures, and text.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitTopazVideoUpscalerStarlightPrecise({
+    input: {
+        source_video: {
+            source: "url",
+            url: "url"
+        },
+        resolution: "1080p"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyTopazVideoUpscalerStarlightPrecise` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitVeedFabric10</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -5733,6 +6600,79 @@ await client.jobs.submitWan27({
 <dd>
 
 **request:** `Hedra.SubmitBodyWan27` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitWan30</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Wan 3.0 video with native audio, up to 30 seconds in one shot — from a text prompt, from a first frame with an optional last frame, or from reference images that keep subjects consistent
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitWan30({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "adaptive",
+        resolution: "480p",
+        duration_ms: 1,
+        quality: "standard"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyWan30` 
     
 </dd>
 </dl>
@@ -7300,6 +8240,188 @@ await client.logDrains.testLogDrain("drain_id");
 <dd>
 
 **requestOptions:** `LogDrainsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Chat
+<details><summary><code>client.chat.<a href="/src/api/resources/chat/client/Client.ts">completionsCreate</a>() -> unknown</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+OpenAI-compatible chat completions. Errors use the OpenAI error body, not the v3 envelope. An empty API wallet answers 402 (deliberate divergence from OpenAI's 429 `insufficient_quota`: retrying cannot fix an empty wallet).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.chat.completionsCreate();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `ChatClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.chat.<a href="/src/api/resources/chat/client/Client.ts">llmsList</a>() -> Hedra.LlmModelList</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+OpenAI-compatible model list for the chat surface: exactly `{"object": "list", "data": [...]}` with additive extension fields per model. The published rate card here is the pricing reference for chat completions.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.chat.llmsList();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `ChatClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.chat.<a href="/src/api/resources/chat/client/Client.ts">llmsGet</a>(model, { ...params }) -> Hedra.LlmModelObject</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+A single OpenAI-shaped model object with additive extensions.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.chat.llmsGet("model");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**model:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.LlmsGetRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `ChatClient.RequestOptions` 
     
 </dd>
 </dl>

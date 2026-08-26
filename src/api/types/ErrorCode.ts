@@ -23,6 +23,7 @@ export const ErrorCode = {
     InsufficientBalance: "INSUFFICIENT_BALANCE",
     ModerationFailed: "MODERATION_FAILED",
     FailedPrecondition: "FAILED_PRECONDITION",
+    Cancelled: "CANCELLED",
     DeadlineExceeded: "DEADLINE_EXCEEDED",
     ResourceExhausted: "RESOURCE_EXHAUSTED",
     Unavailable: "UNAVAILABLE",
