@@ -12,9 +12,9 @@ export interface InputKling26MotionControl {
     prompt?: string | undefined;
     /** Whether the output character's orientation follows the reference video ('video' — better for complex motion) or the character image ('image' — better for camera movement). Also caps the source video: 30s for 'video', 10s for 'image'. */
     character_orientation?: InputKling26MotionControl.CharacterOrientation | undefined;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image: Hedra.InputKling26MotionControlStartImage;
-    /** Source video (video-to-video). From 3s to 30s and at most 524.2 MB. */
+    /** Source video. From 3s to 30s and at most 524.2 MB. */
     source_video: Hedra.InputKling26MotionControlSourceVideo;
     /** Output resolution to generate at. */
     resolution: InputKling26MotionControl.Resolution;

@@ -20,9 +20,9 @@ export interface InputKlingO1 {
     resolution?: InputKlingO1.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputKlingO1StartImage | undefined;
-    /** End frame (first-last-frame-to-video). At most 10.4 MB. */
+    /** End frame. At most 10.4 MB. */
     end_image?: Hedra.InputKlingO1EndImage | undefined;
     /** Reference images. 1 to 3 images, each at most 10.4 MB. */
     images?: Hedra.InputKlingO1ImagesItem[] | undefined;

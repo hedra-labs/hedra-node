@@ -28,8 +28,8 @@ export interface InputQwenImage2 {
     images?: Hedra.InputQwenImage2ImagesItem[] | undefined;
     /** Seed for reproducible output; omit for a random seed. From 0 to 2147483647. */
     seed?: number | undefined;
-    /** Quality level to generate at. */
-    quality: InputQwenImage2.Quality;
+    /** Quality level to generate at. `standard` — tuned for speed, for rapid iteration. `pro` — the higher-fidelity tier, for fine detail and in-image text accuracy. */
+    quality?: InputQwenImage2.Quality | undefined;
 }
 
 export namespace InputQwenImage2 {
@@ -57,7 +57,7 @@ export namespace InputQwenImage2 {
         Webp: "webp",
     } as const;
     export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — tuned for speed, for rapid iteration. `pro` — the higher-fidelity tier, for fine detail and in-image text accuracy. */
     export const Quality = {
         Standard: "standard",
         Pro: "pro",

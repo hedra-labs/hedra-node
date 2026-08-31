@@ -6,8 +6,10 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `grok-imagine`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: images, prompt; must omit: aspect_ratio
- * (2) requires: aspect_ratio, prompt; must omit: images
+ * (1) requires: images, prompt; must omit: aspect_ratio, resolution; accepts quality: standard
+ * (2) requires: aspect_ratio, images, prompt, resolution; accepts quality: quality
+ * (3) requires: aspect_ratio, prompt, resolution; must omit: images; accepts aspect_ratio: 2:1 | 20:9 | 19.5:9 | 16:9 | 4:3 | 3:2 | 1:1 | 2:3 | 3:4 | 9:16 | 9:19.5 | 9:20 | 1:2; quality: quality
+ * (4) requires: aspect_ratio, prompt; must omit: images, resolution; accepts aspect_ratio: 2:1 | 20:9 | 19.5:9 | 16:9 | 4:3 | 3:2 | 1:1 | 2:3 | 3:4 | 9:16 | 9:19.5 | 9:20 | 1:2; quality: standard
  */
 export interface InputGrokImagine {
     /** Generation prompt. At most 8000 characters. */
@@ -22,6 +24,10 @@ export interface InputGrokImagine {
     output_format?: InputGrokImagine.OutputFormat | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputGrokImagine.AspectRatio | undefined;
+    /** Output resolution. */
+    resolution?: InputGrokImagine.Resolution | undefined;
+    /** Quality level to generate at. `standard` — the base tier, at a flat rate whatever the output size. `quality` — xAI's higher-fidelity tier, and the only one offering 2k. */
+    quality?: InputGrokImagine.Quality | undefined;
 }
 
 export namespace InputGrokImagine {
@@ -34,9 +40,32 @@ export namespace InputGrokImagine {
     export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
     /** Output aspect ratio. */
     export const AspectRatio = {
+        Auto: "auto",
+        Two1: "2:1",
+        Twenty9: "20:9",
+        Nineteen59: "19.5:9",
         Sixteen9: "16:9",
-        Nine16: "9:16",
+        Four3: "4:3",
+        Three2: "3:2",
         One1: "1:1",
+        Two3: "2:3",
+        Three4: "3:4",
+        Nine16: "9:16",
+        Nine195: "9:19.5",
+        Nine20: "9:20",
+        One2: "1:2",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+    /** Output resolution. */
+    export const Resolution = {
+        OneK: "1k",
+        TwoK: "2k",
+    } as const;
+    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+    /** Quality level to generate at. `standard` — the base tier, at a flat rate whatever the output size. `quality` — xAI's higher-fidelity tier, and the only one offering 2k. */
+    export const Quality = {
+        Standard: "standard",
+        Quality: "quality",
+    } as const;
+    export type Quality = (typeof Quality)[keyof typeof Quality];
 }

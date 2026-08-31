@@ -12,7 +12,7 @@ export interface InputNanoBananaPro {
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
-    /** Output aspect ratio. */
+    /** Output aspect ratio. 'adaptive' lets the model size the output itself — matching the source image when you pass one. */
     aspect_ratio: InputNanoBananaPro.AspectRatio;
     /** Output resolution. */
     resolution: InputNanoBananaPro.Resolution;
@@ -20,11 +20,14 @@ export interface InputNanoBananaPro {
     images?: Hedra.InputNanoBananaProImagesItem[] | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
+    /** Ground the generation in live Google Search results, so a prompt about current events or real-world specifics draws on what the web says now. Grounded generations cost more than ungrounded ones. */
+    google_search?: boolean | undefined;
 }
 
 export namespace InputNanoBananaPro {
-    /** Output aspect ratio. */
+    /** Output aspect ratio. 'adaptive' lets the model size the output itself — matching the source image when you pass one. */
     export const AspectRatio = {
+        Adaptive: "adaptive",
         Sixteen9: "16:9",
         Nine16: "9:16",
         One1: "1:1",

@@ -22,9 +22,9 @@ export interface InputSeedance20 {
     duration_ms: number;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
-    /** Start frame (image-to-video). From 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
+    /** Start frame. From 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     start_image?: Hedra.InputSeedance20StartImage | undefined;
-    /** End frame (first-last-frame-to-video). From 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
+    /** End frame. From 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     end_image?: Hedra.InputSeedance20EndImage | undefined;
     /** Reference images. 1 to 9 images, each from 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     images?: Hedra.InputSeedance20ImagesItem[] | undefined;
@@ -32,8 +32,8 @@ export interface InputSeedance20 {
     videos?: Hedra.InputSeedance20VideosItem[] | undefined;
     /** Reference audios. 1 to 3 audio files, each at most 104.8 MB, at most 15s in total. */
     audios?: Hedra.InputSeedance20AudiosItem[] | undefined;
-    /** Quality level to generate at. */
-    quality: InputSeedance20.Quality;
+    /** Quality level to generate at. `standard` — the full model, and the only level that reaches 1080p and 4K. `fast` — tuned for turnaround, at 480p and 720p. */
+    quality?: InputSeedance20.Quality | undefined;
 }
 
 export namespace InputSeedance20 {
@@ -45,6 +45,7 @@ export namespace InputSeedance20 {
         Sixteen9: "16:9",
         TwentyOne9: "21:9",
         Nine16: "9:16",
+        Adaptive: "adaptive",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Output resolution. */
@@ -55,7 +56,7 @@ export namespace InputSeedance20 {
         OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — the full model, and the only level that reaches 1080p and 4K. `fast` — tuned for turnaround, at 480p and 720p. */
     export const Quality = {
         Standard: "standard",
         Fast: "fast",

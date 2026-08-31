@@ -10,7 +10,7 @@ export interface InputKlingO3Reference {
     num_outputs?: number | undefined;
     /** Generation prompt. At most 2500 characters. */
     prompt: string;
-    /** Source video (video-to-video). From 3s to 15s and at most 524.2 MB. */
+    /** Source video. From 3s to 15s and at most 524.2 MB. */
     source_video: Hedra.InputKlingO3ReferenceSourceVideo;
     /** Reference images. 1 to 4 images, each at least 300px on each side and at most 10.4 MB. */
     images?: Hedra.InputKlingO3ReferenceImagesItem[] | undefined;

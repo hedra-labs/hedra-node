@@ -22,14 +22,14 @@ export interface InputMinimaxHailuo02 {
     resolution?: InputMinimaxHailuo02.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). The output video follows this image's aspect ratio. At most 20 MB. */
+    /** Start frame. The output video follows this image's aspect ratio. At most 20 MB. */
     start_image?: Hedra.InputMinimaxHailuo02StartImage | undefined;
-    /** End frame (first-last-frame-to-video). At most 20 MB. */
+    /** End frame. At most 20 MB. */
     end_image?: Hedra.InputMinimaxHailuo02EndImage | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputMinimaxHailuo02.AspectRatio | undefined;
-    /** Quality level to generate at. */
-    quality: InputMinimaxHailuo02.Quality;
+    /** Quality level to generate at. `standard` — 768p, for everyday motion. `pro` — 1080p, with smoother motion and sharper detail. */
+    quality?: InputMinimaxHailuo02.Quality | undefined;
 }
 
 export namespace InputMinimaxHailuo02 {
@@ -44,7 +44,7 @@ export namespace InputMinimaxHailuo02 {
         Sixteen9: "16:9",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — 768p, for everyday motion. `pro` — 1080p, with smoother motion and sharper detail. */
     export const Quality = {
         Standard: "standard",
         Pro: "pro",

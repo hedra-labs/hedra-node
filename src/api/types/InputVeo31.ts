@@ -20,18 +20,18 @@ export interface InputVeo31 {
     generate_audio?: boolean | undefined;
     /** What to avoid in the generated video. */
     negative_prompt?: string | undefined;
-    /** Start frame (image-to-video). At most 20 MB. */
+    /** Start frame. At most 20 MB. */
     start_image?: Hedra.InputVeo31StartImage | undefined;
-    /** End frame (first-last-frame-to-video). At most 20 MB. */
+    /** End frame. At most 20 MB. */
     end_image?: Hedra.InputVeo31EndImage | undefined;
-    /** Source video (video-to-video). From 1s to 30s and at most 524.2 MB. */
+    /** Source video. From 1s to 30s and at most 524.2 MB. */
     source_video?: Hedra.InputVeo31SourceVideo | undefined;
     /** Reference images. 1 to 3 images, each at most 20 MB. */
     images?: Hedra.InputVeo31ImagesItem[] | undefined;
     /** Seed for reproducible output; omit for a random seed. From 0 to 4294967295. */
     seed?: number | undefined;
-    /** Quality level to generate at. */
-    quality: InputVeo31.Quality;
+    /** Quality level to generate at. `standard` — the full model, for maximum detail and nuance. `fast` — the same model tuned for turnaround, at a lower rate. */
+    quality?: InputVeo31.Quality | undefined;
 }
 
 export namespace InputVeo31 {
@@ -47,7 +47,7 @@ export namespace InputVeo31 {
         OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — the full model, for maximum detail and nuance. `fast` — the same model tuned for turnaround, at a lower rate. */
     export const Quality = {
         Standard: "standard",
         Fast: "fast",

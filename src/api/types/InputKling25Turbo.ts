@@ -20,7 +20,7 @@ export interface InputKling25Turbo {
     resolution?: InputKling25Turbo.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputKling25TurboStartImage | undefined;
     /** What to avoid in the generated video. At most 2500 characters. */
     negative_prompt?: string | undefined;

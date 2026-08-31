@@ -30,8 +30,8 @@ export interface InputHidreamO1Image {
     num_inference_steps?: number | undefined;
     /** Output resolution. */
     resolution?: InputHidreamO1Image.Resolution | undefined;
-    /** Quality level to generate at. */
-    quality: InputHidreamO1Image.Quality;
+    /** Quality level to generate at. `standard` — the full model, at 50 denoising steps. `dev` — HiDream's distilled checkpoint, at 28 denoising steps instead of 50 — quicker and cheaper for the same prompt. */
+    quality?: InputHidreamO1Image.Quality | undefined;
 }
 
 export namespace InputHidreamO1Image {
@@ -58,7 +58,7 @@ export namespace InputHidreamO1Image {
         OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — the full model, at 50 denoising steps. `dev` — HiDream's distilled checkpoint, at 28 denoising steps instead of 50 — quicker and cheaper for the same prompt. */
     export const Quality = {
         Standard: "standard",
         Dev: "dev",

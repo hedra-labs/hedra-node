@@ -18,8 +18,8 @@ export interface InputIdeogramV4 {
     output_format?: InputIdeogramV4.OutputFormat | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** Quality level to generate at. */
-    quality: InputIdeogramV4.Quality;
+    /** Quality level to generate at. `turbo` — the least rendering effort, for quick exploration. `balanced` — middle rendering effort, the everyday choice. `quality` — the most rendering effort, for poster-ready text and layout. */
+    quality?: InputIdeogramV4.Quality | undefined;
 }
 
 export namespace InputIdeogramV4 {
@@ -45,7 +45,7 @@ export namespace InputIdeogramV4 {
         Png: "png",
     } as const;
     export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `turbo` — the least rendering effort, for quick exploration. `balanced` — middle rendering effort, the everyday choice. `quality` — the most rendering effort, for poster-ready text and layout. */
     export const Quality = {
         Turbo: "turbo",
         Balanced: "balanced",

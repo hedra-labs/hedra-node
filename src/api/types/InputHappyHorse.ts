@@ -20,7 +20,7 @@ export interface InputHappyHorse {
     resolution: InputHappyHorse.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). At least 300px on each side and at most 10 MB. */
+    /** Start frame. At least 300px on each side and at most 10 MB. */
     start_image?: Hedra.InputHappyHorseStartImage | undefined;
     /** Reference images. 1 to 9 images, each at least 400px on each side and at most 10 MB. */
     images?: Hedra.InputHappyHorseImagesItem[] | undefined;

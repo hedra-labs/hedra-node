@@ -23,9 +23,9 @@ export interface InputFlux3 {
     duration_ms: number;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputFlux3StartImage | undefined;
-    /** End frame (first-last-frame-to-video). At most 10.4 MB. */
+    /** End frame. At most 10.4 MB. */
     end_image?: Hedra.InputFlux3EndImage | undefined;
 }
 

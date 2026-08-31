@@ -20,7 +20,7 @@ export interface InputSora2Pro {
     resolution: InputSora2Pro.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputSora2ProStartImage | undefined;
 }
 

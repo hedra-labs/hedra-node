@@ -24,7 +24,7 @@ export interface InputPixverseV6 {
     negative_prompt?: string | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputPixverseV6StartImage | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputPixverseV6.AspectRatio | undefined;

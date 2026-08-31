@@ -21,14 +21,14 @@ export interface InputViduQ3 {
     resolution: InputViduQ3.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputViduQ3StartImage | undefined;
-    /** End frame (first-last-frame-to-video). At most 10.4 MB. */
+    /** End frame. At most 10.4 MB. */
     end_image?: Hedra.InputViduQ3EndImage | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputViduQ3.AspectRatio | undefined;
-    /** Quality level to generate at. */
-    quality: InputViduQ3.Quality;
+    /** Quality level to generate at. `standard` — the full model. `turbo` — the same options tuned for turnaround, at a lower rate. */
+    quality?: InputViduQ3.Quality | undefined;
 }
 
 export namespace InputViduQ3 {
@@ -48,7 +48,7 @@ export namespace InputViduQ3 {
         One1: "1:1",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — the full model. `turbo` — the same options tuned for turnaround, at a lower rate. */
     export const Quality = {
         Standard: "standard",
         Turbo: "turbo",

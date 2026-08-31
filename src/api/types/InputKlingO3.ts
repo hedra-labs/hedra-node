@@ -30,14 +30,14 @@ export interface InputKlingO3 {
     resolution?: InputKlingO3.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputKlingO3StartImage | undefined;
-    /** End frame (first-last-frame-to-video). At most 10.4 MB. */
+    /** End frame. At most 10.4 MB. */
     end_image?: Hedra.InputKlingO3EndImage | undefined;
     /** Reference images. 1 to 3 images, each at most 10.4 MB. */
     images?: Hedra.InputKlingO3ImagesItem[] | undefined;
-    /** Quality level to generate at. */
-    quality: InputKlingO3.Quality;
+    /** Quality level to generate at. `standard` — the 720p tier. `pro` — the high-resolution tier, at 1080p and 4K. */
+    quality?: InputKlingO3.Quality | undefined;
 }
 
 export namespace InputKlingO3 {
@@ -75,7 +75,7 @@ export namespace InputKlingO3 {
         SevenHundredTwentyP: "720p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — the 720p tier. `pro` — the high-resolution tier, at 1080p and 4K. */
     export const Quality = {
         Standard: "standard",
         Pro: "pro",

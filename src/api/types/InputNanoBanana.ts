@@ -14,7 +14,7 @@ export interface InputNanoBanana {
     enhance_prompt?: boolean | undefined;
     /** Output aspect ratio. */
     aspect_ratio: InputNanoBanana.AspectRatio;
-    /** Output resolution. */
+    /** Accepted and ignored. gemini-2.5-flash-image takes no `image_size` argument — the aspect ratio alone decides the output geometry — so this value never reaches the provider and never changes the price. It stays on the contract because requests already send it. */
     resolution: InputNanoBanana.Resolution;
     /** Images to edit or blend. 1 to 3 images, each at most 30 MB. */
     images?: Hedra.InputNanoBananaImagesItem[] | undefined;
@@ -30,7 +30,7 @@ export namespace InputNanoBanana {
         One1: "1:1",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
-    /** Output resolution. */
+    /** Accepted and ignored. gemini-2.5-flash-image takes no `image_size` argument — the aspect ratio alone decides the output geometry — so this value never reaches the provider and never changes the price. It stays on the contract because requests already send it. */
     export const Resolution = {
         OneK: "1K",
         TwoK: "2K",

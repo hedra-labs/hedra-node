@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * End frame (first-last-frame-to-video). At most 10.4 MB.
+ * End frame. At most 10.4 MB.
  */
 export type InputViduQ3EndImage =
     /**

@@ -11,6 +11,7 @@ export type { SubmitBodyElevenlabsFlashMultilingualV2 } from "./SubmitBodyEleven
 export type { SubmitBodyElevenlabsFlashV2 } from "./SubmitBodyElevenlabsFlashV2.js";
 export type { SubmitBodyElevenlabsMultilingualStsV2 } from "./SubmitBodyElevenlabsMultilingualStsV2.js";
 export type { SubmitBodyElevenlabsMultilingualV2 } from "./SubmitBodyElevenlabsMultilingualV2.js";
+export type { SubmitBodyElevenlabsMusic } from "./SubmitBodyElevenlabsMusic.js";
 export type { SubmitBodyElevenlabsSoundEffects } from "./SubmitBodyElevenlabsSoundEffects.js";
 export type { SubmitBodyElevenlabsV3 } from "./SubmitBodyElevenlabsV3.js";
 export type { SubmitBodyElevenlabsVoiceClone } from "./SubmitBodyElevenlabsVoiceClone.js";
@@ -28,6 +29,7 @@ export type { SubmitBodyGeminiOmniFlash } from "./SubmitBodyGeminiOmniFlash.js";
 export type { SubmitBodyGptImage2 } from "./SubmitBodyGptImage2.js";
 export type { SubmitBodyGptImage15 } from "./SubmitBodyGptImage15.js";
 export type { SubmitBodyGrokImagine } from "./SubmitBodyGrokImagine.js";
+export type { SubmitBodyGrokImagine20 } from "./SubmitBodyGrokImagine20.js";
 export type { SubmitBodyGrokVideo } from "./SubmitBodyGrokVideo.js";
 export type { SubmitBodyHappyHorse } from "./SubmitBodyHappyHorse.js";
 export type { SubmitBodyHedraAvatar } from "./SubmitBodyHedraAvatar.js";

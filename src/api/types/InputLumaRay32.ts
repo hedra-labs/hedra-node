@@ -19,12 +19,12 @@ export interface InputLumaRay32 {
 export namespace InputLumaRay32 {
     /** Output aspect ratio. */
     export const AspectRatio = {
-        One1: "1:1",
         Three4: "3:4",
         Four3: "4:3",
+        One1: "1:1",
+        Nine16: "9:16",
         Sixteen9: "16:9",
         TwentyOne9: "21:9",
-        Nine16: "9:16",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Output resolution. */

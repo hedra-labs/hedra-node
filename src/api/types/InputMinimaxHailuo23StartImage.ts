@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Start frame (image-to-video). The output video follows this image's aspect ratio. At most 20 MB.
+ * Start frame. The output video follows this image's aspect ratio. At most 20 MB.
  */
 export type InputMinimaxHailuo23StartImage =
     /**

@@ -22,8 +22,8 @@ export interface InputMaiImage25 {
     images?: Hedra.InputMaiImage25ImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputMaiImage25.OutputFormat | undefined;
-    /** Quality level to generate at. */
-    quality: InputMaiImage25.Quality;
+    /** Quality level to generate at. `standard` — photorealistic generation and editing at the base rate. `pro` — the higher-fidelity tier, for final deliverables that need maximum detail and text rendering. */
+    quality?: InputMaiImage25.Quality | undefined;
 }
 
 export namespace InputMaiImage25 {
@@ -45,7 +45,7 @@ export namespace InputMaiImage25 {
         Webp: "webp",
     } as const;
     export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — photorealistic generation and editing at the base rate. `pro` — the higher-fidelity tier, for final deliverables that need maximum detail and text rendering. */
     export const Quality = {
         Standard: "standard",
         Pro: "pro",

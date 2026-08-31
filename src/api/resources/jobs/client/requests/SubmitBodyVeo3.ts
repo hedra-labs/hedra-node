@@ -9,8 +9,7 @@ import type * as Hedra from "../../../../index.js";
  *             prompt: "prompt",
  *             aspect_ratio: "16:9",
  *             resolution: "720p",
- *             duration_ms: 1,
- *             quality: "standard"
+ *             duration_ms: 1
  *         }
  *     }
  */

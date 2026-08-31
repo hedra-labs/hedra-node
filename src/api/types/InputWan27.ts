@@ -23,9 +23,9 @@ export interface InputWan27 {
     resolution: InputWan27.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). At most 20 MB. */
+    /** Start frame. At most 20 MB. */
     start_image?: Hedra.InputWan27StartImage | undefined;
-    /** End frame (first-last-frame-to-video). At most 20 MB. */
+    /** End frame. At most 20 MB. */
     end_image?: Hedra.InputWan27EndImage | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputWan27.AspectRatio | undefined;

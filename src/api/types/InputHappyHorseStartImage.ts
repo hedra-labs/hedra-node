@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Start frame (image-to-video). At least 300px on each side and at most 10 MB.
+ * Start frame. At least 300px on each side and at most 10 MB.
  */
 export type InputHappyHorseStartImage =
     /**
