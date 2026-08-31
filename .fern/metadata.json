@@ -1,7 +1,7 @@
 {
     "cliVersion": "5.99.0",
     "generatorName": "fernapi/fern-typescript-sdk",
-    "generatorVersion": "3.87.2",
+    "generatorVersion": "3.88.3",
     "generatorConfig": {
         "namespaceExport": "Hedra",
         "inlinePathParameters": false,
@@ -12,10 +12,10 @@
             "packageManager": "pnpm@10.34.5"
         }
     },
-    "originGitCommit": "c1e042634bc79f5199d894431ef3bcbdeeb9df7c",
-    "originGitCommitIsDirty": true,
+    "originGitCommit": "b90cc8e5cdbe66913b6f28fddf067b7447c71eb8",
+    "originGitCommitIsDirty": false,
     "invokedBy": "ci",
-    "requestedVersion": "4.0.0",
+    "requestedVersion": "4.0.1-dev",
     "ciProvider": "github",
-    "sdkVersion": "4.0.0"
+    "sdkVersion": "4.0.1-dev"
 }
