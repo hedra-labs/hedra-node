@@ -20,7 +20,7 @@ export interface InputKling21Master {
     resolution?: InputKling21Master.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputKling21MasterStartImage | undefined;
     /** What to avoid in the generated video. At most 2500 characters. */
     negative_prompt?: string | undefined;

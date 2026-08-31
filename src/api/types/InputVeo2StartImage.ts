@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Start frame (image-to-video). At most 8 MB.
+ * Start frame. At most 8 MB.
  */
 export type InputVeo2StartImage =
     /**

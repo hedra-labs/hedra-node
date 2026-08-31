@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Start frame (image-to-video). At most 10.4 MB.
+ * Start frame. At most 10.4 MB.
  */
 export type InputOmnihuman15StartImage =
     /**

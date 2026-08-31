@@ -16,9 +16,9 @@ export interface InputSeedance20Mini {
     resolution: InputSeedance20Mini.Resolution;
     /** Duration in ms. */
     duration_ms: number;
-    /** Start frame (image-to-video). From 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
+    /** Start frame. From 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     start_image?: Hedra.InputSeedance20MiniStartImage | undefined;
-    /** End frame (first-last-frame-to-video). From 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
+    /** End frame. From 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     end_image?: Hedra.InputSeedance20MiniEndImage | undefined;
     /** Reference images. 1 to 9 images, each from 300px to 6000px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     images?: Hedra.InputSeedance20MiniImagesItem[] | undefined;
@@ -37,6 +37,7 @@ export namespace InputSeedance20Mini {
         Sixteen9: "16:9",
         TwentyOne9: "21:9",
         Nine16: "9:16",
+        Adaptive: "adaptive",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Output resolution. */

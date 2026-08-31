@@ -16,7 +16,7 @@ export interface InputHedraAvatar {
     resolution: InputHedraAvatar.Resolution;
     /** Duration in ms. At most 600000. */
     duration_ms?: number | undefined;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image: Hedra.InputHedraAvatarStartImage;
     /** Driving audio: a single reference, or a list of references for multi-speaker generation — one audio per speaker, played in list order. 1 to 4 audio files, each from 0.5s to 600s and at most 104.8 MB. */
     audio: InputHedraAvatar.Audio;

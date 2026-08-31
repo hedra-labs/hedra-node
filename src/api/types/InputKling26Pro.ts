@@ -22,7 +22,7 @@ export interface InputKling26Pro {
     duration_ms: number;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputKling26ProStartImage | undefined;
     /** What to avoid in the generated video. At most 2500 characters. */
     negative_prompt?: string | undefined;

@@ -193,4 +193,97 @@ describe("BillingClient", () => {
             return await client.billing.getUsage();
         }).rejects.toThrow(Hedra.InternalServerError);
     });
+
+    test("listTransactions (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {
+            data: [{ id: "id", kind: "kind", amount: 1.1, currency: "currency", created_at: "2024-01-15T09:30:00Z" }],
+            next_cursor: "next_cursor",
+        };
+
+        server.mockEndpoint().get("/transactions").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
+
+        const response = await client.billing.listTransactions();
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("listTransactions (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/transactions").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listTransactions();
+        }).rejects.toThrow(Hedra.BadRequestError);
+    });
+
+    test("listTransactions (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/transactions").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listTransactions();
+        }).rejects.toThrow(Hedra.UnauthorizedError);
+    });
+
+    test("listTransactions (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/transactions").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listTransactions();
+        }).rejects.toThrow(Hedra.ForbiddenError);
+    });
+
+    test("listTransactions (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/transactions").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listTransactions();
+        }).rejects.toThrow(Hedra.NotFoundError);
+    });
+
+    test("listTransactions (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/transactions").respondWith().statusCode(429).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listTransactions();
+        }).rejects.toThrow(Hedra.TooManyRequestsError);
+    });
+
+    test("listTransactions (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/transactions").respondWith().statusCode(500).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listTransactions();
+        }).rejects.toThrow(Hedra.InternalServerError);
+    });
 });

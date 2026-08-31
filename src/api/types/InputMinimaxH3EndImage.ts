@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * End frame (first-last-frame-to-video). From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB.
+ * End frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB.
  */
 export type InputMinimaxH3EndImage =
     /**

@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Source video (video-to-video). From 3s to 30s, from 340px to 3850px on each side, and at most 104.8 MB.
+ * Source video. From 3s to 30s, from 340px to 3850px on each side, and at most 104.8 MB.
  */
 export type InputKlingV3MotionControlSourceVideo =
     /**

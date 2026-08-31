@@ -24,12 +24,12 @@ export interface InputLtx23 {
     duration_ms: number;
     /** Output aspect ratio. */
     aspect_ratio: InputLtx23.AspectRatio;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputLtx23StartImage | undefined;
-    /** End frame (first-last-frame-to-video). At most 10.4 MB. */
+    /** End frame. At most 10.4 MB. */
     end_image?: Hedra.InputLtx23EndImage | undefined;
-    /** Quality level to generate at. */
-    quality: InputLtx23.Quality;
+    /** Quality level to generate at. `fast` — tuned for turnaround, for iteration. `pro` — the higher-fidelity tier, for final output. */
+    quality?: InputLtx23.Quality | undefined;
 }
 
 export namespace InputLtx23 {
@@ -47,7 +47,7 @@ export namespace InputLtx23 {
         Nine16: "9:16",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `fast` — tuned for turnaround, for iteration. `pro` — the higher-fidelity tier, for final output. */
     export const Quality = {
         Fast: "fast",
         Pro: "pro",

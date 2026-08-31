@@ -22,14 +22,14 @@ export interface InputVeo3 {
     duration_ms: number;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
-    /** Start frame (image-to-video). At most 8 MB. */
+    /** Start frame. At most 8 MB. */
     start_image?: Hedra.InputVeo3StartImage | undefined;
     /** What to avoid in the generated video. */
     negative_prompt?: string | undefined;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
-    /** Quality level to generate at. */
-    quality: InputVeo3.Quality;
+    /** Quality level to generate at. `standard` — the full model, for hero shots. `fast` — the same model tuned for turnaround, at a lower rate. */
+    quality?: InputVeo3.Quality | undefined;
 }
 
 export namespace InputVeo3 {
@@ -45,7 +45,7 @@ export namespace InputVeo3 {
         OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — the full model, for hero shots. `fast` — the same model tuned for turnaround, at a lower rate. */
     export const Quality = {
         Standard: "standard",
         Fast: "fast",

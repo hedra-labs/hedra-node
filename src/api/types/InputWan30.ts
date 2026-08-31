@@ -25,9 +25,9 @@ export interface InputWan30 {
     generate_audio?: boolean | undefined;
     /** Seed for reproducible output; omit for a random seed. From 0 to 2147483647. */
     seed?: number | undefined;
-    /** Start frame (image-to-video). At most 20 MB. */
+    /** Start frame. At most 20 MB. */
     start_image?: Hedra.InputWan30StartImage | undefined;
-    /** End frame (first-last-frame-to-video). At most 20 MB. */
+    /** End frame. At most 20 MB. */
     end_image?: Hedra.InputWan30EndImage | undefined;
     /** Reference images. 1 to 10 images, each at most 20 MB. */
     images?: Hedra.InputWan30ImagesItem[] | undefined;
@@ -35,8 +35,8 @@ export interface InputWan30 {
     videos?: Hedra.InputWan30VideosItem[] | undefined;
     /** Reference audios. 1 to 5 audio files, each at most 15s and at most 104.8 MB, at most 15s in total. */
     audios?: Hedra.InputWan30AudiosItem[] | undefined;
-    /** Quality level to generate at. */
-    quality: InputWan30.Quality;
+    /** Quality level to generate at. `standard` — the base tier. `prime` — Wan's higher-fidelity tier over the same options, for final output. */
+    quality?: InputWan30.Quality | undefined;
 }
 
 export namespace InputWan30 {
@@ -57,7 +57,7 @@ export namespace InputWan30 {
         OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — the base tier. `prime` — Wan's higher-fidelity tier over the same options, for final output. */
     export const Quality = {
         Standard: "standard",
         Prime: "prime",

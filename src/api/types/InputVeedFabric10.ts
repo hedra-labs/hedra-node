@@ -14,7 +14,7 @@ export interface InputVeedFabric10 {
     aspect_ratio: InputVeedFabric10.AspectRatio;
     /** Output resolution. */
     resolution: InputVeedFabric10.Resolution;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image: Hedra.InputVeedFabric10StartImage;
     /** Driving audio. At most 104.8 MB. */
     audio: Hedra.InputVeedFabric10Audio;

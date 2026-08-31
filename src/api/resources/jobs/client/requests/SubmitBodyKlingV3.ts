@@ -7,8 +7,7 @@ import type * as Hedra from "../../../../index.js";
  *     {
  *         input: {
  *             aspect_ratio: "16:9",
- *             duration_ms: 1,
- *             quality: "standard"
+ *             duration_ms: 1
  *         }
  *     }
  */

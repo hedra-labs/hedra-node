@@ -20,6 +20,8 @@ export interface InputSeedream50Lite {
     aspect_ratio: InputSeedream50Lite.AspectRatio;
     /** Output resolution. */
     resolution: InputSeedream50Lite.Resolution;
+    /** Output image format. */
+    output_format?: InputSeedream50Lite.OutputFormat | undefined;
     /** Images to edit or blend. 1 to 14 images, each at most 30 MB. */
     images?: Hedra.InputSeedream50LiteImagesItem[] | undefined;
 }
@@ -46,4 +48,10 @@ export namespace InputSeedream50Lite {
         TwoThousandOneHundredSixtyP4KUhd: "2160p (4K UHD)",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+    /** Output image format. */
+    export const OutputFormat = {
+        Jpeg: "jpeg",
+        Png: "png",
+    } as const;
+    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
 }

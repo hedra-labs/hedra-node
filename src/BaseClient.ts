@@ -16,7 +16,7 @@ export type BaseClientOptions = {
     /** Specify a custom URL to connect the client to. */
     baseUrl?: core.Supplier<string>;
     /** Override the X-Hedra-Spec-Version header */
-    specVersion?: "3.13.3";
+    specVersion?: "3.15.5";
     /** Additional headers to include in requests. */
     headers?: Record<string, string | core.Supplier<string | null | undefined> | null | undefined>;
     /** The default maximum time to wait for a response in seconds. */
@@ -41,7 +41,7 @@ export interface BaseRequestOptions {
     /** A hook to abort the request. */
     abortSignal?: AbortSignal;
     /** Override the X-Hedra-Spec-Version header */
-    specVersion?: "3.13.3";
+    specVersion?: "3.15.5";
     /** Additional query string parameters to include in the request. */
     queryParams?: Record<string, unknown>;
     /** A dictionary containing additional parameters to spread into the request's body. */
@@ -69,11 +69,11 @@ export function normalizeClientOptions<T extends BaseClientOptions = BaseClientO
         {
             "X-Fern-Language": "JavaScript",
             "X-Fern-SDK-Name": "@hedra/sdk",
-            "X-Fern-SDK-Version": "4.0.1",
-            "User-Agent": "@hedra/sdk/4.0.1",
+            "X-Fern-SDK-Version": "5.0.0-dev",
+            "User-Agent": "@hedra/sdk/5.0.0-dev",
             "X-Fern-Runtime": core.RUNTIME.type,
             "X-Fern-Runtime-Version": core.RUNTIME.version,
-            "X-Hedra-Spec-Version": options?.specVersion ?? "3.13.3",
+            "X-Hedra-Spec-Version": options?.specVersion ?? "3.15.5",
         },
         options?.headers,
     );

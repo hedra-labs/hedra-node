@@ -20,7 +20,7 @@ export interface InputKling16 {
     resolution?: InputKling16.Resolution | undefined;
     /** Duration in ms. */
     duration_ms?: number | undefined;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputKling16StartImage | undefined;
     /** What to avoid in the generated video. At most 2500 characters. */
     negative_prompt?: string | undefined;

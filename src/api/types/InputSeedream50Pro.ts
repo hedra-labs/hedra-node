@@ -20,6 +20,8 @@ export interface InputSeedream50Pro {
     aspect_ratio: InputSeedream50Pro.AspectRatio;
     /** Output resolution. */
     resolution: InputSeedream50Pro.Resolution;
+    /** Output image format. */
+    output_format?: InputSeedream50Pro.OutputFormat | undefined;
     /** Images to edit or blend. 1 to 10 images, each at most 30 MB. */
     images?: Hedra.InputSeedream50ProImagesItem[] | undefined;
 }
@@ -46,4 +48,10 @@ export namespace InputSeedream50Pro {
         OneThousandFourHundredFortyP2KQhd: "1440p (2K QHD)",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+    /** Output image format. */
+    export const OutputFormat = {
+        Jpeg: "jpeg",
+        Png: "png",
+    } as const;
+    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
 }

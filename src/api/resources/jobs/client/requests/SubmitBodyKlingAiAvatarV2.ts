@@ -14,8 +14,7 @@ import type * as Hedra from "../../../../index.js";
  *             audio: {
  *                 source: "url",
  *                 url: "url"
- *             },
- *             quality: "standard"
+ *             }
  *         }
  *     }
  */

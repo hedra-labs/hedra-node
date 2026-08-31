@@ -14,12 +14,12 @@ export interface InputKlingAiAvatarV2 {
     aspect_ratio: InputKlingAiAvatarV2.AspectRatio;
     /** Output resolution. */
     resolution?: InputKlingAiAvatarV2.Resolution | undefined;
-    /** Start frame (image-to-video). At most 10.4 MB. */
+    /** Start frame. At most 10.4 MB. */
     start_image: Hedra.InputKlingAiAvatarV2StartImage;
     /** Driving audio. From 2s to 60s and at most 5 MB. */
     audio: Hedra.InputKlingAiAvatarV2Audio;
-    /** Quality level to generate at. */
-    quality: InputKlingAiAvatarV2.Quality;
+    /** Quality level to generate at. `standard` — the base tier. `pro` — sharper detail and steadier motion at the same resolution, at a higher rate. */
+    quality?: InputKlingAiAvatarV2.Quality | undefined;
 }
 
 export namespace InputKlingAiAvatarV2 {
@@ -35,7 +35,7 @@ export namespace InputKlingAiAvatarV2 {
         SevenHundredTwentyP: "720p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `standard` — the base tier. `pro` — sharper detail and steadier motion at the same resolution, at a higher rate. */
     export const Quality = {
         Standard: "standard",
         Pro: "pro",

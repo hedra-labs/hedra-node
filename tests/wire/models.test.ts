@@ -427,6 +427,155 @@ describe("ModelsClient", () => {
         }).rejects.toThrow(Hedra.InternalServerError);
     });
 
+    test("searchVoices (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {
+            data: [{ id: "id", name: "name", preview_url: "preview_url", labels: { key: "value" } }],
+            next_cursor: "next_cursor",
+        };
+
+        server
+            .mockEndpoint()
+            .get("/models/model/voices/search")
+            .respondWith()
+            .statusCode(200)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        const response = await client.models.searchVoices("model", {
+            q: "q",
+        });
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("searchVoices (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/models/model/voices/search")
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.models.searchVoices("model", {
+                q: "x",
+            });
+        }).rejects.toThrow(Hedra.BadRequestError);
+    });
+
+    test("searchVoices (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/models/model/voices/search")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.models.searchVoices("model", {
+                q: "x",
+            });
+        }).rejects.toThrow(Hedra.UnauthorizedError);
+    });
+
+    test("searchVoices (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/models/model/voices/search")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.models.searchVoices("model", {
+                q: "x",
+            });
+        }).rejects.toThrow(Hedra.ForbiddenError);
+    });
+
+    test("searchVoices (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/models/model/voices/search")
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.models.searchVoices("model", {
+                q: "x",
+            });
+        }).rejects.toThrow(Hedra.NotFoundError);
+    });
+
+    test("searchVoices (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/models/model/voices/search")
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.models.searchVoices("model", {
+                q: "x",
+            });
+        }).rejects.toThrow(Hedra.TooManyRequestsError);
+    });
+
+    test("searchVoices (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/models/model/voices/search")
+            .respondWith()
+            .statusCode(500)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.models.searchVoices("model", {
+                q: "x",
+            });
+        }).rejects.toThrow(Hedra.InternalServerError);
+    });
+
     test("getOpenapi (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });

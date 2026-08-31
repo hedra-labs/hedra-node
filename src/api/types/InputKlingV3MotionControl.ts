@@ -12,9 +12,9 @@ export interface InputKlingV3MotionControl {
     prompt?: string | undefined;
     /** Whether the output character's orientation follows the reference video ('video' — better for complex motion) or the character image ('image' — better for camera movement). Also caps the source video: 30s for 'video', 10s for 'image'. */
     character_orientation?: InputKlingV3MotionControl.CharacterOrientation | undefined;
-    /** Start frame (image-to-video). From 340px to 3850px on each side and at most 10.4 MB. */
+    /** Start frame. From 340px to 3850px on each side and at most 10.4 MB. */
     start_image: Hedra.InputKlingV3MotionControlStartImage;
-    /** Source video (video-to-video). From 3s to 30s, from 340px to 3850px on each side, and at most 104.8 MB. */
+    /** Source video. From 3s to 30s, from 340px to 3850px on each side, and at most 104.8 MB. */
     source_video: Hedra.InputKlingV3MotionControlSourceVideo;
     /** Output resolution to generate at. */
     resolution: InputKlingV3MotionControl.Resolution;

@@ -24,8 +24,8 @@ export interface InputGptImage2 {
     images?: Hedra.InputGptImage2ImagesItem[] | undefined;
     /** Output image format. */
     output_format?: InputGptImage2.OutputFormat | undefined;
-    /** Quality level to generate at. */
-    quality: InputGptImage2.Quality;
+    /** Quality level to generate at. `low` — the quickest and cheapest pass, for drafts, thumbnails, and rapid exploration. `medium` — balanced cost and fidelity, for everyday work and iterative refinement. `high` — the most rendering effort, for final deliverables and text-heavy designs. */
+    quality?: InputGptImage2.Quality | undefined;
 }
 
 export namespace InputGptImage2 {
@@ -52,7 +52,7 @@ export namespace InputGptImage2 {
         Webp: "webp",
     } as const;
     export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
-    /** Quality level to generate at. */
+    /** Quality level to generate at. `low` — the quickest and cheapest pass, for drafts, thumbnails, and rapid exploration. `medium` — balanced cost and fidelity, for everyday work and iterative refinement. `high` — the most rendering effort, for final deliverables and text-heavy designs. */
     export const Quality = {
         Low: "low",
         Medium: "medium",

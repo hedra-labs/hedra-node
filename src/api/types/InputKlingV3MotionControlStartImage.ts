@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Start frame (image-to-video). From 340px to 3850px on each side and at most 10.4 MB.
+ * Start frame. From 340px to 3850px on each side and at most 10.4 MB.
  */
 export type InputKlingV3MotionControlStartImage =
     /**
