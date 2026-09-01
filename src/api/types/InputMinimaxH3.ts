@@ -6,13 +6,10 @@ import type * as Hedra from "../index.js";
  * Model-specific inputs for `minimax-h3`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio, audios, end_image, images, videos; accepts quality: standard
- * (2) requires: duration_ms, end_image, prompt, resolution, start_image; must omit: aspect_ratio, audios, images, videos; accepts quality: standard
- * (3) requires: aspect_ratio, duration_ms, images, prompt, resolution; must omit: end_image, start_image; accepts quality: standard
- * (4) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio, audios, end_image, images, videos; accepts quality: max; resolution: 480p | 768p
- * (5) requires: duration_ms, end_image, prompt, resolution, start_image; must omit: aspect_ratio, audios, images, videos; accepts quality: max; resolution: 480p | 768p
- * (6) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: audios, end_image, images, start_image, videos; accepts aspect_ratio: 1:1 | 3:4 | 4:3 | 16:9 | 21:9 | 9:16; quality: max; resolution: 480p | 768p
- * (7) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: audios, end_image, images, start_image, videos; accepts aspect_ratio: 1:1 | 3:4 | 4:3 | 16:9 | 21:9 | 9:16; quality: standard
+ * (1) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio, audios, end_image, images, videos
+ * (2) requires: duration_ms, end_image, prompt, resolution, start_image; must omit: aspect_ratio, audios, images, videos
+ * (3) requires: aspect_ratio, duration_ms, images, prompt, resolution; must omit: end_image, start_image
+ * (4) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: audios, end_image, images, start_image, videos; accepts aspect_ratio: 1:1 | 3:4 | 4:3 | 16:9 | 21:9 | 9:16
  */
 export interface InputMinimaxH3 {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -35,8 +32,6 @@ export interface InputMinimaxH3 {
     videos?: Hedra.InputMinimaxH3VideosItem[] | undefined;
     /** Reference audios. 1 to 3 audio files, each from 2s to 15s and at most 104.8 MB, at most 15s in total. */
     audios?: Hedra.InputMinimaxH3AudiosItem[] | undefined;
-    /** Quality level to generate at. `standard` — the base tier, offering 2K and 4K and the only one with a reference mode. `max` — a post-trained variant at half the price, 480p and 768p only. */
-    quality?: InputMinimaxH3.Quality | undefined;
 }
 
 export namespace InputMinimaxH3 {
@@ -59,10 +54,4 @@ export namespace InputMinimaxH3 {
         Adaptive: "adaptive",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
-    /** Quality level to generate at. `standard` — the base tier, offering 2K and 4K and the only one with a reference mode. `max` — a post-trained variant at half the price, 480p and 768p only. */
-    export const Quality = {
-        Standard: "standard",
-        Max: "max",
-    } as const;
-    export type Quality = (typeof Quality)[keyof typeof Quality];
 }
