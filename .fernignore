@@ -1,7 +1,9 @@
 # Files Fern must NOT overwrite when it regenerates this SDK (via PR from the
 # hedra-labs/fern-config repo). See https://buildwithfern.com/learn/sdks/capabilities/customize-files
 
-# README install/imports use the @hedra/sdk package name
+# Hand-written. The generated one is Fern's fixed template around the first
+# submit endpoint: a placeholder-prompt submit with no poll, result, streaming
+# frames, or upload wiring, so it would show the SDK's shape, not its use.
 README.md
 
 # Hand-maintained docs / history
