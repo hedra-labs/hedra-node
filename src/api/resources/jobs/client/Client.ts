@@ -57,7 +57,7 @@ export class JobsClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -174,7 +174,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -270,7 +270,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -365,7 +365,7 @@ export class JobsClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -468,7 +468,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Last-Event-Id": lastEventId ?? undefined,
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1",
             }),
             requestOptions?.headers,
         );
@@ -573,6 +573,126 @@ export class JobsClient {
     }
 
     /**
+     * Create high-fidelity speaking or singing avatar videos.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyCreatifyAurora} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitCreatifyAurora({
+     *         input: {
+     *             resolution: "480p",
+     *             start_image: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             audio: {
+     *                 source: "url",
+     *                 url: "url"
+     *             }
+     *         }
+     *     })
+     */
+    public submitCreatifyAurora(
+        request: Hedra.SubmitBodyCreatifyAurora,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitCreatifyAurora(request, requestOptions));
+    }
+
+    private async __submitCreatifyAurora(
+        request: Hedra.SubmitBodyCreatifyAurora,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/creatify-aurora",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/creatify-aurora");
+    }
+
+    /**
      * Polished, print-ready stills when the brief is a finished image rather than a sketch.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -615,7 +735,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -730,7 +850,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -849,7 +969,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -969,7 +1089,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1087,7 +1207,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1201,7 +1321,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1319,7 +1439,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1437,7 +1557,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1550,7 +1670,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1668,7 +1788,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1784,7 +1904,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -1903,7 +2023,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2016,7 +2136,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2131,7 +2251,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2245,7 +2365,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2357,7 +2477,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2469,7 +2589,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2582,7 +2702,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2695,7 +2815,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2808,7 +2928,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -2921,7 +3041,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3034,7 +3154,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3147,7 +3267,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3261,7 +3381,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3373,7 +3493,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3487,7 +3607,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3602,7 +3722,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3717,7 +3837,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3839,7 +3959,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -3961,7 +4081,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4033,6 +4153,132 @@ export class JobsClient {
     }
 
     /**
+     * Turn a clear portrait and driving audio into a talking avatar.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyHeygenPhotoAvatar4} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitHeygenPhotoAvatar4({
+     *         input: {
+     *             aspect_ratio: "16:9",
+     *             resolution: "360p",
+     *             start_image: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             audio: {
+     *                 source: "url",
+     *                 url: "url"
+     *             }
+     *         }
+     *     })
+     */
+    public submitHeygenPhotoAvatar4(
+        request: Hedra.SubmitBodyHeygenPhotoAvatar4,
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitHeygenPhotoAvatar4(request, requestOptions));
+    }
+
+    private async __submitHeygenPhotoAvatar4(
+        request: Hedra.SubmitBodyHeygenPhotoAvatar4,
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/heygen-photo-avatar-4",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(
+            _response.error,
+            _response.rawResponse,
+            "POST",
+            "/models/heygen-photo-avatar-4",
+        );
+    }
+
+    /**
      * HiDream.ai's open-weights HiDream-O1-Image (8B): one pixel-native model that generates, edits, and personalizes without a VAE or a separate text encoder.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -4074,7 +4320,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4187,7 +4433,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4301,7 +4547,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4414,7 +4660,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4528,7 +4774,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4638,7 +4884,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4752,7 +4998,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4866,7 +5112,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -4986,7 +5232,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5105,7 +5351,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5225,7 +5471,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5339,7 +5585,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5452,7 +5698,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5569,7 +5815,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5686,7 +5932,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5799,7 +6045,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -5919,7 +6165,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6039,7 +6285,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6154,7 +6400,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6267,7 +6513,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6381,7 +6627,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6494,7 +6740,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6607,7 +6853,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6720,7 +6966,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6838,7 +7084,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -6957,7 +7203,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7071,7 +7317,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7185,7 +7431,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7305,7 +7551,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7419,7 +7665,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7533,7 +7779,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7647,7 +7893,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7760,7 +8006,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7877,7 +8123,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -7994,7 +8240,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8108,7 +8354,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8223,7 +8469,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8338,7 +8584,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8453,7 +8699,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8568,7 +8814,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8682,7 +8928,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8796,7 +9042,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -8910,7 +9156,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9024,7 +9270,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9139,7 +9385,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9255,7 +9501,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9371,7 +9617,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9492,7 +9738,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9607,7 +9853,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9730,7 +9976,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9853,7 +10099,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -9976,7 +10222,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -10103,7 +10349,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -10218,7 +10464,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -10335,7 +10581,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -10450,7 +10696,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -10564,7 +10810,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -10678,7 +10924,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -10797,7 +11043,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -10911,7 +11157,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -11026,7 +11272,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -11143,7 +11389,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.1" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
