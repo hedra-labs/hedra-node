@@ -1,6 +1,6 @@
 {
     "name": "@hedra/sdk",
-    "version": "5.0.1-dev",
+    "version": "5.1.0-dev",
     "private": false,
     "repository": {
         "type": "git",
@@ -155,6 +155,6 @@
         "node": ">=18.0.0"
     },
     "sideEffects": false,
-    "description": "The official TypeScript library for the Hedra API — API spec 3.16.0",
+    "description": "The official TypeScript library for the Hedra API — API spec 3.16.1",
     "author": "Hedra <support@hedra.com>"
 }
