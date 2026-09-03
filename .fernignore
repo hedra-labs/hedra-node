@@ -50,3 +50,8 @@ biome.json
 .fern/replay.lock
 .fern/replay.yml
 .gitattributes
+
+# The task runner. Hand-written and never emitted by the generator, so this
+# entry is the only thing between the file and deletion on the next
+# regeneration -- a guard against removal, not against overwriting.
+justfile
