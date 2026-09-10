@@ -7,16 +7,16 @@
         "inlinePathParameters": false,
         "user-agent": "hedra-node/{version}",
         "packageJson": {
-            "description": "The official TypeScript library for the Hedra API — API spec 3.16.2",
+            "description": "The official TypeScript library for the Hedra API — API spec 3.16.6",
             "author": "Hedra <support@hedra.com>",
             "sideEffects": false,
             "packageManager": "pnpm@10.34.5"
         }
     },
-    "originGitCommit": "46507aaa043f7ad2aaf381050331d12ab4a69fda",
-    "originGitCommitIsDirty": true,
+    "originGitCommit": "b83fc59a2ace3062282d663fcd8d0b205480db95",
+    "originGitCommitIsDirty": false,
     "invokedBy": "ci",
-    "requestedVersion": "5.2.0",
+    "requestedVersion": "5.3.0-dev",
     "ciProvider": "github",
-    "sdkVersion": "5.2.0"
+    "sdkVersion": "5.3.0-dev"
 }
