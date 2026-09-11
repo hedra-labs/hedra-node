@@ -13,7 +13,7 @@ import type * as Hedra from "../index.js";
 export interface InputWan30 {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
-    /** Generation prompt. At most 5000 characters. */
+    /** Generation prompt. From 1 to 5000 characters. */
     prompt: string;
     /** Output aspect ratio. */
     aspect_ratio: InputWan30.AspectRatio;

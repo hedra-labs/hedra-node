@@ -67,6 +67,7 @@ export type { SubmitBodyMinimaxHailuo02 } from "./SubmitBodyMinimaxHailuo02.js";
 export type { SubmitBodyMinimaxHailuo23 } from "./SubmitBodyMinimaxHailuo23.js";
 export type { SubmitBodyMinimaxSpeech25HdPreview } from "./SubmitBodyMinimaxSpeech25HdPreview.js";
 export type { SubmitBodyMinimaxSpeech25TurboPreview } from "./SubmitBodyMinimaxSpeech25TurboPreview.js";
+export type { SubmitBodyMuseImage } from "./SubmitBodyMuseImage.js";
 export type { SubmitBodyNanoBanana } from "./SubmitBodyNanoBanana.js";
 export type { SubmitBodyNanoBanana2 } from "./SubmitBodyNanoBanana2.js";
 export type { SubmitBodyNanoBananaPro } from "./SubmitBodyNanoBananaPro.js";

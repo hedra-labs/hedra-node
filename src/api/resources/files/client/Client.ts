@@ -29,11 +29,16 @@ export class FilesClient {
      * submit a generation, not when you upload its inputs. `GET /v3/balance`
      * reports what the wallet holds.
      *
+     * Returns 402 while uploads are paused, which happens when your recent
+     * requests were all refused for insufficient funds. Adding funds to the API
+     * wallet resumes them.
+     *
      * @param {Hedra.FilesUploadRequest} request
      * @param {FilesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Hedra.BadRequestError}
      * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
      * @throws {@link Hedra.ForbiddenError}
      * @throws {@link Hedra.NotFoundError}
      * @throws {@link Hedra.TooManyRequestsError}
@@ -66,7 +71,7 @@ export class FilesClient {
             _authRequest.headers,
             this._options?.headers,
             mergeOnlyDefinedHeaders({
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.6",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.16.9",
                 ..._maybeEncodedRequest.headers,
             }),
             requestOptions?.headers,
@@ -100,6 +105,11 @@ export class FilesClient {
                     throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
                 case 401:
                     throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
                         _response.error.body as Hedra.ErrorResponse,
                         _response.rawResponse,
                     );
