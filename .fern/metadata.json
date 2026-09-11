@@ -5,6 +5,7 @@
     "generatorConfig": {
         "namespaceExport": "Hedra",
         "inlinePathParameters": false,
+        "guardProcessEnvAccess": true,
         "user-agent": "hedra-node/{version}",
         "packageJson": {
             "description": "The official TypeScript library for the Hedra API — API spec 3.16.6",
@@ -13,7 +14,7 @@
             "packageManager": "pnpm@10.34.5"
         }
     },
-    "originGitCommit": "22f370c4650946acf7cac432377cce720b110058",
+    "originGitCommit": "35421bc81828f5f9fa0c0265123f3308251d1557",
     "originGitCommitIsDirty": false,
     "invokedBy": "ci",
     "requestedVersion": "5.3.1-dev",
