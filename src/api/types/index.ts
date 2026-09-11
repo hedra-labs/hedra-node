@@ -148,6 +148,8 @@ export * from "./InputMinimaxHailuo23.js";
 export * from "./InputMinimaxHailuo23StartImage.js";
 export * from "./InputMinimaxSpeech25HdPreview.js";
 export * from "./InputMinimaxSpeech25TurboPreview.js";
+export * from "./InputMuseImage.js";
+export * from "./InputMuseImageImagesItem.js";
 export * from "./InputNanoBanana.js";
 export * from "./InputNanoBanana2.js";
 export * from "./InputNanoBanana2ImagesItem.js";
