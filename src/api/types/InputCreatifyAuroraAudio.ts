@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Driving audio. At most 104.8 MB.
+ * Driving audio. At most 60s and at most 104.8 MB.
  */
 export type InputCreatifyAuroraAudio =
     /**

@@ -4,10 +4,6 @@ import type * as Hedra from "../index.js";
 
 /**
  * Model-specific inputs for `happy-horse`.
- *
- * Accepted field combinations (one per input mode):
- * (1) requires: aspect_ratio, duration_ms, prompt, resolution, start_image
- * (2) requires: aspect_ratio, duration_ms, prompt, resolution; accepts aspect_ratio: 16:9 | 4:3 | 1:1 | 3:4 | 9:16
  */
 export interface InputHappyHorse {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -31,17 +27,11 @@ export interface InputHappyHorse {
 export namespace InputHappyHorse {
     /** Output aspect ratio. */
     export const AspectRatio = {
-        TwentyOne9: "21:9",
-        Sixteen10: "16:10",
         Sixteen9: "16:9",
-        Four3: "4:3",
-        Three2: "3:2",
-        One1: "1:1",
-        Two3: "2:3",
-        Three4: "3:4",
         Nine16: "9:16",
-        Ten16: "10:16",
-        Nine21: "9:21",
+        Four3: "4:3",
+        Three4: "3:4",
+        One1: "1:1",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Output resolution. */

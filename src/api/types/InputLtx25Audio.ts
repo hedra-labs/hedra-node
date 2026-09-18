@@ -3,17 +3,17 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Driving audio. From 2s to 60.15s and at most 5 MB.
+ * Driving audio. From 2s to 20s and at most 104.8 MB.
  */
-export type InputKlingAiAvatarV2Audio =
+export type InputLtx25Audio =
     /**
      * A file uploaded via POST /v3/files, referenced by the returned url. */
-    | Hedra.InputKlingAiAvatarV2Audio.Url
+    | Hedra.InputLtx25Audio.Url
     /**
      * An existing asset you own, referenced by its id. */
-    | Hedra.InputKlingAiAvatarV2Audio.Asset;
+    | Hedra.InputLtx25Audio.Asset;
 
-export namespace InputKlingAiAvatarV2Audio {
+export namespace InputLtx25Audio {
     export interface Url {
         source: "url";
         /** A URL returned by POST /v3/files. */

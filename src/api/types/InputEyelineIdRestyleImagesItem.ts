@@ -2,18 +2,15 @@
 
 import type * as Hedra from "../index.js";
 
-/**
- * Driving audio. From 2s to 60.15s and at most 5 MB.
- */
-export type InputKlingAiAvatarV2Audio =
+export type InputEyelineIdRestyleImagesItem =
     /**
      * A file uploaded via POST /v3/files, referenced by the returned url. */
-    | Hedra.InputKlingAiAvatarV2Audio.Url
+    | Hedra.InputEyelineIdRestyleImagesItem.Url
     /**
      * An existing asset you own, referenced by its id. */
-    | Hedra.InputKlingAiAvatarV2Audio.Asset;
+    | Hedra.InputEyelineIdRestyleImagesItem.Asset;
 
-export namespace InputKlingAiAvatarV2Audio {
+export namespace InputEyelineIdRestyleImagesItem {
     export interface Url {
         source: "url";
         /** A URL returned by POST /v3/files. */
