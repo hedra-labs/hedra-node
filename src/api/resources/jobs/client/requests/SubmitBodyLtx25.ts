@@ -7,14 +7,13 @@ import type * as Hedra from "../../../../index.js";
  *     {
  *         input: {
  *             prompt: "prompt",
- *             aspect_ratio: "16:9",
- *             resolution: "720p",
- *             duration_ms: 1
+ *             resolution: "1080p",
+ *             aspect_ratio: "auto"
  *         }
  *     }
  */
-export interface SubmitBodyHappyHorse {
-    input: Hedra.InputHappyHorse;
+export interface SubmitBodyLtx25 {
+    input: Hedra.InputLtx25;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
     /** Replays the original ack for a retried submit instead of enqueueing a duplicate job. */

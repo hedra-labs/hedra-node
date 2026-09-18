@@ -20,11 +20,11 @@ export interface InputGeminiOmniFlash11 {
     start_image?: Hedra.InputGeminiOmniFlash11StartImage | undefined;
     /** End frame. At most 10.4 MB. */
     end_image?: Hedra.InputGeminiOmniFlash11EndImage | undefined;
-    /** Source video. From 1s to 10s and at most 524.2 MB. */
+    /** Source video. From 1s to 10.15s and at most 524.2 MB. */
     source_video?: Hedra.InputGeminiOmniFlash11SourceVideo | undefined;
     /** Reference images. 1 to 10 images, each at most 10.4 MB. */
     images?: Hedra.InputGeminiOmniFlash11ImagesItem[] | undefined;
-    /** Reference videos. 1 to 3 videos, each at most 10s and at most 524.2 MB. */
+    /** Reference videos. 1 to 3 videos, each at most 10.15s and at most 524.2 MB. */
     videos?: Hedra.InputGeminiOmniFlash11VideosItem[] | undefined;
 }
 

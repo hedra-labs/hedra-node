@@ -7,14 +7,19 @@ import type * as Hedra from "../../../../index.js";
  *     {
  *         input: {
  *             prompt: "prompt",
- *             aspect_ratio: "16:9",
- *             resolution: "720p",
- *             duration_ms: 1
+ *             source_video: {
+ *                 source: "url",
+ *                 url: "url"
+ *             },
+ *             images: [{
+ *                     source: "url",
+ *                     url: "url"
+ *                 }]
  *         }
  *     }
  */
-export interface SubmitBodyHappyHorse {
-    input: Hedra.InputHappyHorse;
+export interface SubmitBodyEyelineIdRestyle {
+    input: Hedra.InputEyelineIdRestyle;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
     /** Replays the original ack for a retried submit instead of enqueueing a duplicate job. */

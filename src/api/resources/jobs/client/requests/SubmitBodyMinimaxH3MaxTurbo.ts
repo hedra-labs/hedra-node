@@ -7,14 +7,13 @@ import type * as Hedra from "../../../../index.js";
  *     {
  *         input: {
  *             prompt: "prompt",
- *             aspect_ratio: "16:9",
- *             resolution: "720p",
+ *             resolution: "480p",
  *             duration_ms: 1
  *         }
  *     }
  */
-export interface SubmitBodyHappyHorse {
-    input: Hedra.InputHappyHorse;
+export interface SubmitBodyMinimaxH3MaxTurbo {
+    input: Hedra.InputMinimaxH3MaxTurbo;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
     /** Replays the original ack for a retried submit instead of enqueueing a duplicate job. */

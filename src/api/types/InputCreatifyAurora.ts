@@ -14,7 +14,7 @@ export interface InputCreatifyAurora {
     resolution: InputCreatifyAurora.Resolution;
     /** Start frame. At most 10.4 MB. */
     start_image: Hedra.InputCreatifyAuroraStartImage;
-    /** Driving audio. At most 104.8 MB. */
+    /** Driving audio. At most 60s and at most 104.8 MB. */
     audio: Hedra.InputCreatifyAuroraAudio;
 }
 

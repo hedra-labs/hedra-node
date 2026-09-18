@@ -23,6 +23,7 @@ export namespace InputKlingO3Edit {
     export const Resolution = {
         SevenHundredTwentyP: "720p",
         OneThousandEightyP: "1080p",
+        FourK: "4K",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
 }
