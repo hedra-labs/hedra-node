@@ -69,8 +69,8 @@ export function normalizeClientOptions<T extends BaseClientOptions = BaseClientO
         {
             "X-Fern-Language": "JavaScript",
             "X-Fern-SDK-Name": "@hedra/sdk",
-            "X-Fern-SDK-Version": "6.0.1-dev",
-            "User-Agent": "hedra-node/6.0.1-dev",
+            "X-Fern-SDK-Version": "6.0.1",
+            "User-Agent": "hedra-node/6.0.1",
             "X-Fern-Runtime": core.RUNTIME.type,
             "X-Fern-Runtime-Version": core.RUNTIME.version,
             "X-Hedra-Spec-Version": options?.specVersion ?? "3.17.5",
