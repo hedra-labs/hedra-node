@@ -1,5 +1,7 @@
 export * from "./billing/client/requests/index.js";
 export * as billing from "./billing/index.js";
+export * from "./chat/client/requests/index.js";
+export * as chat from "./chat/index.js";
 export * from "./files/client/requests/index.js";
 export * as files from "./files/index.js";
 export * from "./jobs/client/requests/index.js";
@@ -7,6 +9,7 @@ export * as jobs from "./jobs/index.js";
 export * from "./jobs/types/index.js";
 export * from "./keys/client/requests/index.js";
 export * as keys from "./keys/index.js";
+export * as llm from "./llm/index.js";
 export * from "./logDrains/client/requests/index.js";
 export * as logDrains from "./logDrains/index.js";
 export * from "./models/client/requests/index.js";
