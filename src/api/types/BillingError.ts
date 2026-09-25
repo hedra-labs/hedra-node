@@ -18,4 +18,6 @@ export interface BillingError {
     currency?: string | undefined;
     /** Where a human can add funds to the account this request bills. The API itself cannot add them. */
     funding_url: string;
+    /** Why the automatic top-up did not fund the balance, when known. `card_declined`: the card that pays for automatic top-ups was declined, and the payment method must be updated on the billing page before a top-up can succeed. Clients MUST tolerate unrecognized values: new reasons may be added at any time. */
+    reason?: (string | null) | undefined;
 }
