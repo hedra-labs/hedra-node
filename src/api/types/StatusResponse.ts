@@ -13,7 +13,7 @@ import type * as Hedra from "../index.js";
  * Redis payload with no DB session is byte-identical to a log-free envelope.
  * That was ENG-9693's reason for having no ``logs`` field at all; the stream
  * now carries lifecycle rows as their own ``event: log`` frames instead of
- * inside this one (ENG-9694), and MCP progress notifications stay status-only.
+ * inside this one (ENG-9694).
  */
 export interface StatusResponse {
     /** The job this status describes. */

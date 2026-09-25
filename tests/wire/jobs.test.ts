@@ -150,7 +150,13 @@ describe("JobsClient", () => {
                 param: "param",
                 details: [{ field: "field", message: "message" }],
                 replaced_by: "replaced_by",
-                billing: { balance: 1.1, required: 1.1, currency: "currency", funding_url: "funding_url" },
+                billing: {
+                    balance: 1.1,
+                    required: 1.1,
+                    currency: "currency",
+                    funding_url: "funding_url",
+                    reason: "reason",
+                },
             },
             logs: [
                 {
