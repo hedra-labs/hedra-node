@@ -3,27 +3,20 @@
 import type * as Hedra from "../index.js";
 
 /**
- * The lightweight poll envelope, also the SSE ``status`` frame and the MCP
- * progress notification payload.
+ * A job's status, progress, and estimated completion time.
  *
- * The two log fields are poll-only by construction, like ``cost`` on
- * the result envelope: they are populated when — and only when — a
- * ``GET /v3/jobs/{job_id}/status`` caller supplies a ``logs_after`` cursor, and
- * they exclude when ``None``, so the frame the stream transports build from a
- * Redis payload with no DB session is byte-identical to a log-free envelope.
- * That was ENG-9693's reason for having no ``logs`` field at all; the stream
- * now carries lifecycle rows as their own ``event: log`` frames instead of
- * inside this one (ENG-9694).
+ * Returned by `GET /v3/jobs/{job_id}/status`, and sent as each `status` frame
+ * of `GET /v3/jobs/{job_id}/stream`.
  */
 export interface StatusResponse {
     /** The job this status describes. */
     job_id: string;
     status: Hedra.JobStatus;
-    /** Fraction of the job completed, from 0 to 1 (not a percentage). Null when the job has not reported progress yet. */
+    /** Estimated fraction of the job completed, from 0 to 1 (not a percentage). While `estimated_completion_at` is non-null, this value is computed from the time since submission and that estimate, so it is only as accurate as the estimate, and it stays below 1. While an `IN_QUEUE` or `IN_PROGRESS` job's `estimated_completion_at` is null, `GET /v3/jobs/{job_id}/status` reports 0. A `COMPLETED` job reports 1. A `FAILED` job's value can be anything from 0 to 1 and does not show how far the job got. */
     progress?: (number | null) | undefined;
-    /** ISO-8601 instant this job is estimated to finish; null when no estimate exists for the model yet. Refreshed on every poll. */
+    /** ISO-8601 instant this job is estimated to finish. A job can finish well before or after it. The estimate can change while the job runs, so read it from each poll. Null once the job is `COMPLETED` or `FAILED`, and while no estimate is available. The submit response also includes it; `GET /v3/jobs/{job_id}` and `GET /v3/jobs` do not. */
     estimated_completion_at?: (string | null) | undefined;
-    /** Lifecycle events newer than the `logs_after` cursor, oldest first. Present only when `logs_after` is supplied; absent from SSE status frames and MCP progress notifications. */
+    /** Lifecycle events newer than the `logs_after` cursor, oldest first. Present only when `logs_after` is supplied; absent from the stream's `status` frames. */
     logs?: (Hedra.JobLogItem[] | null) | undefined;
     /** Cursor to send as `logs_after` on the next poll. Absent when this poll delivered no new events — keep using the cursor you sent. */
     logs_next_cursor?: (string | null) | undefined;

@@ -3,36 +3,35 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Model-specific inputs for `minimax-h3-max-turbo`.
+ * Model-specific inputs for `minimax-h3-ultra`.
  *
  * Accepted field combinations (one per input mode):
- * (1) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio, end_image
- * (2) requires: duration_ms, end_image, prompt, resolution, start_image; must omit: aspect_ratio
- * (3) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: end_image, start_image
+ * (1) requires: duration_ms, prompt, start_image; must omit: aspect_ratio, end_image
+ * (2) requires: duration_ms, end_image, prompt, start_image; must omit: aspect_ratio
+ * (3) requires: aspect_ratio, duration_ms, prompt; must omit: end_image, start_image
  */
-export interface InputMinimaxH3MaxTurbo {
+export interface InputMinimaxH3Ultra {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. From 1 to 7000 characters. */
     prompt: string;
     /** Output resolution. */
-    resolution: InputMinimaxH3MaxTurbo.Resolution;
+    resolution?: InputMinimaxH3Ultra.Resolution | undefined;
     /** Duration in ms. */
     duration_ms: number;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
     /** Start frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
-    start_image?: Hedra.InputMinimaxH3MaxTurboStartImage | undefined;
+    start_image?: Hedra.InputMinimaxH3UltraStartImage | undefined;
     /** End frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
-    end_image?: Hedra.InputMinimaxH3MaxTurboEndImage | undefined;
+    end_image?: Hedra.InputMinimaxH3UltraEndImage | undefined;
     /** Output aspect ratio. */
-    aspect_ratio?: InputMinimaxH3MaxTurbo.AspectRatio | undefined;
+    aspect_ratio?: InputMinimaxH3Ultra.AspectRatio | undefined;
 }
 
-export namespace InputMinimaxH3MaxTurbo {
+export namespace InputMinimaxH3Ultra {
     /** Output resolution. */
     export const Resolution = {
-        FourHundredEightyP: "480p",
         SevenHundredSixtyEightP: "768p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];

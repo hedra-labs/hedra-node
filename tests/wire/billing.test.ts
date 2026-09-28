@@ -199,7 +199,21 @@ describe("BillingClient", () => {
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
-            data: [{ id: "id", kind: "kind", amount: 1.1, currency: "currency", created_at: "2024-01-15T09:30:00Z" }],
+            data: [
+                {
+                    id: "id",
+                    kind: "kind",
+                    amount: 1.1,
+                    currency: "currency",
+                    created_at: "2024-01-15T09:30:00Z",
+                    llm_usage: {
+                        model: "model",
+                        request_count: 1,
+                        period_start: "2024-01-15T09:30:00Z",
+                        period_end: "2024-01-15T09:30:00Z",
+                    },
+                },
+            ],
             next_cursor: "next_cursor",
         };
 

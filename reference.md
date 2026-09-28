@@ -4753,6 +4753,77 @@ await client.jobs.submitMinimaxH3({
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitMinimaxH3Max</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+MiniMax H3 Max video generation from text, keyframes, or reference assets.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitMinimaxH3Max({
+    input: {
+        prompt: "prompt",
+        resolution: "480p",
+        duration_ms: 1
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyMinimaxH3Max` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitMinimaxH3MaxCameraControls</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -4886,6 +4957,76 @@ await client.jobs.submitMinimaxH3MaxTurbo({
 <dd>
 
 **request:** `Hedra.SubmitBodyMinimaxH3MaxTurbo` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitMinimaxH3Ultra</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+MiniMax H3 Ultra video generation from text, a start frame, or a first and last frame.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitMinimaxH3Ultra({
+    input: {
+        prompt: "prompt",
+        duration_ms: 1
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyMinimaxH3Ultra` 
     
 </dd>
 </dl>
@@ -5668,6 +5809,77 @@ await client.jobs.submitQwenImage2({
 <dd>
 
 **request:** `Hedra.SubmitBodyQwenImage2` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitQwenImage21</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Alibaba's Qwen-Image-2.1: text-rich posters and layouts, identity-preserving edits, and composition from up to ten reference images.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitQwenImage21({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "16:9",
+        resolution: "540p"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyQwenImage21` 
     
 </dd>
 </dl>
@@ -8400,6 +8612,26 @@ await client.models.getOpenapi("model");
 <dl>
 <dd>
 
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Return what `POST /v3/models/{model}` would charge for this `input`.
+
+Validates `input` against the model's input schema and returns the price in
+US dollars. Creates no job, charges nothing, and does not check the wallet
+balance. The response includes no completion time: a job's
+`estimated_completion_at` appears on the submit response, on
+`GET /v3/jobs/{job_id}/status`, and on `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
 #### 🔌 Usage
 
 <dl>
@@ -8894,8 +9126,11 @@ await client.billing.getUsage();
 <dd>
 
 Every movement of the API wallet's balance, newest first: funds added,
-jobs charged, charges refunded, and corrections. Scoped to the workspace
-the credential bills, the same one `GET /v3/balance` reports.
+jobs charged, charges refunded, and corrections. Chat requests are summed
+into one `llm_usage` row per model per UTC day. Scoped to the workspace the
+credential bills, the same one `GET /v3/balance` reports, so an
+`llm_usage` row sums every member's requests; `GET /v3/usage/llm` lists
+only your own.
 </dd>
 </dl>
 </dd>
