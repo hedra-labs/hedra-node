@@ -18,4 +18,6 @@ export interface ErrorEnvelope {
     replaced_by?: (string | null) | undefined;
     /** Balance, price, and where to add funds — set when the request was refused for funds (code `INSUFFICIENT_BALANCE`); null otherwise. */
     billing?: (Hedra.BillingError | null) | undefined;
+    /** The OpenAI error type for this error's HTTP status: `authentication_error` (401), `permission_error` (403), `rate_limit_error` (429), `server_error` (5xx), and `invalid_request_error` for every other status. Match on `code`, which is more specific. */
+    type?: Hedra.ErrorType | undefined;
 }

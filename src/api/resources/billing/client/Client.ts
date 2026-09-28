@@ -51,7 +51,7 @@ export class BillingClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.17.8" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.17.12" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -146,7 +146,7 @@ export class BillingClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.17.8" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.17.12" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -210,8 +210,11 @@ export class BillingClient {
 
     /**
      * Every movement of the API wallet's balance, newest first: funds added,
-     * jobs charged, charges refunded, and corrections. Scoped to the workspace
-     * the credential bills, the same one `GET /v3/balance` reports.
+     * jobs charged, charges refunded, and corrections. Chat requests are summed
+     * into one `llm_usage` row per model per UTC day. Scoped to the workspace the
+     * credential bills, the same one `GET /v3/balance` reports, so an
+     * `llm_usage` row sums every member's requests; `GET /v3/usage/llm` lists
+     * only your own.
      *
      * @param {Hedra.BillingListTransactionsRequest} request
      * @param {BillingClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -248,7 +251,7 @@ export class BillingClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.17.8" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.17.12" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({

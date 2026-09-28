@@ -14,6 +14,6 @@ export interface FieldError {
     message: string;
     /** Machine-readable hint for which constraint failed ("required", "enum", "type", …). */
     reason?: (string | null) | undefined;
-    /** The accepted values, when the field is an enum — so the request can be fixed without re-fetching the model schema. */
+    /** Accepted values for an enum, or accepted field names on the first unknown-field violation. Omitted on subsequent unknown fields. */
     allowed?: (string[] | null) | undefined;
 }

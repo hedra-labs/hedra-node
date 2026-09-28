@@ -8,10 +8,10 @@ export interface SubmitResponse {
     /** The resolved model id this job runs on. */
     model: string;
     status: Hedra.JobStatus;
-    /** Path of this job's status monitor: poll GET /v3/jobs/{job_id}/status for status, progress, and an estimate. */
+    /** Path of this job's status monitor: poll GET /v3/jobs/{job_id}/status for status, progress, and the estimated completion time. */
     status_url: string;
     /** Path of the job resource itself: GET /v3/jobs/{job_id} returns the result envelope, including the outputs once it completes. Also the value of this response's `Location` header. */
     result_url: string;
-    /** ISO-8601 instant this job is estimated to finish. Null when no estimate exists for the model yet; poll GET /v3/jobs/{job_id}/status for a refreshed one. */
+    /** ISO-8601 instant this job is estimated to finish, as of this response. Null when no estimate is available yet, and when the job has already finished. The estimate can change while the job runs: poll `GET /v3/jobs/{job_id}/status` for the current one. */
     estimated_completion_at?: (string | null) | undefined;
 }

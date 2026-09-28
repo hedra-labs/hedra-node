@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Model-specific inputs for `minimax-h3`.
+ * Model-specific inputs for `minimax-h3-max`.
  *
  * Accepted field combinations (one per input mode):
  * (1) requires: duration_ms, prompt, resolution, start_image; must omit: aspect_ratio, audios, end_image, images, videos
@@ -11,36 +11,36 @@ import type * as Hedra from "../index.js";
  * (3) requires: aspect_ratio, duration_ms, images, prompt, resolution; must omit: end_image, start_image
  * (4) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: audios, end_image, images, start_image, videos; accepts aspect_ratio: 1:1 | 3:4 | 4:3 | 16:9 | 21:9 | 9:16
  */
-export interface InputMinimaxH3 {
+export interface InputMinimaxH3Max {
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Generation prompt. From 1 to 7000 characters. */
     prompt: string;
     /** Output resolution. */
-    resolution: InputMinimaxH3.Resolution;
+    resolution: InputMinimaxH3Max.Resolution;
     /** Duration in ms. */
     duration_ms: number;
+    /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
+    enhance_prompt?: boolean | undefined;
     /** Start frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
-    start_image?: Hedra.InputMinimaxH3StartImage | undefined;
+    start_image?: Hedra.InputMinimaxH3MaxStartImage | undefined;
     /** End frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
-    end_image?: Hedra.InputMinimaxH3EndImage | undefined;
+    end_image?: Hedra.InputMinimaxH3MaxEndImage | undefined;
     /** Output aspect ratio. Omitted or `adaptive` uses the supported ratio nearest the first reference image, else the first reference video. */
-    aspect_ratio?: InputMinimaxH3.AspectRatio | undefined;
-    /** Reference images. 1 to 5 images, each from 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
-    images?: Hedra.InputMinimaxH3ImagesItem[] | undefined;
+    aspect_ratio?: InputMinimaxH3Max.AspectRatio | undefined;
+    /** Reference images. 1 to 4 images, each from 256px to 1024px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
+    images?: Hedra.InputMinimaxH3MaxImagesItem[] | undefined;
     /** Reference videos. 1 to 3 videos, each from 2s to 15s and at most 524.2 MB, at most 15s in total. */
-    videos?: Hedra.InputMinimaxH3VideosItem[] | undefined;
+    videos?: Hedra.InputMinimaxH3MaxVideosItem[] | undefined;
     /** Reference audios. 1 to 3 audio files, each from 2s to 15s and at most 104.8 MB, at most 15s in total. */
-    audios?: Hedra.InputMinimaxH3AudiosItem[] | undefined;
+    audios?: Hedra.InputMinimaxH3MaxAudiosItem[] | undefined;
 }
 
-export namespace InputMinimaxH3 {
+export namespace InputMinimaxH3Max {
     /** Output resolution. */
     export const Resolution = {
         FourHundredEightyP: "480p",
         SevenHundredSixtyEightP: "768p",
-        TwoK: "2K",
-        FourK: "4K",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Output aspect ratio. Omitted or `adaptive` uses the supported ratio nearest the first reference image, else the first reference video. */
