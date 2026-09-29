@@ -34,7 +34,7 @@ concurrency:
 
 jobs:
   autoland:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Always run on push to main and manual dispatch; on PR events only for
     # fern-api[bot] regeneration branches targeting main.
     if: >-

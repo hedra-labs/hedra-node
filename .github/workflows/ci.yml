@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   compile:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repo
@@ -37,7 +37,7 @@ jobs:
         run: pnpm check
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repo
@@ -65,7 +65,7 @@ jobs:
   # since fern-config#44 regeneration is the mechanism by which versions move
   # at all -- a rule forbidding the version to change would freeze it forever.
   regen-shape:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
         with:
@@ -129,7 +129,7 @@ jobs:
   # across all three SDK repos and autoland-drift-check.yml enforces that, so a
   # formatter here would actively break landing.
   config-syntax:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repo
