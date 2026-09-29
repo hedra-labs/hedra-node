@@ -1,5 +1,5 @@
 export * as Hedra from "./api/index.js";
-export type { BaseClientOptions, BaseRequestOptions } from "./BaseClient.js";
+export type { BaseClientOptions, BaseIdempotentRequestOptions, BaseRequestOptions } from "./BaseClient.js";
 export { HedraClient } from "./Client.js";
 export { HedraEnvironment } from "./environments.js";
 export { HedraError, HedraTimeoutError } from "./errors/index.js";

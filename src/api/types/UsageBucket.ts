@@ -8,10 +8,8 @@
 export interface UsageBucket {
     /** What this bucket rolls up: `"total"`, an ISO date (`YYYY-MM-DD`, UTC), or a public model id — per `group_by`. */
     key: string;
-    /** Jobs submitted in this bucket. */
+    /** Jobs submitted in this bucket, chat completions included. */
     jobs: number;
-    /** Settled LLM chat requests in this bucket. Unlike `jobs` (which counts submits, charged or not), this counts requests whose usage settled — a request refused before any work never appears, and a late settlement lands in the window the request was created in. */
-    requests?: number | undefined;
     /** Net amount spent in this bucket. */
     spent: number;
 }

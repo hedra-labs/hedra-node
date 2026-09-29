@@ -5,5 +5,6 @@ export const Modality = {
     Image: "image",
     Video: "video",
     Audio: "audio",
+    Text: "text",
 } as const;
 export type Modality = (typeof Modality)[keyof typeof Modality];

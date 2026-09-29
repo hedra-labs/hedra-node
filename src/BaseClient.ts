@@ -16,7 +16,7 @@ export type BaseClientOptions = {
     /** Specify a custom URL to connect the client to. */
     baseUrl?: core.Supplier<string>;
     /** Override the X-Hedra-Spec-Version header */
-    specVersion?: "3.17.12";
+    specVersion?: "3.20.0";
     /** Additional headers to include in requests. */
     headers?: Record<string, string | core.Supplier<string | null | undefined> | null | undefined>;
     /** The default maximum time to wait for a response in seconds. */
@@ -41,7 +41,7 @@ export interface BaseRequestOptions {
     /** A hook to abort the request. */
     abortSignal?: AbortSignal;
     /** Override the X-Hedra-Spec-Version header */
-    specVersion?: "3.17.12";
+    specVersion?: "3.20.0";
     /** Additional query string parameters to include in the request. */
     queryParams?: Record<string, unknown>;
     /** A dictionary containing additional parameters to spread into the request's body. */
@@ -50,6 +50,10 @@ export interface BaseRequestOptions {
     headers?: Record<string, string | core.Supplier<string | null | undefined> | null | undefined>;
     /** Options for SSE stream reconnection behavior. Has no effect on non-resumable endpoints. */
     stream?: { reconnectionEnabled?: boolean; maxReconnectionAttempts?: number };
+}
+
+export interface BaseIdempotentRequestOptions {
+    idempotencyKey?: string | undefined;
 }
 
 export type NormalizedClientOptions<T extends BaseClientOptions = BaseClientOptions> = T & {
@@ -69,11 +73,11 @@ export function normalizeClientOptions<T extends BaseClientOptions = BaseClientO
         {
             "X-Fern-Language": "JavaScript",
             "X-Fern-SDK-Name": "@hedra/sdk",
-            "X-Fern-SDK-Version": "6.2.0",
-            "User-Agent": "hedra-node/6.2.0",
+            "X-Fern-SDK-Version": "7.0.0-dev",
+            "User-Agent": "hedra-node/7.0.0-dev",
             "X-Fern-Runtime": core.RUNTIME.type,
             "X-Fern-Runtime-Version": core.RUNTIME.version,
-            "X-Hedra-Spec-Version": options?.specVersion ?? "3.17.12",
+            "X-Hedra-Spec-Version": options?.specVersion ?? "3.20.0",
         },
         options?.headers,
     );

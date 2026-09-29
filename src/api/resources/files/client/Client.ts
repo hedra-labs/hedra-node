@@ -3,6 +3,7 @@
 import type { BaseClientOptions, BaseRequestOptions } from "../../../../BaseClient.js";
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "../../../../BaseClient.js";
 import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../core/headers.js";
+import { getIdempotencyHeaders } from "../../../../core/idempotency.js";
 import * as core from "../../../../core/index.js";
 import * as environments from "../../../../environments.js";
 import { handleNonStatusCodeError } from "../../../../errors/handleNonStatusCodeError.js";
@@ -70,8 +71,9 @@ export class FilesClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            getIdempotencyHeaders(),
             mergeOnlyDefinedHeaders({
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.17.12",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
                 ..._maybeEncodedRequest.headers,
             }),
             requestOptions?.headers,

@@ -14,4 +14,8 @@ export interface ModelSummary {
     price_description?: string | undefined;
     /** URL of the provider's logo. */
     logo_url?: (string | null) | undefined;
+    /** A chat model's context window in tokens; null for other models. */
+    context_length?: (number | null) | undefined;
+    /** The largest `max_tokens` a chat model accepts; null for other models. */
+    max_output_tokens?: (number | null) | undefined;
 }

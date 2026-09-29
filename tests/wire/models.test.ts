@@ -18,6 +18,8 @@ describe("ModelsClient", () => {
                     description: "description",
                     price_description: "price_description",
                     logo_url: "logo_url",
+                    context_length: 1,
+                    max_output_tokens: 1,
                 },
             ],
             next_cursor: "next_cursor",
@@ -105,8 +107,16 @@ describe("ModelsClient", () => {
             description: "description",
             price_description: "price_description",
             logo_url: "logo_url",
+            context_length: 1,
+            max_output_tokens: 1,
             input_schema: { key: "value" },
             output_schema: { key: "value" },
+            chat: {
+                default_max_tokens: 1,
+                pricing: { usd_per_1m_input_tokens: 1.1, usd_per_1m_output_tokens: 1.1 },
+                input_modalities: ["input_modalities"],
+                max_images_per_request: 1,
+            },
         };
 
         server.mockEndpoint().get("/models/model").respondWith().statusCode(200).jsonBody(rawResponseBody).build();

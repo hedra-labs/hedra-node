@@ -104,10 +104,9 @@ describe("BillingClient", () => {
             end: "2024-01-15T09:30:00Z",
             group_by: "total",
             total_jobs: 1,
-            total_requests: 1,
             total_spent: 1.1,
             currency: "currency",
-            data: [{ key: "key", jobs: 1, requests: 1, spent: 1.1 }],
+            data: [{ key: "key", jobs: 1, spent: 1.1 }],
         };
 
         server.mockEndpoint().get("/usage").respondWith().statusCode(200).jsonBody(rawResponseBody).build();

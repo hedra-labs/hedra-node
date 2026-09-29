@@ -27,9 +27,9 @@ export namespace InputViduQ3Reference {
     export const AspectRatio = {
         Sixteen9: "16:9",
         Nine16: "9:16",
-        One1: "1:1",
         Four3: "4:3",
         Three4: "3:4",
+        One1: "1:1",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Output resolution. */

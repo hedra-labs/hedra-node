@@ -16,6 +16,4 @@ export interface SubmitBodyMinimaxH3Max {
     input: Hedra.InputMinimaxH3Max;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
-    /** Replays the original ack for a retried submit instead of enqueueing a duplicate job. */
-    idempotency_key?: string | null;
 }
