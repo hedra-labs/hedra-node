@@ -21,7 +21,7 @@ export interface InputHedraAvatar {
     /** Driving audio: a single reference, or a list of references for multi-speaker generation — one audio per speaker, played in list order. 1 to 4 audio files, each from 0.5s to 600s and at most 104.8 MB. */
     audio: InputHedraAvatar.Audio;
     /** Speaker position(s) in the start frame, as normalized [x, y] image coordinates (0-1 from the top-left). */
-    bounding_box_target?: InputHedraAvatar.BoundingBoxTarget | undefined;
+    bounding_box_target?: unknown[] | undefined;
 }
 
 export namespace InputHedraAvatar {
@@ -47,8 +47,4 @@ export namespace InputHedraAvatar {
      * Driving audio: a single reference, or a list of references for multi-speaker generation — one audio per speaker, played in list order. 1 to 4 audio files, each from 0.5s to 600s and at most 104.8 MB.
      */
     export type Audio = Hedra.InputHedraAvatarAudioZero | Hedra.InputHedraAvatarAudioOneItem[];
-    /**
-     * Speaker position(s) in the start frame, as normalized [x, y] image coordinates (0-1 from the top-left).
-     */
-    export type BoundingBoxTarget = unknown[] | unknown[][];
 }
