@@ -4,6 +4,22 @@
 <dl>
 <dd>
 
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Your jobs, newest first. Each `POST /v3/chat/completions` request is a
+job too, whose id is the completion's `id`. A chat job has no outputs,
+and it sends no `job.completed` or `job.failed` webhook.
+</dd>
+</dl>
+</dd>
+</dl>
+
 #### 🔌 Usage
 
 <dl>
@@ -369,7 +385,7 @@ await client.jobs.submitCreatifyAurora({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -440,7 +456,7 @@ await client.jobs.submitDreamina31({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -512,7 +528,7 @@ await client.jobs.submitElevenlabsAudioIsolation({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -583,7 +599,7 @@ await client.jobs.submitElevenlabsEnglishStsV2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -653,7 +669,7 @@ await client.jobs.submitElevenlabsFlashMultilingualV2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -723,7 +739,7 @@ await client.jobs.submitElevenlabsFlashV2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -794,7 +810,7 @@ await client.jobs.submitElevenlabsMultilingualStsV2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -864,7 +880,7 @@ await client.jobs.submitElevenlabsMultilingualV2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -934,7 +950,7 @@ await client.jobs.submitElevenlabsMusic({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1004,7 +1020,7 @@ await client.jobs.submitElevenlabsSoundEffects({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1074,7 +1090,7 @@ await client.jobs.submitElevenlabsV3({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1147,7 +1163,7 @@ await client.jobs.submitElevenlabsVoiceClone({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1224,7 +1240,7 @@ await client.jobs.submitEyelineIdRelight({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1301,7 +1317,7 @@ await client.jobs.submitEyelineIdRestyle({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1372,7 +1388,7 @@ await client.jobs.submitFlux11Pro({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1442,7 +1458,7 @@ await client.jobs.submitFlux11Ultra({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1514,7 +1530,7 @@ await client.jobs.submitFlux3({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1587,7 +1603,7 @@ await client.jobs.submitFlux3VideoUpscalerCreative({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1660,7 +1676,7 @@ await client.jobs.submitFlux3VideoUpscalerPrecise({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1731,7 +1747,7 @@ await client.jobs.submitFluxDev({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1800,7 +1816,7 @@ await client.jobs.submitFluxKontextMax({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1869,7 +1885,7 @@ await client.jobs.submitFluxKontextPro({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -1939,7 +1955,7 @@ await client.jobs.submitFlux2Flex({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2009,7 +2025,7 @@ await client.jobs.submitFlux2Klein9B({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2079,7 +2095,7 @@ await client.jobs.submitFlux2Max({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2149,7 +2165,7 @@ await client.jobs.submitFlux2Pro({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2219,7 +2235,7 @@ await client.jobs.submitGeminiOmniFlash({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2290,7 +2306,7 @@ await client.jobs.submitGeminiOmniFlash11({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2360,7 +2376,7 @@ await client.jobs.submitGptImage15({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2431,7 +2447,7 @@ await client.jobs.submitGptImage2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2502,7 +2518,7 @@ await client.jobs.submitGptImage25Flare({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2573,7 +2589,7 @@ await client.jobs.submitGptImage25Sunburst({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2642,7 +2658,7 @@ await client.jobs.submitGrokImagine({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2713,7 +2729,7 @@ await client.jobs.submitGrokImagine20({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2785,7 +2801,7 @@ await client.jobs.submitGrokVideo({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2857,7 +2873,7 @@ await client.jobs.submitHappyHorse({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -2936,7 +2952,7 @@ await client.jobs.submitHedraAvatar({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3015,7 +3031,7 @@ await client.jobs.submitHedraCharacter3({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3093,7 +3109,7 @@ await client.jobs.submitHeygenPhotoAvatar4({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3163,7 +3179,7 @@ await client.jobs.submitHidreamO1Image({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3233,7 +3249,7 @@ await client.jobs.submitIdeogramV2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3304,7 +3320,7 @@ await client.jobs.submitIdeogramV4({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3374,7 +3390,7 @@ await client.jobs.submitImagen3({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3445,7 +3461,7 @@ await client.jobs.submitImagen4({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3512,7 +3528,7 @@ await client.jobs.submitKling16({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3583,7 +3599,7 @@ await client.jobs.submitKling21Master({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3654,7 +3670,7 @@ await client.jobs.submitKling25Turbo({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3731,7 +3747,7 @@ await client.jobs.submitKling26MotionControl({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3802,7 +3818,7 @@ await client.jobs.submitKling26Pro({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3879,7 +3895,7 @@ await client.jobs.submitKlingAiAvatarV2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -3950,7 +3966,7 @@ await client.jobs.submitKlingO1({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4020,7 +4036,7 @@ await client.jobs.submitKlingO3({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4094,7 +4110,7 @@ await client.jobs.submitKlingO3Edit({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4168,7 +4184,7 @@ await client.jobs.submitKlingO3Reference({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4238,7 +4254,7 @@ await client.jobs.submitKlingV3({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4315,7 +4331,7 @@ await client.jobs.submitKlingV3MotionControl({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4385,7 +4401,7 @@ await client.jobs.submitKrea2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4457,7 +4473,7 @@ await client.jobs.submitLtx23({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4528,7 +4544,7 @@ await client.jobs.submitLtx25({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4600,7 +4616,7 @@ await client.jobs.submitLumaRay32({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4670,7 +4686,7 @@ await client.jobs.submitMaiImage25({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4741,7 +4757,7 @@ await client.jobs.submitMinimaxH3({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4812,7 +4828,7 @@ await client.jobs.submitMinimaxH3Max({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4893,7 +4909,7 @@ await client.jobs.submitMinimaxH3MaxCameraControls({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -4964,7 +4980,7 @@ await client.jobs.submitMinimaxH3MaxTurbo({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5034,7 +5050,7 @@ await client.jobs.submitMinimaxH3Ultra({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5104,7 +5120,7 @@ await client.jobs.submitMinimaxHailuo02({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5174,7 +5190,7 @@ await client.jobs.submitMinimaxHailuo23({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5244,7 +5260,7 @@ await client.jobs.submitMinimaxSpeech25HdPreview({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5314,7 +5330,7 @@ await client.jobs.submitMinimaxSpeech25TurboPreview({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5384,7 +5400,7 @@ await client.jobs.submitMuseImage({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5455,7 +5471,7 @@ await client.jobs.submitNanoBanana({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5526,7 +5542,7 @@ await client.jobs.submitNanoBanana2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5597,7 +5613,7 @@ await client.jobs.submitNanoBananaPro({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5674,7 +5690,7 @@ await client.jobs.submitOmnihuman15({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5745,7 +5761,7 @@ await client.jobs.submitPixverseV6({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5816,7 +5832,7 @@ await client.jobs.submitQwenImage2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5887,7 +5903,7 @@ await client.jobs.submitQwenImage21({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -5958,7 +5974,7 @@ await client.jobs.submitRecraftV3({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6028,7 +6044,7 @@ await client.jobs.submitReve21({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6102,7 +6118,7 @@ await client.jobs.submitReve21Edit({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6176,7 +6192,7 @@ await client.jobs.submitReve21Remix({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6247,7 +6263,7 @@ await client.jobs.submitSana({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6319,7 +6335,7 @@ await client.jobs.submitSeedance15Pro({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6391,7 +6407,7 @@ await client.jobs.submitSeedance20({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6463,7 +6479,7 @@ await client.jobs.submitSeedance20Mini({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6535,7 +6551,7 @@ await client.jobs.submitSeedance25({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6606,7 +6622,7 @@ await client.jobs.submitSeedream40({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6677,7 +6693,7 @@ await client.jobs.submitSeedream45({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6748,7 +6764,7 @@ await client.jobs.submitSeedream50Lite({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6819,7 +6835,7 @@ await client.jobs.submitSeedream50Pro({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6891,7 +6907,7 @@ await client.jobs.submitSora2Pro({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -6964,7 +6980,7 @@ await client.jobs.submitTopazImageUpscaler({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7036,7 +7052,7 @@ await client.jobs.submitTopazImageUpscalerTransparency({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7109,7 +7125,7 @@ await client.jobs.submitTopazImageUpscalerWonder({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7182,7 +7198,7 @@ await client.jobs.submitTopazVideoUpscaler({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7254,7 +7270,7 @@ await client.jobs.submitTopazVideoUpscalerHyperion25({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7327,7 +7343,7 @@ await client.jobs.submitTopazVideoUpscalerStarlightFast({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7400,7 +7416,7 @@ await client.jobs.submitTopazVideoUpscalerStarlightHq({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7473,7 +7489,7 @@ await client.jobs.submitTopazVideoUpscalerStarlightPrecise({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7552,7 +7568,7 @@ await client.jobs.submitVeedFabric10({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7624,7 +7640,7 @@ await client.jobs.submitVeedVideoBackgroundRemoval({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7693,7 +7709,7 @@ await client.jobs.submitVeo2({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7765,7 +7781,7 @@ await client.jobs.submitVeo3({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7836,7 +7852,7 @@ await client.jobs.submitVeo31({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7907,7 +7923,7 @@ await client.jobs.submitViduQ3({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -7983,7 +7999,7 @@ await client.jobs.submitViduQ3Reference({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -8054,7 +8070,7 @@ await client.jobs.submitWan27({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -8126,7 +8142,7 @@ await client.jobs.submitWan30({
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -8205,7 +8221,7 @@ await client.jobs.submit("model", {
 <dl>
 <dd>
 
-**requestOptions:** `JobsClient.RequestOptions` 
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
     
 </dd>
 </dl>
@@ -9129,8 +9145,7 @@ Every movement of the API wallet's balance, newest first: funds added,
 jobs charged, charges refunded, and corrections. Chat requests are summed
 into one `llm_usage` row per model per UTC day. Scoped to the workspace the
 credential bills, the same one `GET /v3/balance` reports, so an
-`llm_usage` row sums every member's requests; `GET /v3/usage/llm` lists
-only your own.
+`llm_usage` row sums every member's requests.
 </dd>
 </dl>
 </dd>

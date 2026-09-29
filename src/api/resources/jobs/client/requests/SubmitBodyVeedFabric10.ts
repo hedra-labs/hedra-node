@@ -24,6 +24,4 @@ export interface SubmitBodyVeedFabric10 {
     input: Hedra.InputVeedFabric10;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
-    /** Replays the original ack for a retried submit instead of enqueueing a duplicate job. */
-    idempotency_key?: string | null;
 }

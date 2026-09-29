@@ -15,6 +15,4 @@ export interface SubmitBodyHidreamO1Image {
     input: Hedra.InputHidreamO1Image;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
-    /** Replays the original ack for a retried submit instead of enqueueing a duplicate job. */
-    idempotency_key?: string | null;
 }

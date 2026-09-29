@@ -4,6 +4,8 @@
  * Timing measured for a completed job.
  */
 export interface Metrics {
-    /** Wall-clock milliseconds between this job's `started` and `completed` lifecycle events. It brackets provider queueing, generation, output download, and any failed attempts with their retry backoff, so it measures the whole job rather than the model's own inference time, and it is not a provider-reported figure. Read from the job's durable lifecycle records, so polled results and webhook deliveries report the same value. Null when the job did not record both events. */
+    /** Wall-clock milliseconds between this job's `started` and `completed` lifecycle events. It brackets provider queueing, generation, output download, and any failed attempts with their retry backoff, so it measures the whole job rather than the model's own inference time, and it is not a provider-reported figure. Read from the job's durable lifecycle records, so polled results and webhook deliveries report the same value. Null when the job did not record both events. For a chat completion, the milliseconds from dispatching the request to the provider until its last byte. */
     processing_time_ms?: (number | null) | undefined;
+    /** For a chat completion, the milliseconds from dispatching the request to the provider until its first chunk. Absent for other jobs. */
+    time_to_first_token_ms?: (number | null) | undefined;
 }

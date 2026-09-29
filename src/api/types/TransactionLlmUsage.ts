@@ -8,7 +8,7 @@ export interface TransactionLlmUsage {
     model: string;
     /** How many requests the row sums. */
     request_count: number;
-    /** Start of the UTC day the row covers. A request counts toward the day it was created, even when it was charged after midnight. `GET /v3/usage/llm` lists your own requests in the row when given this as `start`, `period_end` as `end`, and `model`. */
+    /** Start of the UTC day the row covers. A request counts toward the day it was created, even when it was charged after midnight. `GET /v3/models/{model}/jobs` lists the requests as jobs. */
     period_start: string;
     /** End of the UTC day the row covers, exclusive: one day after `period_start`. */
     period_end: string;
