@@ -18,23 +18,17 @@ export interface InputFluxKontextPro {
     enhance_prompt?: boolean | undefined;
     /** The single source image to edit. Exactly 1 image, at most 30 MB. */
     images?: Hedra.InputFluxKontextProImagesItem[] | undefined;
-    /** Output image format. */
-    output_format?: InputFluxKontextPro.OutputFormat | undefined;
-    /** Seed for reproducible output; omit for a random seed. */
-    seed?: number | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputFluxKontextPro.AspectRatio | undefined;
     /** Output resolution. */
     resolution?: InputFluxKontextPro.Resolution | undefined;
+    /** Output image format. */
+    output_format?: InputFluxKontextPro.OutputFormat | undefined;
+    /** Seed for reproducible output; omit for a random seed. */
+    seed?: number | undefined;
 }
 
 export namespace InputFluxKontextPro {
-    /** Output image format. */
-    export const OutputFormat = {
-        Jpeg: "jpeg",
-        Png: "png",
-    } as const;
-    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Sixteen9: "16:9",
@@ -53,4 +47,10 @@ export namespace InputFluxKontextPro {
         Fixed: "fixed",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+    /** Output image format. */
+    export const OutputFormat = {
+        Jpeg: "jpeg",
+        Png: "png",
+    } as const;
+    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
 }

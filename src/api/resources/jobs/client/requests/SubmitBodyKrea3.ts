@@ -7,12 +7,12 @@ import type * as Hedra from "../../../../index.js";
  *     {
  *         input: {
  *             prompt: "prompt",
- *             aspect_ratio: "1:1"
+ *             aspect_ratio: "auto"
  *         }
  *     }
  */
-export interface SubmitBodyIdeogramV2 {
-    input: Hedra.InputIdeogramV2;
+export interface SubmitBodyKrea3 {
+    input: Hedra.InputKrea3;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
 }

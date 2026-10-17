@@ -133,6 +133,7 @@ describe("JobsClient", () => {
                     asset_id: "asset_id",
                     voice_id: "voice_id",
                     url: "url",
+                    expires_at: "2024-01-15T09:30:00Z",
                     content_type: "content_type",
                     width: 1,
                     height: 1,
@@ -142,7 +143,7 @@ describe("JobsClient", () => {
                 },
             ],
             metrics: { processing_time_ms: 1, time_to_first_token_ms: 1 },
-            usage: { prompt_tokens: 1, completion_tokens: 1, reasoning_tokens: 1, estimated: true },
+            usage: { prompt_tokens: 1, cached_tokens: 1, completion_tokens: 1, reasoning_tokens: 1, estimated: true },
             error: {
                 code: "UNKNOWN",
                 message: "message",
@@ -157,6 +158,7 @@ describe("JobsClient", () => {
                     currency: "currency",
                     funding_url: "funding_url",
                     reason: "reason",
+                    affordable_output_tokens: 1,
                 },
                 type: "invalid_request_error",
             },
@@ -257,6 +259,120 @@ describe("JobsClient", () => {
         await expect(async () => {
             return await client.jobs.get("job_id");
         }).rejects.toThrow(Hedra.InternalServerError);
+    });
+
+    test("delete (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        server.mockEndpoint().delete("/jobs/job_id").respondWith().statusCode(200).build();
+
+        const response = await client.jobs.delete("job_id");
+        expect(response).toEqual(undefined);
+    });
+
+    test("delete (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().delete("/jobs/job_id").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.jobs.delete("job_id");
+        }).rejects.toThrow(Hedra.BadRequestError);
+    });
+
+    test("delete (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().delete("/jobs/job_id").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.jobs.delete("job_id");
+        }).rejects.toThrow(Hedra.UnauthorizedError);
+    });
+
+    test("delete (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().delete("/jobs/job_id").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.jobs.delete("job_id");
+        }).rejects.toThrow(Hedra.ForbiddenError);
+    });
+
+    test("delete (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().delete("/jobs/job_id").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.jobs.delete("job_id");
+        }).rejects.toThrow(Hedra.NotFoundError);
+    });
+
+    test("delete (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().delete("/jobs/job_id").respondWith().statusCode(409).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.jobs.delete("job_id");
+        }).rejects.toThrow(Hedra.ConflictError);
+    });
+
+    test("delete (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().delete("/jobs/job_id").respondWith().statusCode(429).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.jobs.delete("job_id");
+        }).rejects.toThrow(Hedra.TooManyRequestsError);
+    });
+
+    test("delete (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().delete("/jobs/job_id").respondWith().statusCode(500).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.jobs.delete("job_id");
+        }).rejects.toThrow(Hedra.InternalServerError);
+    });
+
+    test("delete (9)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().delete("/jobs/job_id").respondWith().statusCode(503).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.jobs.delete("job_id");
+        }).rejects.toThrow(Hedra.ServiceUnavailableError);
     });
 
     test("getStatus (1)", async () => {

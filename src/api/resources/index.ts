@@ -11,6 +11,7 @@ export * from "./logDrains/client/requests/index.js";
 export * as logDrains from "./logDrains/index.js";
 export * from "./models/client/requests/index.js";
 export * as models from "./models/index.js";
+export * as runAModel from "./runAModel/index.js";
 export * from "./tokens/client/requests/index.js";
 export * as tokens from "./tokens/index.js";
 export * from "./webhooks/client/requests/index.js";

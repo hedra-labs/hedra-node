@@ -59,7 +59,7 @@ export class KeysClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -153,7 +153,7 @@ export class KeysClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -249,7 +249,7 @@ export class KeysClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -344,7 +344,7 @@ export class KeysClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({

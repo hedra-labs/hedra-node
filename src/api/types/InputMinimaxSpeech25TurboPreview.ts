@@ -10,8 +10,56 @@ export interface InputMinimaxSpeech25TurboPreview {
     stability?: number | undefined;
     /** Speech rate multiplier; 1.0 is the voice's natural pace. From 0.7 to 1.2. */
     speed?: number | undefined;
-    /** Language code; 'auto' by default. */
-    language?: string | undefined;
+    /** Language of the text, as an ISO 639-1 code such as 'ko' ('yue' for Cantonese, 'fil' for Filipino), or 'auto' to detect it from the text. Omitted means 'auto'. Regional tags such as 'pt-BR' and English names such as 'Korean' are also accepted. */
+    language?: InputMinimaxSpeech25TurboPreview.Language | undefined;
     /** Voice to speak with (`voice_<uuid>`). List the voices you can use at GET /v3/models/minimax-speech-25-turbo-preview/voices. */
     voice_id: string;
+}
+
+export namespace InputMinimaxSpeech25TurboPreview {
+    /** Language of the text, as an ISO 639-1 code such as 'ko' ('yue' for Cantonese, 'fil' for Filipino), or 'auto' to detect it from the text. Omitted means 'auto'. Regional tags such as 'pt-BR' and English names such as 'Korean' are also accepted. */
+    export const Language = {
+        Auto: "auto",
+        Zh: "zh",
+        Yue: "yue",
+        En: "en",
+        Ar: "ar",
+        Ru: "ru",
+        Es: "es",
+        Fr: "fr",
+        Pt: "pt",
+        De: "de",
+        Tr: "tr",
+        Nl: "nl",
+        Uk: "uk",
+        Vi: "vi",
+        Id: "id",
+        Ja: "ja",
+        It: "it",
+        Ko: "ko",
+        Th: "th",
+        Pl: "pl",
+        Ro: "ro",
+        El: "el",
+        Cs: "cs",
+        Fi: "fi",
+        Hi: "hi",
+        Bg: "bg",
+        Da: "da",
+        He: "he",
+        Ms: "ms",
+        Fa: "fa",
+        Sk: "sk",
+        Sv: "sv",
+        Hr: "hr",
+        Fil: "fil",
+        Hu: "hu",
+        No: "no",
+        Sl: "sl",
+        Ca: "ca",
+        Nn: "nn",
+        Ta: "ta",
+        Af: "af",
+    } as const;
+    export type Language = (typeof Language)[keyof typeof Language];
 }

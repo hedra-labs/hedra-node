@@ -64,7 +64,7 @@ export class JobsClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -181,7 +181,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -240,6 +240,119 @@ export class JobsClient {
     }
 
     /**
+     * Delete a finished job's outputs, prompt and logs.
+     *
+     * Afterwards `GET /v3/jobs/{job_id}` reports each output `EXPIRED`, with no
+     * prompt and no logs, and `GET /v3/jobs` still lists the job with its model,
+     * status, timestamps and cost. Another job whose output this job read by
+     * `asset_id` is unchanged. Deleting a job again returns 204.
+     *
+     * Returns 409 `ALREADY_IN_PROGRESS` while the job, or another job that names
+     * this job's output by `asset_id`, is `IN_QUEUE` or `IN_PROGRESS`; 400
+     * `INVALID_ARGUMENT` for a voice clone job; and 503 `UNAVAILABLE` when Hedra
+     * could not finish deleting the job. Retry the request to finish it.
+     *
+     * @param {string} job_id - The job's id (`job_<uuid>`).
+     * @param {Hedra.JobsDeleteRequest} request
+     * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.ConflictError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link Hedra.ServiceUnavailableError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.delete("job_id")
+     */
+    public delete(
+        job_id: string,
+        request: Hedra.JobsDeleteRequest = {},
+        requestOptions?: JobsClient.RequestOptions,
+    ): core.HttpResponsePromise<void> {
+        return core.HttpResponsePromise.fromPromise(this.__delete(job_id, request, requestOptions));
+    }
+
+    private async __delete(
+        job_id: string,
+        _request: Hedra.JobsDeleteRequest = {},
+        requestOptions?: JobsClient.RequestOptions,
+    ): Promise<core.WithRawResponse<void>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                `jobs/${core.url.encodePathParam(job_id)}`,
+            ),
+            method: "DELETE",
+            headers: _headers,
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: undefined, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 409:
+                    throw new Hedra.ConflictError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new Hedra.ServiceUnavailableError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "DELETE", "/jobs/{job_id}");
+    }
+
+    /**
      * @param {string} job_id - The job's id (`job_<uuid>`).
      * @param {Hedra.JobsGetStatusRequest} request
      * @param {JobsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -277,7 +390,7 @@ export class JobsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -372,7 +485,7 @@ export class JobsClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -475,7 +588,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Last-Event-Id": lastEventId ?? undefined,
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -630,7 +743,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -747,7 +860,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -865,7 +978,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -987,7 +1100,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -1110,7 +1223,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -1231,7 +1344,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -1348,7 +1461,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -1469,7 +1582,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -1590,7 +1703,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -1706,7 +1819,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -1827,7 +1940,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -1946,7 +2059,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -2074,7 +2187,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -2197,7 +2310,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -2314,7 +2427,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -2430,7 +2543,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -2548,7 +2661,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -2667,7 +2780,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -2791,7 +2904,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -2913,7 +3026,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -3028,7 +3141,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -3143,7 +3256,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -3259,7 +3372,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -3375,7 +3488,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -3491,7 +3604,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -3607,7 +3720,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -3723,7 +3836,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -3840,7 +3953,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -3956,7 +4069,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -4073,7 +4186,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -4190,7 +4303,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -4307,7 +4420,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -4427,7 +4540,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -4544,7 +4657,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -4662,7 +4775,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -4780,7 +4893,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -4905,7 +5018,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -5030,7 +5143,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -5154,7 +5267,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -5275,7 +5388,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -5348,123 +5461,7 @@ export class JobsClient {
     }
 
     /**
-     * Best in class for poster-ready images and spot-on text rendering in social graphics.
-     *
-     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-     *
-     * @param {Hedra.SubmitBodyIdeogramV2} request
-     * @param {JobsClient.IdempotentRequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Hedra.BadRequestError}
-     * @throws {@link Hedra.UnauthorizedError}
-     * @throws {@link Hedra.PaymentRequiredError}
-     * @throws {@link Hedra.ForbiddenError}
-     * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
-     * @throws {@link Hedra.TooManyRequestsError}
-     * @throws {@link Hedra.InternalServerError}
-     * @throws {@link errors.HedraError}
-     * @throws {@link errors.HedraTimeoutError}
-     *
-     * @example
-     *     await client.jobs.submitIdeogramV2({
-     *         input: {
-     *             prompt: "prompt",
-     *             aspect_ratio: "1:1"
-     *         }
-     *     })
-     */
-    public submitIdeogramV2(
-        request: Hedra.SubmitBodyIdeogramV2,
-        requestOptions?: JobsClient.IdempotentRequestOptions,
-    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__submitIdeogramV2(request, requestOptions));
-    }
-
-    private async __submitIdeogramV2(
-        request: Hedra.SubmitBodyIdeogramV2,
-        requestOptions?: JobsClient.IdempotentRequestOptions,
-    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.HedraEnvironment.Production,
-                "models/ideogram-v2",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            requestType: "json",
-            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.HedraError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/ideogram-v2");
-    }
-
-    /**
-     * Ideogram V4 renders poster-ready text and layout; the required quality parameter picks turbo, balanced or quality, which sets both the render effort and the price.
+     * Ideogram V4 renders poster-ready text and layout; the quality parameter picks turbo, balanced (the default) or quality, which sets both the render effort and the price.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
      *
@@ -5508,7 +5505,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -5581,6 +5578,121 @@ export class JobsClient {
     }
 
     /**
+     * Ideogram 4.5 renders accurate typography for posters, logos and designs, and edits an image from a prompt, keeping its size and the pixels the edit leaves alone; the quality parameter picks low, medium (the default) or high, which sets both the render effort and the price.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyIdeogramV45} request
+     * @param {JobsClient.IdempotentRequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitIdeogramV45({
+     *         input: {
+     *             prompt: "prompt"
+     *         }
+     *     })
+     */
+    public submitIdeogramV45(
+        request: Hedra.SubmitBodyIdeogramV45,
+        requestOptions?: JobsClient.IdempotentRequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitIdeogramV45(request, requestOptions));
+    }
+
+    private async __submitIdeogramV45(
+        request: Hedra.SubmitBodyIdeogramV45,
+        requestOptions?: JobsClient.IdempotentRequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/ideogram-v4-5",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/ideogram-v4-5");
+    }
+
+    /**
      * Google's earlier photoreal generator, kept for parity.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -5624,7 +5736,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -5741,7 +5853,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -5854,7 +5966,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -5971,7 +6083,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -6088,7 +6200,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -6211,7 +6323,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -6333,7 +6445,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -6456,7 +6568,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -6573,7 +6685,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -6689,7 +6801,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -6809,7 +6921,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -6929,7 +7041,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -7045,7 +7157,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -7168,7 +7280,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -7289,7 +7401,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -7362,6 +7474,122 @@ export class JobsClient {
     }
 
     /**
+     * Krea 3 generates an image of about 4 megapixels from a prompt alone or by editing one to four images.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyKrea3} request
+     * @param {JobsClient.IdempotentRequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitKrea3({
+     *         input: {
+     *             prompt: "prompt",
+     *             aspect_ratio: "auto"
+     *         }
+     *     })
+     */
+    public submitKrea3(
+        request: Hedra.SubmitBodyKrea3,
+        requestOptions?: JobsClient.IdempotentRequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitKrea3(request, requestOptions));
+    }
+
+    private async __submitKrea3(
+        request: Hedra.SubmitBodyKrea3,
+        requestOptions?: JobsClient.IdempotentRequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/krea-3",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/krea-3");
+    }
+
+    /**
      * Clips up to 4K with synchronized native audio, for final output.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -7407,7 +7635,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -7524,7 +7752,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -7642,7 +7870,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -7758,7 +7986,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -7875,7 +8103,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -7992,7 +8220,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -8119,7 +8347,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -8241,7 +8469,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -8357,7 +8585,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -8473,7 +8701,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -8589,7 +8817,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -8705,7 +8933,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -8826,7 +9054,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -8947,7 +9175,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -9064,7 +9292,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -9181,7 +9409,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -9254,6 +9482,123 @@ export class JobsClient {
     }
 
     /**
+     * Nano Banana 2 with cleaner text and layouts, and characters that stay consistent across references, up to 4K.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyNanoBanana21} request
+     * @param {JobsClient.IdempotentRequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitNanoBanana21({
+     *         input: {
+     *             prompt: "prompt",
+     *             aspect_ratio: "adaptive",
+     *             resolution: "1K"
+     *         }
+     *     })
+     */
+    public submitNanoBanana21(
+        request: Hedra.SubmitBodyNanoBanana21,
+        requestOptions?: JobsClient.IdempotentRequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitNanoBanana21(request, requestOptions));
+    }
+
+    private async __submitNanoBanana21(
+        request: Hedra.SubmitBodyNanoBanana21,
+        requestOptions?: JobsClient.IdempotentRequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/nano-banana-2.1",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/nano-banana-2.1");
+    }
+
+    /**
      * The reasoning-heavy tier — dense prompts, mixed references, and style transfer up to 4K.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -9298,7 +9643,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -9421,7 +9766,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -9494,6 +9839,128 @@ export class JobsClient {
     }
 
     /**
+     * Performs your audio's tone and emotion in one take of up to five minutes.
+     *
+     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+     *
+     * @param {Hedra.SubmitBodyOmnihuman20} request
+     * @param {JobsClient.IdempotentRequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link Hedra.BadRequestError}
+     * @throws {@link Hedra.UnauthorizedError}
+     * @throws {@link Hedra.PaymentRequiredError}
+     * @throws {@link Hedra.ForbiddenError}
+     * @throws {@link Hedra.NotFoundError}
+     * @throws {@link Hedra.UnprocessableEntityError}
+     * @throws {@link Hedra.TooManyRequestsError}
+     * @throws {@link Hedra.InternalServerError}
+     * @throws {@link errors.HedraError}
+     * @throws {@link errors.HedraTimeoutError}
+     *
+     * @example
+     *     await client.jobs.submitOmnihuman20({
+     *         input: {
+     *             start_image: {
+     *                 source: "url",
+     *                 url: "url"
+     *             },
+     *             audio: {
+     *                 source: "url",
+     *                 url: "url"
+     *             }
+     *         }
+     *     })
+     */
+    public submitOmnihuman20(
+        request: Hedra.SubmitBodyOmnihuman20,
+        requestOptions?: JobsClient.IdempotentRequestOptions,
+    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__submitOmnihuman20(request, requestOptions));
+    }
+
+    private async __submitOmnihuman20(
+        request: Hedra.SubmitBodyOmnihuman20,
+        requestOptions?: JobsClient.IdempotentRequestOptions,
+    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            mergeOnlyDefinedHeaders({
+                "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
+            }),
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.HedraEnvironment.Production,
+                "models/omnihuman-20",
+            ),
+            method: "POST",
+            headers: _headers,
+            contentType: "application/json",
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            requestType: "json",
+            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 401:
+                    throw new Hedra.UnauthorizedError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new Hedra.PaymentRequiredError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 404:
+                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
+                case 422:
+                    throw new Hedra.UnprocessableEntityError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new Hedra.TooManyRequestsError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new Hedra.InternalServerError(
+                        _response.error.body as Hedra.ErrorResponse,
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.HedraError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/omnihuman-20");
+    }
+
+    /**
      * Stylized 1080p clips up to 15 seconds, with native audio.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -9538,7 +10005,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -9655,7 +10122,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -9772,7 +10239,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -9889,7 +10356,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -10005,7 +10472,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -10125,7 +10592,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -10245,7 +10712,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -10362,7 +10829,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -10480,7 +10947,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -10598,7 +11065,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -10716,7 +11183,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -10834,7 +11301,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -10951,7 +11418,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -11068,7 +11535,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -11185,7 +11652,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -11302,7 +11769,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -11375,124 +11842,6 @@ export class JobsClient {
     }
 
     /**
-     * For complex, narrative-driven videos with remarkable consistency and realistic character-world interaction.
-     *
-     * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-     *
-     * @param {Hedra.SubmitBodySora2Pro} request
-     * @param {JobsClient.IdempotentRequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Hedra.BadRequestError}
-     * @throws {@link Hedra.UnauthorizedError}
-     * @throws {@link Hedra.PaymentRequiredError}
-     * @throws {@link Hedra.ForbiddenError}
-     * @throws {@link Hedra.NotFoundError}
-     * @throws {@link Hedra.UnprocessableEntityError}
-     * @throws {@link Hedra.TooManyRequestsError}
-     * @throws {@link Hedra.InternalServerError}
-     * @throws {@link errors.HedraError}
-     * @throws {@link errors.HedraTimeoutError}
-     *
-     * @example
-     *     await client.jobs.submitSora2Pro({
-     *         input: {
-     *             prompt: "prompt",
-     *             aspect_ratio: "16:9",
-     *             resolution: "720p",
-     *             duration_ms: 1
-     *         }
-     *     })
-     */
-    public submitSora2Pro(
-        request: Hedra.SubmitBodySora2Pro,
-        requestOptions?: JobsClient.IdempotentRequestOptions,
-    ): core.HttpResponsePromise<Hedra.SubmitResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__submitSora2Pro(request, requestOptions));
-    }
-
-    private async __submitSora2Pro(
-        request: Hedra.SubmitBodySora2Pro,
-        requestOptions?: JobsClient.IdempotentRequestOptions,
-    ): Promise<core.WithRawResponse<Hedra.SubmitResponse>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            mergeOnlyDefinedHeaders({
-                "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
-            }),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.HedraEnvironment.Production,
-                "models/sora-2-pro",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            requestType: "json",
-            body: mergeAdditionalBodyParameters(request, requestOptions?.additionalBodyParameters),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return { data: _response.body as Hedra.SubmitResponse, rawResponse: _response.rawResponse };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new Hedra.BadRequestError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 401:
-                    throw new Hedra.UnauthorizedError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                case 402:
-                    throw new Hedra.PaymentRequiredError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new Hedra.ForbiddenError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 404:
-                    throw new Hedra.NotFoundError(_response.error.body as Hedra.ErrorResponse, _response.rawResponse);
-                case 422:
-                    throw new Hedra.UnprocessableEntityError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                case 429:
-                    throw new Hedra.TooManyRequestsError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                case 500:
-                    throw new Hedra.InternalServerError(
-                        _response.error.body as Hedra.ErrorResponse,
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.HedraError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/models/sora-2-pro");
-    }
-
-    /**
      * Use the powerful and accurate Topaz image enhancer to upscale and enhance your images.
      *
      * Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
@@ -11539,7 +11888,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -11659,7 +12008,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -11783,7 +12132,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -11907,7 +12256,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -12025,7 +12374,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -12151,7 +12500,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -12277,7 +12626,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -12403,7 +12752,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -12533,7 +12882,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -12651,7 +13000,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -12771,7 +13120,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -12889,7 +13238,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -13006,7 +13355,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -13123,7 +13472,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -13245,7 +13594,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -13362,7 +13711,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -13480,7 +13829,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );
@@ -13600,7 +13949,7 @@ export class JobsClient {
             this._options?.headers,
             mergeOnlyDefinedHeaders({
                 "Idempotency-Key": requestOptions?.idempotencyKey ?? generateIdempotencyKey(),
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
             }),
             requestOptions?.headers,
         );

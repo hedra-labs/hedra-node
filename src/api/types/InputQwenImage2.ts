@@ -24,7 +24,7 @@ export interface InputQwenImage2 {
     output_format?: InputQwenImage2.OutputFormat | undefined;
     /** What to avoid in the generated image. At most 500 characters. */
     negative_prompt?: string | undefined;
-    /** Images to edit or blend. 1 to 3 images, each at most 30 MB. */
+    /** Images to edit or blend. 1 to 3 images, each at most 10 MB. */
     images?: Hedra.InputQwenImage2ImagesItem[] | undefined;
     /** Seed for reproducible output; omit for a random seed. From 0 to 2147483647. */
     seed?: number | undefined;

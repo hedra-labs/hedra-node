@@ -822,6 +822,7 @@ describe("WebhooksClient", () => {
                     currency: "currency",
                     funding_url: "funding_url",
                     reason: "reason",
+                    affordable_output_tokens: 1,
                 },
                 type: "invalid_request_error",
             },

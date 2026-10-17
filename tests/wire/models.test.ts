@@ -703,7 +703,13 @@ describe("ModelsClient", () => {
         const server = mockServerPool.createServer();
         const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { model: "model", cost: 1.1, currency: "currency" };
+        const rawResponseBody = {
+            model: "model",
+            cost: 1.1,
+            list_cost: 1.1,
+            discount_percent: 1.1,
+            currency: "currency",
+        };
 
         server
             .mockEndpoint()
