@@ -3,12 +3,12 @@
 import type * as Hedra from "../index.js";
 
 export interface KeySummary {
-    /** The key's public identifier; null only for legacy rows predating public key ids. */
+    /** The key's public identifier; null only for a legacy key that predates public key ids. */
     key_id: string | null;
     kind: Hedra.ApiKeyKind;
     /** Human-readable label for the key. */
     name?: (string | null) | undefined;
-    /** Scopes granted to the key; null means full access (a legacy key predating scopes). */
+    /** Scopes granted to the key; null means every scope (a legacy key predating scopes). */
     scopes?: (string[] | null) | undefined;
     /** The workspace the key bills and acts in. */
     workspace_id?: (string | null) | undefined;

@@ -18,23 +18,17 @@ export interface InputFluxKontextMax {
     enhance_prompt?: boolean | undefined;
     /** The single source image to edit. Exactly 1 image, at most 30 MB. */
     images?: Hedra.InputFluxKontextMaxImagesItem[] | undefined;
-    /** Output image format. */
-    output_format?: InputFluxKontextMax.OutputFormat | undefined;
-    /** Seed for reproducible output; omit for a random seed. */
-    seed?: number | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputFluxKontextMax.AspectRatio | undefined;
     /** Output resolution. */
     resolution?: InputFluxKontextMax.Resolution | undefined;
+    /** Output image format. */
+    output_format?: InputFluxKontextMax.OutputFormat | undefined;
+    /** Seed for reproducible output; omit for a random seed. */
+    seed?: number | undefined;
 }
 
 export namespace InputFluxKontextMax {
-    /** Output image format. */
-    export const OutputFormat = {
-        Jpeg: "jpeg",
-        Png: "png",
-    } as const;
-    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Sixteen9: "16:9",
@@ -53,4 +47,10 @@ export namespace InputFluxKontextMax {
         Fixed: "fixed",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
+    /** Output image format. */
+    export const OutputFormat = {
+        Jpeg: "jpeg",
+        Png: "png",
+    } as const;
+    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
 }

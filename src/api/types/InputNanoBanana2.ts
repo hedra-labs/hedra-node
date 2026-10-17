@@ -14,18 +14,18 @@ export interface InputNanoBanana2 {
     enhance_prompt?: boolean | undefined;
     /** Output aspect ratio. 'adaptive' lets the model size the output itself — matching the source image when you pass one. */
     aspect_ratio: InputNanoBanana2.AspectRatio;
-    /** Output resolution. */
-    resolution: InputNanoBanana2.Resolution;
     /** Images to edit or blend, at most 10 high-fidelity objects and 4 characters. 1 to 14 images, each at most 30 MB. */
     images?: Hedra.InputNanoBanana2ImagesItem[] | undefined;
-    /** Seed for reproducible output; omit for a random seed. */
-    seed?: number | undefined;
     /** Ground the generation in live Google Search results, so a prompt about current events or real-world specifics draws on what the web says now. Grounded generations cost more than ungrounded ones. */
     google_search?: boolean | undefined;
     /** Let the grounding search return images as well as text, so the model sees what it found rather than only reading about it. Turning this on grounds the generation whether or not google_search is also set. */
     image_search?: boolean | undefined;
     /** How much the model plans before it draws. Omit for the model's own default ('minimal'); 'high' reasons further at the cost of latency. */
     thinking_level?: InputNanoBanana2.ThinkingLevel | undefined;
+    /** Output resolution. */
+    resolution: InputNanoBanana2.Resolution;
+    /** Seed for reproducible output; omit for a random seed. */
+    seed?: number | undefined;
 }
 
 export namespace InputNanoBanana2 {
@@ -48,6 +48,12 @@ export namespace InputNanoBanana2 {
         Eight1: "8:1",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+    /** How much the model plans before it draws. Omit for the model's own default ('minimal'); 'high' reasons further at the cost of latency. */
+    export const ThinkingLevel = {
+        Minimal: "minimal",
+        High: "high",
+    } as const;
+    export type ThinkingLevel = (typeof ThinkingLevel)[keyof typeof ThinkingLevel];
     /** Output resolution. */
     export const Resolution = {
         FiveHundredTwelvePx: "512px",
@@ -56,10 +62,4 @@ export namespace InputNanoBanana2 {
         FourK: "4K",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** How much the model plans before it draws. Omit for the model's own default ('minimal'); 'high' reasons further at the cost of latency. */
-    export const ThinkingLevel = {
-        Minimal: "minimal",
-        High: "high",
-    } as const;
-    export type ThinkingLevel = (typeof ThinkingLevel)[keyof typeof ThinkingLevel];
 }

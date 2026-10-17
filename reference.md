@@ -134,6 +134,87 @@ await client.jobs.get("job_id");
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">delete</a>(job_id, { ...params }) -> void</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a finished job's outputs, prompt and logs.
+
+Afterwards `GET /v3/jobs/{job_id}` reports each output `EXPIRED`, with no
+prompt and no logs, and `GET /v3/jobs` still lists the job with its model,
+status, timestamps and cost. Another job whose output this job read by
+`asset_id` is unchanged. Deleting a job again returns 204.
+
+Returns 409 `ALREADY_IN_PROGRESS` while the job, or another job that names
+this job's output by `asset_id`, is `IN_QUEUE` or `IN_PROGRESS`; 400
+`INVALID_ARGUMENT` for a voice clone job; and 503 `UNAVAILABLE` when Hedra
+could not finish deleting the job. Retry the request to finish it.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.delete("job_id");
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**job_id:** `string` — The job's id (`job_<uuid>`).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `Hedra.JobsDeleteRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">getStatus</a>(job_id, { ...params }) -> Hedra.StatusResponse</code></summary>
 <dl>
 <dd>
@@ -3191,76 +3272,6 @@ await client.jobs.submitHidreamO1Image({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitIdeogramV2</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Best in class for poster-ready images and spot-on text rendering in social graphics.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitIdeogramV2({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "1:1"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyIdeogramV2` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitIdeogramV4</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -3273,7 +3284,7 @@ await client.jobs.submitIdeogramV2({
 <dl>
 <dd>
 
-Ideogram V4 renders poster-ready text and layout; the required quality parameter picks turbo, balanced or quality, which sets both the render effort and the price.
+Ideogram V4 renders poster-ready text and layout; the quality parameter picks turbo, balanced (the default) or quality, which sets both the render effort and the price.
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -3313,6 +3324,75 @@ await client.jobs.submitIdeogramV4({
 <dd>
 
 **request:** `Hedra.SubmitBodyIdeogramV4` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitIdeogramV45</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Ideogram 4.5 renders accurate typography for posters, logos and designs, and edits an image from a prompt, keeping its size and the pixels the edit leaves alone; the quality parameter picks low, medium (the default) or high, which sets both the render effort and the price.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitIdeogramV45({
+    input: {
+        prompt: "prompt"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyIdeogramV45` 
     
 </dd>
 </dl>
@@ -4394,6 +4474,76 @@ await client.jobs.submitKrea2({
 <dd>
 
 **request:** `Hedra.SubmitBodyKrea2` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitKrea3</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Krea 3 generates an image of about 4 megapixels from a prompt alone or by editing one to four images.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitKrea3({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "auto"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyKrea3` 
     
 </dd>
 </dl>
@@ -5554,6 +5704,77 @@ await client.jobs.submitNanoBanana2({
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitNanoBanana21</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Nano Banana 2 with cleaner text and layouts, and characters that stay consistent across references, up to 4K.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitNanoBanana21({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "adaptive",
+        resolution: "1K"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyNanoBanana21` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitNanoBananaPro</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -5683,6 +5904,82 @@ await client.jobs.submitOmnihuman15({
 <dd>
 
 **request:** `Hedra.SubmitBodyOmnihuman15` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitOmnihuman20</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Performs your audio's tone and emotion in one take of up to five minutes.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitOmnihuman20({
+    input: {
+        start_image: {
+            source: "url",
+            url: "url"
+        },
+        audio: {
+            source: "url",
+            url: "url"
+        }
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyOmnihuman20` 
     
 </dd>
 </dl>
@@ -6828,78 +7125,6 @@ await client.jobs.submitSeedream50Pro({
 <dd>
 
 **request:** `Hedra.SubmitBodySeedream50Pro` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitSora2Pro</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-For complex, narrative-driven videos with remarkable consistency and realistic character-world interaction.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitSora2Pro({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "16:9",
-        resolution: "720p",
-        duration_ms: 1
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodySora2Pro` 
     
 </dd>
 </dl>
@@ -9196,6 +9421,63 @@ await client.billing.listTransactions();
 </dl>
 </details>
 
+<details><summary><code>client.billing.<a href="/src/api/resources/billing/client/Client.ts">listDiscounts</a>() -> Hedra.DiscountListResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+The negotiated discounts the workspace the key bills is charged under
+now. `POST /v3/models/{model}/estimate` and every charge for these models
+already reflect them; `GET /v3/models` shows list prices.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.billing.listDiscounts();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `BillingClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Webhooks
 <details><summary><code>client.webhooks.<a href="/src/api/resources/webhooks/client/Client.ts">getPublicKey</a>() -> Hedra.WebhookPublicKey</code></summary>
 <dl>
@@ -9866,6 +10148,117 @@ await client.logDrains.testLogDrain("drain_id");
 <dd>
 
 **requestOptions:** `LogDrainsClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Run a model
+<details><summary><code>client.runAModel.<a href="/src/api/resources/runAModel/client/Client.ts">responsesCreate</a>() -> unknown</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+OpenAI-compatible Responses API. Each request runs as a chat completion, and is charged, limited and recorded as one. Each request must send the whole conversation in `input`: `store: true`, a `previous_response_id`, a `conversation` or an `item_reference` input item gets a 400 that says so. A request without `max_output_tokens` is bounded at 32,768 output tokens, or the model's lower limit. Function and namespace tools are served, and `web_search` tools are ignored. Each image the model does not accept becomes a text note in its place: every image on a model without image input, and on any other model the oldest images beyond the model's `max_images_per_request`. `text.format` becomes chat's `response_format`. Beside tools under `tool_choice` `auto`, the route instead offers a `json_schema` format's schema to the model as one more function, `final_answer`, and sets `tool_choice` to `required`, so the model can call tools before it answers; the route returns a call to `final_answer` as the answer message, with `phase` `final_answer`, and leaves out any text the model writes, because openai-python's `responses.parse` parses every message as the answer. The route accepts `text.verbosity` and `service_tier` and ignores them. Errors are those of `POST /chat/completions`, and the 400 for a value that chat rejects names the chat field, such as `max_tokens` or `messages[3].content`. With `stream: true` the response is `text/event-stream` in the Responses event format, ending with `response.completed` or `response.incomplete`, or with `response.failed` for a failure after streaming has begun.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.runAModel.responsesCreate();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `RunAModelClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.runAModel.<a href="/src/api/resources/runAModel/client/Client.ts">messagesCreate</a>() -> unknown</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Anthropic-compatible Messages API. Set the base URL of an Anthropic SDK or of Claude Code to the v3 base URL followed by `/anthropic`, and send an API key in `x-api-key` or `Authorization: Bearer`. Each request runs as a chat completion, and is charged, limited and recorded as one. The route serves client tools, and answers a tool of any other type with a 400. Each image the model does not accept becomes a text note in its place: every image on a model without image input, and on any other model the oldest images beyond the model's `max_images_per_request`. `output_config.effort` becomes chat's `reasoning_effort`, and `thinking` of type `disabled` becomes `reasoning_effort: none`, whatever `output_config.effort` says. `output_config.format` becomes chat's `response_format`, so the answer's `text` block holds JSON that matches the schema. Beside tools, a request with `output_config.format` must set `tool_choice` to `any`, `tool` or `none`, and gets a 400 under `auto`. The route accepts `thinking.budget_tokens`, `cache_control` and `context_management`, and they have no effect. The model's reasoning comes back as `thinking` blocks with an empty `signature`. Errors are those of `POST /chat/completions` in Anthropic's error body: the body's `type` is `error`, `error.type` is Anthropic's error type for the status, and `error` keeps the v3 error fields. The 400 for a value that chat rejects names the chat field, such as `reasoning_effort` or `messages[3].content`, under the message or `tool_result` block the caller sent. With `stream: true` the response is `text/event-stream` in the Messages event format, ending with `message_stop`, or with an `error` event for a failure after streaming has begun.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.runAModel.messagesCreate();
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**requestOptions:** `RunAModelClient.RequestOptions` 
     
 </dd>
 </dl>

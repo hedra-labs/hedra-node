@@ -2,18 +2,15 @@
 
 import type * as Hedra from "../index.js";
 
-/**
- * Start frame. At most 10.4 MB.
- */
-export type InputSora2ProStartImage =
+export type InputIdeogramV45ImagesItem =
     /**
      * A file uploaded via POST /v3/files, referenced by the returned url. */
-    | Hedra.InputSora2ProStartImage.Url
+    | Hedra.InputIdeogramV45ImagesItem.Url
     /**
      * An existing asset you own, referenced by its id. */
-    | Hedra.InputSora2ProStartImage.Asset;
+    | Hedra.InputIdeogramV45ImagesItem.Asset;
 
-export namespace InputSora2ProStartImage {
+export namespace InputIdeogramV45ImagesItem {
     export interface Url {
         source: "url";
         /** A URL returned by POST /v3/files. */

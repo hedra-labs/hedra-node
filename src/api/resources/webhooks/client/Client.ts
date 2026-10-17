@@ -28,7 +28,7 @@ export declare namespace WebhooksClient {
  *
  * Each POST also carries `X-Hedra-Webhook-Attempt` (1-based, informational) and **`X-Hedra-Webhook-Redelivery`** (`true` / `false`). Redelivery is the exception to deduplication: when it is `true`, an operator asked for this event to be sent again — process it even if you have already recorded that id, because that request is the whole reason it was sent.
  *
- * **Inspecting deliveries.** `GET /webhooks/deliveries` reports each delivery's cumulative `attempts`, its latest outcome (`status`, `last_response_status`, `last_error`), and its replay history: `redelivery_count` counts operator replays, and `redeliveries` archives the outcome each replay superseded — a replay re-sends on the same delivery record and never erases the previous result. Each entry's `attempts` value is the cumulative total when that replay was requested, so the per-cycle attempt counts (and any total beyond the 12-attempt ladder) can be read off the record directly.
+ * **Inspecting deliveries.** `GET /webhooks/deliveries` reports each delivery's cumulative `attempts`, its latest outcome (`status`, `last_response_status`, `last_error`), and its replay history: `redelivery_count` counts operator replays, and `redeliveries` archives the outcome each replay superseded — a replay re-sends on the same delivery record. Each entry's `attempts` value is the cumulative total when that replay was requested, so the per-cycle attempt counts (and any total beyond the 12-attempt ladder) can be read off the record directly.
  *
  * **Why a delivery failed.** `last_error` — on the delivery and on every archived replay entry — is the same error envelope a failed job returns from `GET /jobs/{job_id}`, not a free-text diagnostic. Its `code` comes from the one error vocabulary this API uses, narrowed for delivery to this set:
  *
@@ -93,7 +93,7 @@ export class WebhooksClient {
     ): Promise<core.WithRawResponse<Hedra.WebhookPublicKey>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -174,7 +174,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -266,7 +266,7 @@ export class WebhooksClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -351,7 +351,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -438,7 +438,7 @@ export class WebhooksClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -529,7 +529,7 @@ export class WebhooksClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -663,7 +663,7 @@ export class WebhooksClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.20.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({

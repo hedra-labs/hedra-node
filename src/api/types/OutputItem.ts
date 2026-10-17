@@ -22,8 +22,10 @@ export interface OutputItem {
     asset_id?: (string | null) | undefined;
     /** The voice a voice-clone job created (`voice_<uuid>`). Send it back as `voice_id` on a text-to-speech submit to speak with this voice; it stays usable by the account that created it. Null for every other kind of output. */
     voice_id?: (string | null) | undefined;
-    /** Presigned download URL for the output bytes. Null once the output has expired. */
+    /** Presigned download URL for the output bytes, or null once the output has expired. Each call to `GET /v3/jobs/{job_id}` returns a newly signed one. */
     url?: (string | null) | undefined;
+    /** Download or reuse this output before this ISO-8601 instant. After it, `status` can change to `EXPIRED`, with `url`, `asset_id` and `expires_at` null; `DELETE /v3/jobs/{job_id}` makes that change at once. Null for an output that does not expire, such as a cloned voice. */
+    expires_at?: (string | null) | undefined;
     /** MIME type of the output bytes. */
     content_type?: (string | null) | undefined;
     /** Width in pixels; null for an output with no frame (audio). */

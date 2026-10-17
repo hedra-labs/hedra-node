@@ -6,6 +6,7 @@ import { JobsClient } from "./api/resources/jobs/client/Client.js";
 import { KeysClient } from "./api/resources/keys/client/Client.js";
 import { LogDrainsClient } from "./api/resources/logDrains/client/Client.js";
 import { ModelsClient } from "./api/resources/models/client/Client.js";
+import { RunAModelClient } from "./api/resources/runAModel/client/Client.js";
 import { TokensClient } from "./api/resources/tokens/client/Client.js";
 import { WebhooksClient } from "./api/resources/webhooks/client/Client.js";
 import type { BaseClientOptions, BaseRequestOptions } from "./BaseClient.js";
@@ -28,6 +29,7 @@ export class HedraClient {
     protected _billing: BillingClient | undefined;
     protected _webhooks: WebhooksClient | undefined;
     protected _logDrains: LogDrainsClient | undefined;
+    protected _runAModel: RunAModelClient | undefined;
 
     constructor(options: HedraClient.Options = {}) {
         this._options = normalizeClientOptionsWithAuth(options);
@@ -63,6 +65,10 @@ export class HedraClient {
 
     public get logDrains(): LogDrainsClient {
         return (this._logDrains ??= new LogDrainsClient(this._options));
+    }
+
+    public get runAModel(): RunAModelClient {
+        return (this._runAModel ??= new RunAModelClient(this._options));
     }
 
     /**

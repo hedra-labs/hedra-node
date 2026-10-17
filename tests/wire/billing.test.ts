@@ -211,6 +211,14 @@ describe("BillingClient", () => {
                         period_start: "2024-01-15T09:30:00Z",
                         period_end: "2024-01-15T09:30:00Z",
                     },
+                    sandbox_usage: {
+                        accelerator: "accelerator",
+                        replicas: 1,
+                        created_at: "2024-01-15T09:30:00Z",
+                        ended_at: null,
+                    },
+                    list_amount: 1.1,
+                    discount_percent: 1.1,
                 },
             ],
             next_cursor: "next_cursor",
@@ -297,6 +305,106 @@ describe("BillingClient", () => {
 
         await expect(async () => {
             return await client.billing.listTransactions();
+        }).rejects.toThrow(Hedra.InternalServerError);
+    });
+
+    test("listDiscounts (1)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {
+            data: [
+                {
+                    model: "model",
+                    percent_off: 1.1,
+                    starts_at: "2024-01-15T09:30:00Z",
+                    ends_at: "2024-01-15T09:30:00Z",
+                },
+            ],
+            next_cursor: "next_cursor",
+        };
+
+        server.mockEndpoint().get("/discounts").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
+
+        const response = await client.billing.listDiscounts();
+        expect(response).toEqual(rawResponseBody);
+    });
+
+    test("listDiscounts (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/discounts").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listDiscounts();
+        }).rejects.toThrow(Hedra.BadRequestError);
+    });
+
+    test("listDiscounts (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/discounts").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listDiscounts();
+        }).rejects.toThrow(Hedra.UnauthorizedError);
+    });
+
+    test("listDiscounts (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/discounts").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listDiscounts();
+        }).rejects.toThrow(Hedra.ForbiddenError);
+    });
+
+    test("listDiscounts (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/discounts").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listDiscounts();
+        }).rejects.toThrow(Hedra.NotFoundError);
+    });
+
+    test("listDiscounts (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/discounts").respondWith().statusCode(429).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listDiscounts();
+        }).rejects.toThrow(Hedra.TooManyRequestsError);
+    });
+
+    test("listDiscounts (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new HedraClient({ maxRetries: 0, apiKey: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "UNKNOWN", message: "message" } };
+
+        server.mockEndpoint().get("/discounts").respondWith().statusCode(500).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.billing.listDiscounts();
         }).rejects.toThrow(Hedra.InternalServerError);
     });
 });

@@ -7,14 +7,13 @@ import type * as Hedra from "../../../../index.js";
  *     {
  *         input: {
  *             prompt: "prompt",
- *             aspect_ratio: "16:9",
- *             resolution: "720p",
- *             duration_ms: 1
+ *             aspect_ratio: "adaptive",
+ *             resolution: "1K"
  *         }
  *     }
  */
-export interface SubmitBodySora2Pro {
-    input: Hedra.InputSora2Pro;
+export interface SubmitBodyNanoBanana21 {
+    input: Hedra.InputNanoBanana21;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
 }

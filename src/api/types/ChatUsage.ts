@@ -6,6 +6,8 @@
 export interface ChatUsage {
     /** Tokens in the prompt. */
     prompt_tokens: number;
+    /** Of `prompt_tokens`, how many the model served from cache, which Hedra charges at the model's cached input rate; null when the model did not report the count. */
+    cached_tokens?: (number | null) | undefined;
     /** Tokens generated, reasoning tokens included. */
     completion_tokens: number;
     /** Of `completion_tokens`, how many the model spent reasoning; null when the model reports none. */
