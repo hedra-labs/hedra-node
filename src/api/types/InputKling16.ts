@@ -36,8 +36,8 @@ export namespace InputKling16 {
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Output resolution. */
     export const Resolution = {
-        OneThousandEightyP: "1080p",
         SevenHundredTwentyP: "720p",
+        OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
 }

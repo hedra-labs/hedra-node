@@ -93,7 +93,7 @@ export class WebhooksClient {
     ): Promise<core.WithRawResponse<Hedra.WebhookPublicKey>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.22.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -174,7 +174,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.22.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -266,7 +266,7 @@ export class WebhooksClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.22.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -351,7 +351,7 @@ export class WebhooksClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.22.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -438,7 +438,7 @@ export class WebhooksClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.22.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -529,7 +529,7 @@ export class WebhooksClient {
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.22.0" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -663,7 +663,7 @@ export class WebhooksClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.22.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({

@@ -8,7 +8,7 @@ export interface KeySummary {
     kind: Hedra.ApiKeyKind;
     /** Human-readable label for the key. */
     name?: (string | null) | undefined;
-    /** Scopes granted to the key; null means every scope (a legacy key predating scopes). */
+    /** Scopes granted to the key. */
     scopes?: (string[] | null) | undefined;
     /** The workspace the key bills and acts in. */
     workspace_id?: (string | null) | undefined;

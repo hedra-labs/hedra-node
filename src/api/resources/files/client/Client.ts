@@ -73,7 +73,7 @@ export class FilesClient {
             this._options?.headers,
             getIdempotencyHeaders(),
             mergeOnlyDefinedHeaders({
-                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14",
+                "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.22.0",
                 ..._maybeEncodedRequest.headers,
             }),
             requestOptions?.headers,

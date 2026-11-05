@@ -56,7 +56,7 @@ export class TokensClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.21.14" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.22.0" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
