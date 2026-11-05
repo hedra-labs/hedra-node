@@ -8,6 +8,7 @@ import type * as Hedra from "../index.js";
  * Accepted field combinations (one per input mode):
  * (1) requires: aspect_ratio, duration_ms, prompt, resolution; accepts quality: standard
  * (2) requires: aspect_ratio, duration_ms, prompt, resolution; accepts quality: fast; resolution: 480p | 720p
+ * (3) requires: aspect_ratio, duration_ms, prompt, resolution; must omit: generate_audio; accepts quality: mini; resolution: 480p | 720p
  */
 export interface InputSeedance20 {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -32,7 +33,7 @@ export interface InputSeedance20 {
     videos?: Hedra.InputSeedance20VideosItem[] | undefined;
     /** Reference audios. 1 to 3 audio files, each at most 104.8 MB, at most 15.15s in total. */
     audios?: Hedra.InputSeedance20AudiosItem[] | undefined;
-    /** Quality level to generate at. `standard` — the full model, and the only level that reaches 1080p and 4K. `fast` — tuned for turnaround, at 480p and 720p. */
+    /** Quality level to generate at. `standard` — the full model, and the only level that reaches 1080p and 4K. `fast` — tuned for turnaround, at 480p and 720p. `mini` — the cheapest level, at 480p and 720p, with no `generate_audio` toggle. */
     quality?: InputSeedance20.Quality | undefined;
 }
 
@@ -56,10 +57,11 @@ export namespace InputSeedance20 {
         OneThousandEightyP: "1080p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** Quality level to generate at. `standard` — the full model, and the only level that reaches 1080p and 4K. `fast` — tuned for turnaround, at 480p and 720p. */
+    /** Quality level to generate at. `standard` — the full model, and the only level that reaches 1080p and 4K. `fast` — tuned for turnaround, at 480p and 720p. `mini` — the cheapest level, at 480p and 720p, with no `generate_audio` toggle. */
     export const Quality = {
         Standard: "standard",
         Fast: "fast",
+        Mini: "mini",
     } as const;
     export type Quality = (typeof Quality)[keyof typeof Quality];
 }

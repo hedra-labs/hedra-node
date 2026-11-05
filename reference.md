@@ -1840,76 +1840,7 @@ await client.jobs.submitFluxDev({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFluxKontextMax</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Highest-fidelity reference-image support for complex, multi-element scenes and perfectly matched branded visuals.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitFluxKontextMax({
-    input: {
-        prompt: "prompt"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyFluxKontextMax` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFluxKontextPro</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFluxKontext</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
 
@@ -1938,7 +1869,7 @@ Submits an asynchronous job and returns `202` with a job id. Fetch the result at
 <dd>
 
 ```typescript
-await client.jobs.submitFluxKontextPro({
+await client.jobs.submitFluxKontext({
     input: {
         prompt: "prompt"
     }
@@ -1958,7 +1889,7 @@ await client.jobs.submitFluxKontextPro({
 <dl>
 <dd>
 
-**request:** `Hedra.SubmitBodyFluxKontextPro` 
+**request:** `Hedra.SubmitBodyFluxKontext` 
     
 </dd>
 </dl>
@@ -1978,7 +1909,7 @@ await client.jobs.submitFluxKontextPro({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux2Flex</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux2</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
 
@@ -1990,7 +1921,7 @@ await client.jobs.submitFluxKontextPro({
 <dl>
 <dd>
 
-The tunable Flux.2 tier — trade denoising steps against speed per generation.
+The everyday Flux.2 tier — style transfer and sequential edits that hold together across passes.
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -2007,7 +1938,7 @@ Submits an asynchronous job and returns `202` with a job id. Fetch the result at
 <dd>
 
 ```typescript
-await client.jobs.submitFlux2Flex({
+await client.jobs.submitFlux2({
     input: {
         prompt: "prompt",
         aspect_ratio: "16:9"
@@ -2028,7 +1959,7 @@ await client.jobs.submitFlux2Flex({
 <dl>
 <dd>
 
-**request:** `Hedra.SubmitBodyFlux2Flex` 
+**request:** `Hedra.SubmitBodyFlux2` 
     
 </dd>
 </dl>
@@ -2099,146 +2030,6 @@ await client.jobs.submitFlux2Klein9B({
 <dd>
 
 **request:** `Hedra.SubmitBodyFlux2Klein9B` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux2Max</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-The top Flux.2 tier, for realism and precision in final deliverables.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitFlux2Max({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "16:9"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyFlux2Max` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux2Pro</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-The everyday Flux.2 tier — style transfer and sequential edits that hold together across passes.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitFlux2Pro({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "16:9"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyFlux2Pro` 
     
 </dd>
 </dl>
@@ -2803,78 +2594,6 @@ await client.jobs.submitGrokImagine20({
 <dd>
 
 **request:** `Hedra.SubmitBodyGrokImagine20` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitGrokVideo</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Short, punchy clips from a prompt at 480p or 720p.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitGrokVideo({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "auto",
-        resolution: "480p",
-        duration_ms: 1
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyGrokVideo` 
     
 </dd>
 </dl>
@@ -5154,7 +4873,7 @@ await client.jobs.submitMinimaxH3MaxTurbo({
 <dl>
 <dd>
 
-MiniMax H3 Ultra video generation from text, a start frame, or a first and last frame.
+MiniMax H3 Ultra video generation from text, keyframes, or reference images.
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -6716,78 +6435,6 @@ await client.jobs.submitSeedance20({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitSeedance20Mini</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-The lightest Seedance tier — short reference-driven clips at 480p and 720p.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitSeedance20Mini({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "1:1",
-        resolution: "480p",
-        duration_ms: 1
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodySeedance20Mini` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitSeedance25</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -7014,7 +6661,7 @@ await client.jobs.submitSeedream45({
 <dl>
 <dd>
 
-Sharp 2K and 4K stills from a prompt, at the light tier's price.
+Sharp 2K and 4K stills from a prompt, or edits and blends of source images, at the light tier's price.
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -7085,7 +6732,7 @@ await client.jobs.submitSeedream50Lite({
 <dl>
 <dd>
 
-The top Seedream tier — layer-separable output and strong multilingual in-image text, up to 2K.
+The top Seedream tier — layer-separable output, precise edits to a source image, and strong multilingual in-image text, up to 2K.
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -8379,6 +8026,438 @@ await client.jobs.submitWan30({
 </dl>
 </details>
 
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFluxKontextMax</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Deprecated: run `flux-kontext` with `input.quality` `max` instead.
+
+Highest-fidelity reference-image support for complex, multi-element scenes and perfectly matched branded visuals.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitFluxKontextMax({
+    input: {
+        prompt: "prompt"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyFluxKontextMax` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFluxKontextPro</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Deprecated: run `flux-kontext` with `input.quality` `pro` instead.
+
+Reference-image support for character, brand, or style consistency.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitFluxKontextPro({
+    input: {
+        prompt: "prompt"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyFluxKontextPro` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux2Flex</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Deprecated: run `flux2` with `input.quality` `flex` instead.
+
+The tunable Flux.2 tier — trade denoising steps against speed per generation.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitFlux2Flex({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "16:9"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyFlux2Flex` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux2Max</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Deprecated: run `flux2` with `input.quality` `max` instead.
+
+The top Flux.2 tier, for realism and precision in final deliverables.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitFlux2Max({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "16:9"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyFlux2Max` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux2Pro</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Deprecated: run `flux2` with `input.quality` `pro` instead.
+
+The everyday Flux.2 tier — style transfer and sequential edits that hold together across passes.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitFlux2Pro({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "16:9"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyFlux2Pro` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitSeedance20Mini</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Deprecated: run `seedance-20` with `input.quality` `mini` instead.
+
+The lightest Seedance tier — short reference-driven clips at 480p and 720p.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitSeedance20Mini({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "1:1",
+        resolution: "480p",
+        duration_ms: 1
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodySeedance20Mini` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submit</a>(model, { ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -9368,7 +9447,8 @@ await client.billing.getUsage();
 
 Every movement of the API wallet's balance, newest first: funds added,
 jobs charged, charges refunded, and corrections. Chat requests are summed
-into one `llm_usage` row per model per UTC day. Scoped to the workspace the
+into one `llm_usage` row per model per UTC day. A GPU sandbox's charges
+and refunds are summed into one `sandbox_usage` row. Scoped to the workspace the
 credential bills, the same one `GET /v3/balance` reports, so an
 `llm_usage` row sums every member's requests.
 </dd>

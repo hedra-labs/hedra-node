@@ -18,7 +18,7 @@ export interface InputKrea3 {
     aspect_ratio: InputKrea3.AspectRatio;
     /** Output resolution. */
     resolution?: InputKrea3.Resolution | undefined;
-    /** Seed for reproducible output; omit for a random seed. */
+    /** Accepted but not used: Krea 3 renders a different image each time, whatever the seed. */
     seed?: number | undefined;
 }
 

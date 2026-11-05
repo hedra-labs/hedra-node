@@ -2,11 +2,11 @@
 
 /**
  * One usage rollup row. `key` is ``"total"`` for the summary, an ISO date
- * (``YYYY-MM-DD``, UTC) for ``group_by=day``, or a public model id for
- * ``group_by=model``.
+ * (``YYYY-MM-DD``, UTC) for ``group_by=day``, or, for ``group_by=model``, a
+ * public model id or ``sandbox/<gpu_model>`` for a GPU sandbox.
  */
 export interface UsageBucket {
-    /** What this bucket rolls up: `"total"`, an ISO date (`YYYY-MM-DD`, UTC), or a public model id — per `group_by`. */
+    /** What this bucket rolls up: `"total"`, an ISO date (`YYYY-MM-DD`, UTC), or a public model id, or `sandbox/<gpu_model>` for GPU sandboxes — per `group_by`. */
     key: string;
     /** Jobs submitted in this bucket, chat completions included. */
     jobs: number;

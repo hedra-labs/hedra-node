@@ -2,18 +2,15 @@
 
 import type * as Hedra from "../index.js";
 
-/**
- * Start frame. At most 10.4 MB.
- */
-export type InputGrokVideoStartImage =
+export type InputMinimaxH3UltraImagesItem =
     /**
      * A file uploaded via POST /v3/files, referenced by the returned url. */
-    | Hedra.InputGrokVideoStartImage.Url
+    | Hedra.InputMinimaxH3UltraImagesItem.Url
     /**
      * An existing asset you own, referenced by its id. */
-    | Hedra.InputGrokVideoStartImage.Asset;
+    | Hedra.InputMinimaxH3UltraImagesItem.Asset;
 
-export namespace InputGrokVideoStartImage {
+export namespace InputMinimaxH3UltraImagesItem {
     export interface Url {
         source: "url";
         /** A URL returned by POST /v3/files. */

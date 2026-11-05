@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * End frame. At most 10.4 MB.
+ * End frame. With an aspect ratio from 0.4 to 2.5 and at most 10.4 MB.
  */
 export type InputKlingO3EndImage =
     /**

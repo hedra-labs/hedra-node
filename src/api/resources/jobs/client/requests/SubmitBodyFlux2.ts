@@ -7,14 +7,12 @@ import type * as Hedra from "../../../../index.js";
  *     {
  *         input: {
  *             prompt: "prompt",
- *             aspect_ratio: "auto",
- *             resolution: "480p",
- *             duration_ms: 1
+ *             aspect_ratio: "16:9"
  *         }
  *     }
  */
-export interface SubmitBodyGrokVideo {
-    input: Hedra.InputGrokVideo;
+export interface SubmitBodyFlux2 {
+    input: Hedra.InputFlux2;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
 }
