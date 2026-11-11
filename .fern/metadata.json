@@ -14,10 +14,10 @@
             "packageManager": "pnpm@10.34.5"
         }
     },
-    "originGitCommit": "450f0025e8e7d918ebc383332392f547a6b33765",
-    "originGitCommitIsDirty": false,
+    "originGitCommit": "dc70750b1f0d7b4659b3b181925b44ffce34ee9a",
+    "originGitCommitIsDirty": true,
     "invokedBy": "ci",
-    "requestedVersion": "8.0.0-dev",
+    "requestedVersion": "8.0.0",
     "ciProvider": "github",
-    "sdkVersion": "8.0.0-dev"
+    "sdkVersion": "8.0.0"
 }
