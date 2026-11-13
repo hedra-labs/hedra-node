@@ -14,7 +14,7 @@
             "packageManager": "pnpm@10.34.5"
         }
     },
-    "originGitCommit": "d7debd0c4d9e70ac7f9df572056f9cef93e8f17f",
+    "originGitCommit": "f6fa0b8e0187aee8d97ce6ebf70094cead0c9d24",
     "originGitCommitIsDirty": false,
     "invokedBy": "ci",
     "requestedVersion": "8.0.0",
