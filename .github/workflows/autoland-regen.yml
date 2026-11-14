@@ -90,12 +90,11 @@ jobs:
           git config user.name "${APP_SLUG}[bot]"
           git config user.email "$(gh api "/users/${APP_SLUG}[bot]" --jq .id)+${APP_SLUG}[bot]@users.noreply.github.com"
 
-          # Classify a PR by the version its manifest carries at the PR head:
-          # `X.Y.Z-dev` is a regeneration, `X.Y.Z` is a release. This file must
-          # stay byte-identical across the three SDK repos (autoland-drift-check
-          # enforces it), so the classifier finds its own manifest rather than
-          # being told which one to read.
-          classify() {  # $1 = head sha -> echoes "release" or "regen"
+          # The version a manifest carries at a commit. This file must stay
+          # byte-identical across the three SDK repos (autoland-drift-check
+          # enforces it), so it finds its own manifest rather than being told
+          # which one to read.
+          manifest_version() {  # $1 = commit sha -> echoes the version
             local sha="$1" m body v
             for m in pyproject.toml package.json Cargo.toml; do
               body="$(gh api "repos/${REPO}/contents/${m}?ref=${sha}" --jq .content 2>/dev/null | base64 -d)" || continue
@@ -106,11 +105,47 @@ jobs:
                 v="$(printf '%s' "$body" | sed -n 's/^version[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)"
               fi
               if [[ -z "$v" ]]; then continue; fi
-              case "$v" in
-                *-dev) echo regen ;;
-                *)     echo release ;;
-              esac
+              echo "$v"
               return 0
+            done
+            return 1
+          }
+
+          # A release PR stamps a version main does not carry yet: release-sdks.yml
+          # strips `-dev` from main's `X.Y.Z-dev`. A regeneration either stamps
+          # `X.Y.Z-dev` or, when the spec diff calls for no bump, keeps main's own
+          # version as it stands: hedra-node #142 and #143 regenerated at 8.0.0
+          # with main at 8.0.0. So a PR is a release only when its version has no
+          # `-dev` AND differs from main's. Read at the commit checked out above,
+          # pinned rather than `?ref=main`, which the contents API can serve stale.
+          main_version="$(manifest_version "$(git rev-parse HEAD)")" || {
+            echo "::error::Could not read main's manifest version; refusing to rank anything."
+            exit 1
+          }
+          classify() {  # $1 = head sha -> echoes "release" or "regen"
+            local v
+            v="$(manifest_version "$1")" || return 1
+            if [[ "$v" == *-dev || "$v" == "$main_version" ]]; then
+              echo regen
+            else
+              echo release
+            fi
+          }
+
+          # Turn auto-merge off and confirm it is off. `gh pr merge --disable-auto`
+          # exits non-zero both when auto-merge was never on and when the API call
+          # fails, so its exit status settles nothing; this reads the PR back and
+          # retries until the read says off. Returns 1 when it cannot confirm,
+          # because GitHub may still merge a PR whose auto-merge stayed on.
+          disable_auto() {  # $1 = PR number
+            local pr="$1" attempt on
+            for attempt in 1 2 3 4; do
+              on="$(gh pr view "$pr" --repo "$REPO" --json autoMergeRequest --jq '.autoMergeRequest != null' 2>/dev/null)" || on=""
+              if [[ "$on" == "false" ]]; then return 0; fi
+              if [[ "$on" == "true" ]]; then
+                gh pr merge --disable-auto "$pr" --repo "$REPO" || true
+              fi
+              sleep $((attempt * 5))
             done
             return 1
           }
@@ -257,8 +292,12 @@ jobs:
             echo "Main gained commits after #${pr} was generated that change generated files:"
             cat "$exposed"
             # Detach auto-merge before anything else: with its checks already
-            # green, GitHub could land the PR while the steps below run.
-            gh pr merge --disable-auto "$pr" --repo "$REPO" 2>/dev/null || true
+            # green, GitHub could land the PR while the steps below run. Neither
+            # the hold nor a replacement is safe while auto-merge may still be on.
+            if ! disable_auto "$pr"; then
+              echo "::error::Could not confirm auto-merge is off on #${pr}; not holding or replacing it while GitHub may still merge it."
+              exit 1
+            fi
             if [[ "$head_kind" == "release" ]]; then
               # A release is not regenerated from here; a human decides. Comment
               # once, not on every push to main.
