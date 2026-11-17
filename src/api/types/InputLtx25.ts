@@ -17,25 +17,32 @@ export interface InputLtx25 {
     num_outputs?: number | undefined;
     /** Generation prompt. From 1 to 5000 characters. */
     prompt: string;
-    /** Output resolution. */
-    resolution: InputLtx25.Resolution;
     /** Output aspect ratio. */
     aspect_ratio: InputLtx25.AspectRatio;
     /** Driving audio. From 2s to 20s and at most 104.8 MB. */
     audio?: Hedra.InputLtx25Audio | undefined;
     /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputLtx25StartImage | undefined;
+    /** Output resolution. */
+    resolution: InputLtx25.Resolution;
+    /** End frame. At most 10.4 MB. */
+    end_image?: Hedra.InputLtx25EndImage | undefined;
     /** Whether to generate native audio for the video. */
     generate_audio?: boolean | undefined;
     /** Duration in ms. */
     duration_ms?: number | undefined;
-    /** End frame. At most 10.4 MB. */
-    end_image?: Hedra.InputLtx25EndImage | undefined;
     /** Quality level to generate at. `fast` — tuned for turnaround, and the only level that renders 1440p, 2160p, or clips past 10 seconds. `pro` — the higher-fidelity tier, for final output at 720p or 1080p, and the level that caps both the clip it renders and the audio driving it at 10 seconds. */
     quality?: InputLtx25.Quality | undefined;
 }
 
 export namespace InputLtx25 {
+    /** Output aspect ratio. */
+    export const AspectRatio = {
+        Auto: "auto",
+        Sixteen9: "16:9",
+        Nine16: "9:16",
+    } as const;
+    export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Output resolution. */
     export const Resolution = {
         OneThousandEightyP: "1080p",
@@ -44,13 +51,6 @@ export namespace InputLtx25 {
         TwoThousandOneHundredSixtyP: "2160p",
     } as const;
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
-    /** Output aspect ratio. */
-    export const AspectRatio = {
-        Auto: "auto",
-        Sixteen9: "16:9",
-        Nine16: "9:16",
-    } as const;
-    export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
     /** Quality level to generate at. `fast` — tuned for turnaround, and the only level that renders 1440p, 2160p, or clips past 10 seconds. `pro` — the higher-fidelity tier, for final output at 720p or 1080p, and the level that caps both the clip it renders and the audio driving it at 10 seconds. */
     export const Quality = {
         Fast: "fast",

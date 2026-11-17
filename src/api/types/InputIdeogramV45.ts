@@ -16,14 +16,14 @@ export interface InputIdeogramV45 {
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
-    /** Images to edit or blend. 1 to 5 images, each at most 30 MB. */
-    images?: Hedra.InputIdeogramV45ImagesItem[] | undefined;
-    /** Seed for reproducible output; omit for a random seed. */
-    seed?: number | undefined;
     /** Output aspect ratio. */
     aspect_ratio?: InputIdeogramV45.AspectRatio | undefined;
     /** Output resolution. */
     resolution?: InputIdeogramV45.Resolution | undefined;
+    /** Images to edit or blend. 1 to 5 images, each at most 30 MB. */
+    images?: Hedra.InputIdeogramV45ImagesItem[] | undefined;
+    /** Seed for reproducible output; omit for a random seed. */
+    seed?: number | undefined;
     /** Quality level to generate at. `low` — the least rendering effort, for quick exploration. `medium` — middle rendering effort, the everyday choice. `high` — the most rendering effort, for poster-ready text and layout. */
     quality?: InputIdeogramV45.Quality | undefined;
 }

@@ -20,12 +20,12 @@ export interface InputMinimaxH3 {
     resolution: InputMinimaxH3.Resolution;
     /** Duration in ms. */
     duration_ms: number;
+    /** Output aspect ratio. Omitted or `adaptive` uses the supported ratio nearest the first reference image, else the first reference video. */
+    aspect_ratio?: InputMinimaxH3.AspectRatio | undefined;
     /** Start frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     start_image?: Hedra.InputMinimaxH3StartImage | undefined;
     /** End frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     end_image?: Hedra.InputMinimaxH3EndImage | undefined;
-    /** Output aspect ratio. Omitted or `adaptive` uses the supported ratio nearest the first reference image, else the first reference video. */
-    aspect_ratio?: InputMinimaxH3.AspectRatio | undefined;
     /** Reference images. 1 to 5 images, each from 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     images?: Hedra.InputMinimaxH3ImagesItem[] | undefined;
     /** Reference videos. 1 to 3 videos, each from 2s to 15s and at most 524.2 MB, at most 15s in total. */

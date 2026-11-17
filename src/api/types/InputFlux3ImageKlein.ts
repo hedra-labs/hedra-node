@@ -3,50 +3,53 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Model-specific inputs for `reve-21-remix`.
+ * Model-specific inputs for `flux-3-image-klein`.
  */
-export interface InputReve21Remix {
-    /** Generation prompt. From 1 to 4000 characters. */
+export interface InputFlux3ImageKlein {
+    /** Generation prompt. */
     prompt: string;
     /** Number of outputs generated per job. Only 1 is supported. */
     num_outputs?: number | undefined;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
+    /** Images to edit or blend. 1 to 10 images, each at most 30 MB. */
+    images?: Hedra.InputFlux3ImageKleinImagesItem[] | undefined;
     /** Output aspect ratio. */
-    aspect_ratio: InputReve21Remix.AspectRatio;
-    /** Images to edit or blend. 1 to 8 images, each at most 30 MB. */
-    images: Hedra.InputReve21RemixImagesItem[];
-    /** Output image format. */
-    output_format?: InputReve21Remix.OutputFormat | undefined;
+    aspect_ratio: InputFlux3ImageKlein.AspectRatio;
+    /** Output resolution. */
+    resolution: InputFlux3ImageKlein.Resolution;
+    /** Seed for reproducible output; omit for a random seed. From 0 to 4294967295. */
+    seed?: number | undefined;
 }
 
-export namespace InputReve21Remix {
+export namespace InputFlux3ImageKlein {
     /** Output aspect ratio. */
     export const AspectRatio = {
-        Four1: "4:1",
-        Three1: "3:1",
+        Auto: "auto",
         TwentyOne9: "21:9",
         Two1: "2:1",
-        Seventeen9: "17:9",
         Sixteen9: "16:9",
         Three2: "3:2",
+        Seven5: "7:5",
         Four3: "4:3",
         Five4: "5:4",
         One1: "1:1",
         Four5: "4:5",
         Three4: "3:4",
+        Five7: "5:7",
         Two3: "2:3",
         Nine16: "9:16",
         One2: "1:2",
-        One3: "1:3",
-        One4: "1:4",
+        Nine21: "9:21",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
-    /** Output image format. */
-    export const OutputFormat = {
-        Jpeg: "jpeg",
-        Png: "png",
-        Webp: "webp",
+    /** Output resolution. */
+    export const Resolution = {
+        SevenHundredSixtyEightPx: "768px",
+        OneK: "1K",
+        One5K: "1.5K",
+        TwoK: "2K",
+        FourK: "4K",
     } as const;
-    export type OutputFormat = (typeof OutputFormat)[keyof typeof OutputFormat];
+    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
 }

@@ -6,12 +6,14 @@ import type * as Hedra from "../../../../index.js";
  * @example
  *     {
  *         input: {
- *             prompt: "prompt"
+ *             prompt: "prompt",
+ *             aspect_ratio: "auto",
+ *             resolution: "768px"
  *         }
  *     }
  */
-export interface SubmitBodyVeo2 {
-    input: Hedra.InputVeo2;
+export interface SubmitBodyFlux3Image {
+    input: Hedra.InputFlux3Image;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
 }

@@ -17,6 +17,8 @@ export interface InputViduQ3 {
     prompt: string;
     /** Seed for reproducible output; omit for a random seed. */
     seed?: number | undefined;
+    /** Output aspect ratio. */
+    aspect_ratio?: InputViduQ3.AspectRatio | undefined;
     /** Output resolution. */
     resolution: InputViduQ3.Resolution;
     /** Duration in ms. */
@@ -25,20 +27,11 @@ export interface InputViduQ3 {
     start_image?: Hedra.InputViduQ3StartImage | undefined;
     /** End frame. At most 10.4 MB. */
     end_image?: Hedra.InputViduQ3EndImage | undefined;
-    /** Output aspect ratio. */
-    aspect_ratio?: InputViduQ3.AspectRatio | undefined;
     /** Quality level to generate at. `standard` — the full model. `turbo` — the same options tuned for turnaround, at a lower rate. */
     quality?: InputViduQ3.Quality | undefined;
 }
 
 export namespace InputViduQ3 {
-    /** Output resolution. */
-    export const Resolution = {
-        FiveHundredFortyP: "540p",
-        SevenHundredTwentyP: "720p",
-        OneThousandEightyP: "1080p",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Sixteen9: "16:9",
@@ -48,6 +41,13 @@ export namespace InputViduQ3 {
         One1: "1:1",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+    /** Output resolution. */
+    export const Resolution = {
+        FiveHundredFortyP: "540p",
+        SevenHundredTwentyP: "720p",
+        OneThousandEightyP: "1080p",
+    } as const;
+    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Quality level to generate at. `standard` — the full model. `turbo` — the same options tuned for turnaround, at a lower rate. */
     export const Quality = {
         Standard: "standard",

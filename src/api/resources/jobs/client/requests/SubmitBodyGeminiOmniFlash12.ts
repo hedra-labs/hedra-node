@@ -8,12 +8,12 @@ import type * as Hedra from "../../../../index.js";
  *         input: {
  *             prompt: "prompt",
  *             aspect_ratio: "16:9",
- *             resolution: "1K"
+ *             resolution: "360p"
  *         }
  *     }
  */
-export interface SubmitBodyImagen4 {
-    input: Hedra.InputImagen4;
+export interface SubmitBodyGeminiOmniFlash12 {
+    input: Hedra.InputGeminiOmniFlash12;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
 }

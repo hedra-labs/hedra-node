@@ -478,77 +478,6 @@ await client.jobs.submitCreatifyAurora({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitDreamina31</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Polished, print-ready stills when the brief is a finished image rather than a sketch.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitDreamina31({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "16:9",
-        resolution: "540p"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyDreamina31` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitElevenlabsAudioIsolation</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -1256,160 +1185,6 @@ await client.jobs.submitElevenlabsVoiceClone({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitEyelineIdRelight</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Relight a video from a relit first frame, keeping the scene, the subjects and the original performance.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitEyelineIdRelight({
-    input: {
-        prompt: "prompt",
-        source_video: {
-            source: "url",
-            url: "url"
-        },
-        images: [{
-                source: "url",
-                url: "url"
-            }]
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyEyelineIdRelight` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitEyelineIdRestyle</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Restyle a video's scene, lighting and look from an edited first frame while keeping the people in it recognizably themselves.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitEyelineIdRestyle({
-    input: {
-        prompt: "prompt",
-        source_video: {
-            source: "url",
-            url: "url"
-        },
-        images: [{
-                source: "url",
-                url: "url"
-            }]
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyEyelineIdRestyle` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux11Pro</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -1563,7 +1338,7 @@ await client.jobs.submitFlux11Ultra({
 <dl>
 <dd>
 
-Video with native audio, straight from a prompt.
+Set a still in motion, with native audio.
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -1604,6 +1379,148 @@ await client.jobs.submitFlux3({
 <dd>
 
 **request:** `Hedra.SubmitBodyFlux3` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux3Image</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Black Forest Labs' flagship image model: renders from a prompt or edits and combines up to ten images, with accurate text. Each resolution is an area at any aspect ratio: 768px that of a 768x768 image, 1K about 1 megapixel, 1.5K about 2, 2K about 4 and 4K about 16.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitFlux3Image({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "auto",
+        resolution: "768px"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyFlux3Image` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitFlux3ImageKlein</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+The fast, low-cost FLUX.3 image model, built for editing: renders from a prompt or edits and combines up to ten images. Each resolution is an area at any aspect ratio: 768px that of a 768x768 image, 1K about 1 megapixel, 1.5K about 2, 2K about 4 and 4K about 16.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitFlux3ImageKlein({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "auto",
+        resolution: "768px"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyFlux3ImageKlein` 
     
 </dd>
 </dl>
@@ -2171,6 +2088,77 @@ await client.jobs.submitGeminiOmniFlash11({
 <dd>
 
 **request:** `Hedra.SubmitBodyGeminiOmniFlash11` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitGeminiOmniFlash12</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Gemini's fast multimodal video model — cinematic clips of up to 15 seconds with native audio, from a prompt, a keyframe pair, or reference images, up to 4K.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitGeminiOmniFlash12({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "16:9",
+        resolution: "360p"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodyGeminiOmniFlash12` 
     
 </dd>
 </dl>
@@ -3112,147 +3100,6 @@ await client.jobs.submitIdeogramV45({
 <dd>
 
 **request:** `Hedra.SubmitBodyIdeogramV45` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitImagen3</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Google's earlier photoreal generator, kept for parity.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitImagen3({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "16:9"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyImagen3` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitImagen4</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Google's photoreal model—natural lighting, lifelike skin, and pro-grade sharpness in every shot.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitImagen4({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "16:9",
-        resolution: "1K"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyImagen4` 
     
 </dd>
 </dl>
@@ -4294,7 +4141,7 @@ await client.jobs.submitKrea3({
 <dl>
 <dd>
 
-Clips up to 4K with synchronized native audio, for final output.
+Animate a start frame up to 4K, optionally toward an end frame, with native audio.
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -4314,9 +4161,9 @@ Submits an asynchronous job and returns `202` with a job id. Fetch the result at
 await client.jobs.submitLtx23({
     input: {
         prompt: "prompt",
+        aspect_ratio: "auto",
         resolution: "1080p",
-        duration_ms: 1,
-        aspect_ratio: "auto"
+        duration_ms: 1
     }
 });
 
@@ -4366,7 +4213,7 @@ await client.jobs.submitLtx23({
 <dl>
 <dd>
 
-Clips up to 20 seconds with synchronized native audio, on the quick path.
+Clips up to 20 seconds with synchronized native audio, from a prompt, a start frame, or a start and end frame, or cut to a supplied audio track — on the quick path.
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -4386,8 +4233,8 @@ Submits an asynchronous job and returns `202` with a job id. Fetch the result at
 await client.jobs.submitLtx25({
     input: {
         prompt: "prompt",
-        resolution: "1080p",
-        aspect_ratio: "auto"
+        aspect_ratio: "auto",
+        resolution: "1080p"
     }
 });
 
@@ -5730,7 +5577,7 @@ await client.jobs.submitOmnihuman20({
 <dl>
 <dd>
 
-Stylized 1080p clips up to 15 seconds, with native audio.
+Animate a still into a stylized 1080p clip up to 15 seconds, with native audio.
 
 Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
 </dd>
@@ -5983,224 +5830,6 @@ await client.jobs.submitRecraftV3({
 <dd>
 
 **request:** `Hedra.SubmitBodyRecraftV3` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitReve21</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Generate images from a text prompt with strong prompt adherence, layout intelligence, and accurate text rendering
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitReve21({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "4:1"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyReve21` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitReve21Edit</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Edit one source image from a natural-language instruction, keeping the rest of the image intact
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitReve21Edit({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "4:1",
-        images: [{
-                source: "url",
-                url: "url"
-            }]
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyReve21Edit` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitReve21Remix</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Compose up to eight reference images into a new image from a text prompt
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitReve21Remix({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "4:1",
-        images: [{
-                source: "url",
-                url: "url"
-            }]
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyReve21Remix` 
     
 </dd>
 </dl>
@@ -6772,6 +6401,77 @@ await client.jobs.submitSeedream50Pro({
 <dd>
 
 **request:** `Hedra.SubmitBodySeedream50Pro` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `JobsClient.IdempotentRequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitSeedream55</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Stills at 1.5K or 2K from a prompt, or edits and blends of source images.
+
+Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.jobs.submitSeedream55({
+    input: {
+        prompt: "prompt",
+        aspect_ratio: "1:1",
+        resolution: "1.5K"
+    }
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Hedra.SubmitBodySeedream55` 
     
 </dd>
 </dl>
@@ -7505,75 +7205,6 @@ await client.jobs.submitVeedVideoBackgroundRemoval({
 <dd>
 
 **request:** `Hedra.SubmitBodyVeedVideoBackgroundRemoval` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitVeo2</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Google's earlier cinematic generator, kept for existing workflows.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitVeo2({
-    input: {
-        prompt: "prompt"
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodyVeo2` 
     
 </dd>
 </dl>

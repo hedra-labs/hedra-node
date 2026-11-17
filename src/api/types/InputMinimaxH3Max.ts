@@ -22,12 +22,12 @@ export interface InputMinimaxH3Max {
     duration_ms: number;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
+    /** Output aspect ratio. Omitted or `adaptive` uses the supported ratio nearest the first reference image, else the first reference video. */
+    aspect_ratio?: InputMinimaxH3Max.AspectRatio | undefined;
     /** Start frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     start_image?: Hedra.InputMinimaxH3MaxStartImage | undefined;
     /** End frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     end_image?: Hedra.InputMinimaxH3MaxEndImage | undefined;
-    /** Output aspect ratio. Omitted or `adaptive` uses the supported ratio nearest the first reference image, else the first reference video. */
-    aspect_ratio?: InputMinimaxH3Max.AspectRatio | undefined;
     /** Reference images. 1 to 4 images, each from 256px to 1024px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     images?: Hedra.InputMinimaxH3MaxImagesItem[] | undefined;
     /** Reference videos. 1 to 3 videos, each from 2s to 15s and at most 524.2 MB, at most 15s in total. */

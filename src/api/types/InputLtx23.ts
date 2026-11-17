@@ -16,30 +16,23 @@ export interface InputLtx23 {
     num_outputs?: number | undefined;
     /** Generation prompt. From 1 to 5000 characters. */
     prompt: string;
-    /** Output resolution. */
-    resolution: InputLtx23.Resolution;
-    /** Whether to generate native audio for the video. */
-    generate_audio?: boolean | undefined;
-    /** Duration in ms. */
-    duration_ms: number;
     /** Output aspect ratio. */
     aspect_ratio: InputLtx23.AspectRatio;
     /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputLtx23StartImage | undefined;
     /** End frame. At most 10.4 MB. */
     end_image?: Hedra.InputLtx23EndImage | undefined;
+    /** Output resolution. */
+    resolution: InputLtx23.Resolution;
+    /** Whether to generate native audio for the video. */
+    generate_audio?: boolean | undefined;
+    /** Duration in ms. */
+    duration_ms: number;
     /** Quality level to generate at. `fast` — tuned for turnaround, for iteration. `pro` — the higher-fidelity tier, for final output. */
     quality?: InputLtx23.Quality | undefined;
 }
 
 export namespace InputLtx23 {
-    /** Output resolution. */
-    export const Resolution = {
-        OneThousandEightyP: "1080p",
-        OneThousandFourHundredFortyP: "1440p",
-        TwoThousandOneHundredSixtyP: "2160p",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Auto: "auto",
@@ -47,6 +40,13 @@ export namespace InputLtx23 {
         Nine16: "9:16",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+    /** Output resolution. */
+    export const Resolution = {
+        OneThousandEightyP: "1080p",
+        OneThousandFourHundredFortyP: "1440p",
+        TwoThousandOneHundredSixtyP: "2160p",
+    } as const;
+    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Quality level to generate at. `fast` — tuned for turnaround, for iteration. `pro` — the higher-fidelity tier, for final output. */
     export const Quality = {
         Fast: "fast",

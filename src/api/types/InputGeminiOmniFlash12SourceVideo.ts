@@ -2,15 +2,18 @@
 
 import type * as Hedra from "../index.js";
 
-export type InputReve21EditImagesItem =
+/**
+ * Source video. From 1s to 15.083s and at most 524.2 MB.
+ */
+export type InputGeminiOmniFlash12SourceVideo =
     /**
      * A file uploaded via POST /v3/files, referenced by the returned url. */
-    | Hedra.InputReve21EditImagesItem.Url
+    | Hedra.InputGeminiOmniFlash12SourceVideo.Url
     /**
      * An existing asset you own, referenced by its id. */
-    | Hedra.InputReve21EditImagesItem.Asset;
+    | Hedra.InputGeminiOmniFlash12SourceVideo.Asset;
 
-export namespace InputReve21EditImagesItem {
+export namespace InputGeminiOmniFlash12SourceVideo {
     export interface Url {
         source: "url";
         /** A URL returned by POST /v3/files. */
