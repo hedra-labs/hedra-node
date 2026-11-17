@@ -8,8 +8,8 @@ import type * as Hedra from "../index.js";
  * Accepted field combinations (one per input mode):
  * (1) requires: duration_ms, prompt, start_image; must omit: aspect_ratio, audios, end_image, images
  * (2) requires: duration_ms, end_image, prompt, start_image; must omit: aspect_ratio, audios, images
- * (3) requires: aspect_ratio, duration_ms, images, prompt; must omit: end_image, start_image; accepts aspect_ratio: adaptive | 16:9 | 9:16 | 1:1
- * (4) requires: aspect_ratio, duration_ms, prompt; must omit: audios, end_image, images, start_image; accepts aspect_ratio: 16:9 | 9:16 | 1:1 | 3:4 | 4:3 | 21:9
+ * (3) requires: aspect_ratio, duration_ms, images, prompt; must omit: end_image, start_image; accepts aspect_ratio: 1:1 | 16:9 | 9:16 | adaptive
+ * (4) requires: aspect_ratio, duration_ms, prompt; must omit: audios, end_image, images, start_image; accepts aspect_ratio: 1:1 | 3:4 | 4:3 | 16:9 | 21:9 | 9:16
  */
 export interface InputMinimaxH3Ultra {
     /** Number of outputs generated per job. Only 1 is supported. */
@@ -22,12 +22,12 @@ export interface InputMinimaxH3Ultra {
     duration_ms: number;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
+    /** Output aspect ratio. Omitted or `adaptive` uses the supported ratio nearest the first reference image. */
+    aspect_ratio?: InputMinimaxH3Ultra.AspectRatio | undefined;
     /** Start frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     start_image?: Hedra.InputMinimaxH3UltraStartImage | undefined;
     /** End frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     end_image?: Hedra.InputMinimaxH3UltraEndImage | undefined;
-    /** Output aspect ratio. Omitted or `adaptive` uses the supported ratio nearest the first reference image. */
-    aspect_ratio?: InputMinimaxH3Ultra.AspectRatio | undefined;
     /** Reference images. 1 to 4 images, each from 256px to 1024px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     images?: Hedra.InputMinimaxH3UltraImagesItem[] | undefined;
     /** Reference audios. 1 to 3 audio files, each from 2s to 15s and at most 104.8 MB, at most 15s in total. */
@@ -42,13 +42,13 @@ export namespace InputMinimaxH3Ultra {
     export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Output aspect ratio. Omitted or `adaptive` uses the supported ratio nearest the first reference image. */
     export const AspectRatio = {
-        Adaptive: "adaptive",
-        Sixteen9: "16:9",
-        Nine16: "9:16",
         One1: "1:1",
         Three4: "3:4",
         Four3: "4:3",
+        Sixteen9: "16:9",
         TwentyOne9: "21:9",
+        Nine16: "9:16",
+        Adaptive: "adaptive",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
 }

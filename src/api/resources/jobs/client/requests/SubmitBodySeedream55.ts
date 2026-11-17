@@ -7,16 +7,13 @@ import type * as Hedra from "../../../../index.js";
  *     {
  *         input: {
  *             prompt: "prompt",
- *             aspect_ratio: "4:1",
- *             images: [{
- *                     source: "url",
- *                     url: "url"
- *                 }]
+ *             aspect_ratio: "1:1",
+ *             resolution: "1.5K"
  *         }
  *     }
  */
-export interface SubmitBodyReve21Remix {
-    input: Hedra.InputReve21Remix;
+export interface SubmitBodySeedream55 {
+    input: Hedra.InputSeedream55;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
 }

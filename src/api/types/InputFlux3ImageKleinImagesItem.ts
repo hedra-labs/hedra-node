@@ -2,18 +2,15 @@
 
 import type * as Hedra from "../index.js";
 
-/**
- * Start frame. At most 8 MB.
- */
-export type InputVeo2StartImage =
+export type InputFlux3ImageKleinImagesItem =
     /**
      * A file uploaded via POST /v3/files, referenced by the returned url. */
-    | Hedra.InputVeo2StartImage.Url
+    | Hedra.InputFlux3ImageKleinImagesItem.Url
     /**
      * An existing asset you own, referenced by its id. */
-    | Hedra.InputVeo2StartImage.Asset;
+    | Hedra.InputFlux3ImageKleinImagesItem.Asset;
 
-export namespace InputVeo2StartImage {
+export namespace InputFlux3ImageKleinImagesItem {
     export interface Url {
         source: "url";
         /** A URL returned by POST /v3/files. */

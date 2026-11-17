@@ -7,12 +7,13 @@ import type * as Hedra from "../../../../index.js";
  *     {
  *         input: {
  *             prompt: "prompt",
- *             aspect_ratio: "16:9"
+ *             aspect_ratio: "auto",
+ *             resolution: "768px"
  *         }
  *     }
  */
-export interface SubmitBodyImagen3 {
-    input: Hedra.InputImagen3;
+export interface SubmitBodyFlux3ImageKlein {
+    input: Hedra.InputFlux3ImageKlein;
     /** URL to receive a signed completion webhook. */
     webhook?: string | null;
 }

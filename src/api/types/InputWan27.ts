@@ -19,6 +19,8 @@ export interface InputWan27 {
     negative_prompt?: string | undefined;
     /** Seed for reproducible output; omit for a random seed. From 0 to 2147483647. */
     seed?: number | undefined;
+    /** Output aspect ratio. */
+    aspect_ratio?: InputWan27.AspectRatio | undefined;
     /** Output resolution. */
     resolution: InputWan27.Resolution;
     /** Duration in ms. */
@@ -27,19 +29,11 @@ export interface InputWan27 {
     start_image?: Hedra.InputWan27StartImage | undefined;
     /** End frame. At most 20 MB. */
     end_image?: Hedra.InputWan27EndImage | undefined;
-    /** Output aspect ratio. */
-    aspect_ratio?: InputWan27.AspectRatio | undefined;
     /** Reference images. 1 to 4 images, each at most 20 MB. */
     images?: Hedra.InputWan27ImagesItem[] | undefined;
 }
 
 export namespace InputWan27 {
-    /** Output resolution. */
-    export const Resolution = {
-        SevenHundredTwentyP: "720p",
-        OneThousandEightyP: "1080p",
-    } as const;
-    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
     /** Output aspect ratio. */
     export const AspectRatio = {
         Sixteen9: "16:9",
@@ -49,4 +43,10 @@ export namespace InputWan27 {
         One1: "1:1",
     } as const;
     export type AspectRatio = (typeof AspectRatio)[keyof typeof AspectRatio];
+    /** Output resolution. */
+    export const Resolution = {
+        SevenHundredTwentyP: "720p",
+        OneThousandEightyP: "1080p",
+    } as const;
+    export type Resolution = (typeof Resolution)[keyof typeof Resolution];
 }

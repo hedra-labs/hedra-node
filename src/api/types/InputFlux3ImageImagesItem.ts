@@ -2,18 +2,15 @@
 
 import type * as Hedra from "../index.js";
 
-/**
- * Source video. From 1s to 8s and at most 524.2 MB.
- */
-export type InputEyelineIdRelightSourceVideo =
+export type InputFlux3ImageImagesItem =
     /**
      * A file uploaded via POST /v3/files, referenced by the returned url. */
-    | Hedra.InputEyelineIdRelightSourceVideo.Url
+    | Hedra.InputFlux3ImageImagesItem.Url
     /**
      * An existing asset you own, referenced by its id. */
-    | Hedra.InputEyelineIdRelightSourceVideo.Asset;
+    | Hedra.InputFlux3ImageImagesItem.Asset;
 
-export namespace InputEyelineIdRelightSourceVideo {
+export namespace InputFlux3ImageImagesItem {
     export interface Url {
         source: "url";
         /** A URL returned by POST /v3/files. */

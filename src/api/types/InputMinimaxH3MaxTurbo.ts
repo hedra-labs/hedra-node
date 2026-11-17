@@ -21,12 +21,12 @@ export interface InputMinimaxH3MaxTurbo {
     duration_ms: number;
     /** Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran. */
     enhance_prompt?: boolean | undefined;
+    /** Output aspect ratio. */
+    aspect_ratio?: InputMinimaxH3MaxTurbo.AspectRatio | undefined;
     /** Start frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     start_image?: Hedra.InputMinimaxH3MaxTurboStartImage | undefined;
     /** End frame. From 256px to 5760px on each side, with an aspect ratio from 0.4 to 2.5, and at most 30 MB. */
     end_image?: Hedra.InputMinimaxH3MaxTurboEndImage | undefined;
-    /** Output aspect ratio. */
-    aspect_ratio?: InputMinimaxH3MaxTurbo.AspectRatio | undefined;
 }
 
 export namespace InputMinimaxH3MaxTurbo {

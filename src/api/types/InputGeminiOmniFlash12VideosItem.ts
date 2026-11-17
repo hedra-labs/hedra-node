@@ -2,15 +2,15 @@
 
 import type * as Hedra from "../index.js";
 
-export type InputEyelineIdRelightImagesItem =
+export type InputGeminiOmniFlash12VideosItem =
     /**
      * A file uploaded via POST /v3/files, referenced by the returned url. */
-    | Hedra.InputEyelineIdRelightImagesItem.Url
+    | Hedra.InputGeminiOmniFlash12VideosItem.Url
     /**
      * An existing asset you own, referenced by its id. */
-    | Hedra.InputEyelineIdRelightImagesItem.Asset;
+    | Hedra.InputGeminiOmniFlash12VideosItem.Asset;
 
-export namespace InputEyelineIdRelightImagesItem {
+export namespace InputGeminiOmniFlash12VideosItem {
     export interface Url {
         source: "url";
         /** A URL returned by POST /v3/files. */

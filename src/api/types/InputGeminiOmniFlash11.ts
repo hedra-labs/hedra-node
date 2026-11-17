@@ -14,8 +14,6 @@ export interface InputGeminiOmniFlash11 {
     aspect_ratio: InputGeminiOmniFlash11.AspectRatio;
     /** Output resolution. */
     resolution: InputGeminiOmniFlash11.Resolution;
-    /** Duration in ms. */
-    duration_ms?: number | undefined;
     /** Start frame. At most 10.4 MB. */
     start_image?: Hedra.InputGeminiOmniFlash11StartImage | undefined;
     /** End frame. At most 10.4 MB. */
@@ -26,6 +24,8 @@ export interface InputGeminiOmniFlash11 {
     images?: Hedra.InputGeminiOmniFlash11ImagesItem[] | undefined;
     /** Reference videos. 1 to 3 videos, each at most 10.15s and at most 524.2 MB. */
     videos?: Hedra.InputGeminiOmniFlash11VideosItem[] | undefined;
+    /** Duration in ms. */
+    duration_ms?: number | undefined;
 }
 
 export namespace InputGeminiOmniFlash11 {
