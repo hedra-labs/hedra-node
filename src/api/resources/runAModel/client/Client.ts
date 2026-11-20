@@ -62,7 +62,7 @@ export class RunAModelClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -167,7 +167,7 @@ export class RunAModelClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({

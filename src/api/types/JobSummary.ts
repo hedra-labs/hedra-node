@@ -12,4 +12,6 @@ export interface JobSummary {
     status: Hedra.JobStatus;
     /** ISO-8601 instant the job was submitted. */
     created_at: string;
+    /** Who submitted the job: you, another member of your workspace, or its service key. Set on every listed job. */
+    created_by?: (Hedra.SandboxCreator | null) | undefined;
 }

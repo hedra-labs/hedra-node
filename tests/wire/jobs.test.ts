@@ -17,6 +17,7 @@ describe("JobsClient", () => {
                     quality: "quality",
                     status: "IN_QUEUE",
                     created_at: "2024-01-15T09:30:00Z",
+                    created_by: { email: null, name: null, kind: "personal" },
                 },
             ],
             next_cursor: "next_cursor",
@@ -175,6 +176,7 @@ describe("JobsClient", () => {
             ],
             cost: 1.1,
             currency: "currency",
+            created_by: { email: "email", name: "name", kind: "personal" },
         };
 
         server.mockEndpoint().get("/jobs/job_id").respondWith().statusCode(200).jsonBody(rawResponseBody).build();

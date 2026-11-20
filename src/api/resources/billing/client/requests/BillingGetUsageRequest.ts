@@ -13,4 +13,6 @@ export interface BillingGetUsageRequest {
     end?: string | null;
     /** One summary row (`total`), one per UTC day (`day`), or one per model (`model`). */
     group_by?: Hedra.UsageGroupBy;
+    /** With `true`, the default, the spend of everyone in the workspace the credential bills, the one `GET /v3/balance` reports, whoever submitted the job or created the sandbox, and `members` breaks it down per member, naming each by email and name; with `false`, only your own spend, in every workspace. Any credential holding `usage:read` may pass either. */
+    members?: boolean;
 }

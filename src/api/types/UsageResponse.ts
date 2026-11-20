@@ -16,4 +16,6 @@ export interface UsageResponse {
     currency: string;
     /** One bucket per `group_by` group. */
     data?: Hedra.UsageBucket[] | undefined;
+    /** Unless `members=false`, one entry per member who submitted a job or whose sandboxes spent in the window, most spent first. Absent with `members=false`. As with `data`, each `spent` is rounded on its own, so their sum can differ from `total_spent` by up to a millionth of a dollar per entry. */
+    members?: (Hedra.UsageMember[] | null) | undefined;
 }

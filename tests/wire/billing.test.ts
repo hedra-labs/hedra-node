@@ -107,6 +107,7 @@ describe("BillingClient", () => {
             total_spent: 1.1,
             currency: "currency",
             data: [{ key: "key", jobs: 1, spent: 1.1 }],
+            members: [{ created_by: { email: null, name: null, kind: "personal" }, jobs: 1, spent: 1.1 }],
         };
 
         server.mockEndpoint().get("/usage").respondWith().statusCode(200).jsonBody(rawResponseBody).build();

@@ -202,6 +202,7 @@ describe("ModelsClient", () => {
                     quality: "quality",
                     status: "IN_QUEUE",
                     created_at: "2024-01-15T09:30:00Z",
+                    created_by: { email: null, name: null, kind: "personal" },
                 },
             ],
             next_cursor: "next_cursor",

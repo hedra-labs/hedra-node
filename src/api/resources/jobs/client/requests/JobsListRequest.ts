@@ -9,4 +9,6 @@ export interface JobsListRequest {
     limit?: number;
     /** Opaque cursor from the previous page's `next_cursor`; omit for the first page. */
     cursor?: string | null;
+    /** With `true`, every job in your workspace, whoever submitted it; with `false`, the default, only the jobs you submitted. Any member of the workspace may pass `true`. */
+    members?: boolean;
 }
