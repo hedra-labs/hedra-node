@@ -12,9 +12,11 @@
 <dl>
 <dd>
 
-Your jobs, newest first. Each `POST /v3/chat/completions` request is a
-job too, whose id is the completion's `id`. A chat job has no outputs,
-and it sends no `job.completed` or `job.failed` webhook.
+Your jobs, or with `members=true` every job in your workspace, each
+with its `created_by`, newest first. Each `POST /v3/chat/completions`
+request is a job too, whose id is the completion's `id`. A chat job has
+no outputs, and it sends no `job.completed` or `job.failed` webhook.
+Any member can read a teammate's job by id, and delete it.
 </dd>
 </dl>
 </dd>
@@ -151,7 +153,9 @@ Delete a finished job's outputs, prompt and logs.
 Afterwards `GET /v3/jobs/{job_id}` reports each output `EXPIRED`, with no
 prompt and no logs, and `GET /v3/jobs` still lists the job with its model,
 status, timestamps and cost. Another job whose output this job read by
-`asset_id` is unchanged. Deleting a job again returns 204.
+`asset_id` is unchanged. Deleting a job again returns 204. Any member of
+the job's workspace can delete it, whoever submitted it; another
+member's job outside your credential's workspace returns 404.
 
 Returns 409 `ALREADY_IN_PROGRESS` while the job, or another job that names
 this job's output by `asset_id`, is `IN_QUEUE` or `IN_PROGRESS`; 400
@@ -5920,78 +5924,6 @@ await client.jobs.submitSana({
 </dl>
 </details>
 
-<details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitSeedance15Pro</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Keyframe-driven video with native audio, from a start frame, an end frame, or both.
-
-Submits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` — each item in its `outputs[]` follows the `OutputItem` schema — or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.jobs.submitSeedance15Pro({
-    input: {
-        prompt: "prompt",
-        aspect_ratio: "1:1",
-        resolution: "480p",
-        duration_ms: 1
-    }
-});
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Hedra.SubmitBodySeedance15Pro` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `JobsClient.IdempotentRequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.jobs.<a href="/src/api/resources/jobs/client/Client.ts">submitSeedance20</a>({ ...params }) -> Hedra.SubmitResponse</code></summary>
 <dl>
 <dd>
@@ -8278,6 +8210,21 @@ await client.models.get("model");
 <details><summary><code>client.models.<a href="/src/api/resources/models/client/Client.ts">listModelJobs</a>(model, { ...params }) -> core.Page&lt;Hedra.JobSummary, Hedra.JobListResponse&gt;</code></summary>
 <dl>
 <dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Your jobs for this model, or with `members=true` every job for it in
+your workspace, each with its `created_by`, newest first.
+</dd>
+</dl>
+</dd>
+</dl>
 
 #### 🔌 Usage
 

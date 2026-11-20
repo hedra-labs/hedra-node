@@ -26,4 +26,6 @@ export interface ResultResponse {
     cost?: (number | null) | undefined;
     /** ISO-4217 currency code for `cost`. Present exactly when `cost` is. */
     currency?: (string | null) | undefined;
+    /** Who submitted the job: you, another member of your workspace, or its service key. Absent from webhook payloads. */
+    created_by?: (Hedra.SandboxCreator | null) | undefined;
 }

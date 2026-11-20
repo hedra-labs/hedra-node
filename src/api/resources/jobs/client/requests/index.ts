@@ -87,7 +87,6 @@ export type { SubmitBodyQwenImage2 } from "./SubmitBodyQwenImage2.js";
 export type { SubmitBodyQwenImage21 } from "./SubmitBodyQwenImage21.js";
 export type { SubmitBodyRecraftV3 } from "./SubmitBodyRecraftV3.js";
 export type { SubmitBodySana } from "./SubmitBodySana.js";
-export type { SubmitBodySeedance15Pro } from "./SubmitBodySeedance15Pro.js";
 export type { SubmitBodySeedance20 } from "./SubmitBodySeedance20.js";
 export type { SubmitBodySeedance20Mini } from "./SubmitBodySeedance20Mini.js";
 export type { SubmitBodySeedance25 } from "./SubmitBodySeedance25.js";

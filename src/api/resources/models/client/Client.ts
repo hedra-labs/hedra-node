@@ -59,7 +59,7 @@ export class ModelsClient {
         };
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -147,7 +147,7 @@ export class ModelsClient {
     ): Promise<core.WithRawResponse<Hedra.ModelDetail>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -201,6 +201,9 @@ export class ModelsClient {
     }
 
     /**
+     * Your jobs for this model, or with `members=true` every job for it in
+     * your workspace, each with its `created_by`, newest first.
+     *
      * @param {string} model - The model's public id (`GET /v3/models`).
      * @param {Hedra.ModelsListModelJobsRequest} request
      * @param {ModelsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -224,16 +227,17 @@ export class ModelsClient {
     ): Promise<core.Page<Hedra.JobSummary, Hedra.JobListResponse>> {
         const list = core.HttpResponsePromise.interceptFunction(
             async (request: Hedra.ModelsListModelJobsRequest): Promise<core.WithRawResponse<Hedra.JobListResponse>> => {
-                const { limit, cursor } = request;
+                const { limit, cursor, members } = request;
                 const _queryParams: Record<string, unknown> = {
                     limit,
                     cursor,
+                    members,
                 };
                 const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
                 const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
                     _authRequest.headers,
                     this._options?.headers,
-                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+                    mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
                     requestOptions?.headers,
                 );
                 const _response = await core.fetcher({
@@ -352,7 +356,7 @@ export class ModelsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -455,7 +459,7 @@ export class ModelsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -550,7 +554,7 @@ export class ModelsClient {
     ): Promise<core.WithRawResponse<Record<string, unknown>>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -646,7 +650,7 @@ export class ModelsClient {
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({

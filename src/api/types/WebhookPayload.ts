@@ -3,7 +3,7 @@
 import type * as Hedra from "../index.js";
 
 /**
- * Body of a webhook delivery: the `GET /jobs/{job_id}` result envelope without its poll-only fields (`logs`, `cost`, `currency`) — poll the job to read those.
+ * Body of a webhook delivery: the `GET /jobs/{job_id}` result envelope without its poll-only fields (`logs`, `cost`, `currency`, `created_by`) — poll the job to read those.
  */
 export interface WebhookPayload {
     /** The job this envelope describes. */

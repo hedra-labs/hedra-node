@@ -51,7 +51,7 @@ export class BillingClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -136,17 +136,18 @@ export class BillingClient {
         request: Hedra.BillingGetUsageRequest = {},
         requestOptions?: BillingClient.RequestOptions,
     ): Promise<core.WithRawResponse<Hedra.UsageResponse>> {
-        const { start, end, group_by: groupBy } = request;
+        const { start, end, group_by: groupBy, members } = request;
         const _queryParams: Record<string, unknown> = {
             start: start !== undefined ? start : undefined,
             end: end !== undefined ? end : undefined,
             group_by: groupBy != null ? groupBy : undefined,
+            members,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -251,7 +252,7 @@ export class BillingClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -345,7 +346,7 @@ export class BillingClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.0" }),
+            mergeOnlyDefinedHeaders({ "X-Hedra-Spec-Version": requestOptions?.specVersion ?? "3.25.4" }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
