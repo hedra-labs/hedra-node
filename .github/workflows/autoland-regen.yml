@@ -16,6 +16,24 @@ name: Autoland regeneration PRs
 # Deliberately absent: any comparison of the PR's version against main's. Since
 # fern-config#44 a regeneration stamps a computed X.Y.Z-dev that differs from
 # main by design, so such a gate would close every PR.
+#
+# Main moving under an open regeneration. Fern cuts a fern-bot branch from main
+# as it stood when the generator ran, and Replay records every hand-made commit
+# up to that point. A commit that reaches main after that point and changes a
+# file the generator writes cannot be landed with the regeneration: merging main
+# in, or landing on a main that already holds it, makes it an ancestor of the
+# `[fern-replay]` landing commit, which Replay takes as the next generation
+# boundary. Replay never records it, and the following regeneration silently
+# reverts it. hedra-cli#186's Cargo.toml fix was lost this way through
+# hedra-cli#185 and reverted by hedra-cli#189. Only a regeneration cut from
+# current main records such a
+# commit, so the queue step retires the PR and the two steps after it dispatch
+# fern-config's generate-sdks.yml for this repo's group.
+#
+# The repos do not require branches to be up to date before merging, so GitHub
+# can still land a PR whose checks finish between a push to main and the run of
+# this workflow that the push triggers. The check narrows that window to the
+# queue delay; it does not close it.
 
 on:
   pull_request_target:
@@ -60,6 +78,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Advance the regeneration queue
+        id: queue
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
@@ -71,12 +90,11 @@ jobs:
           git config user.name "${APP_SLUG}[bot]"
           git config user.email "$(gh api "/users/${APP_SLUG}[bot]" --jq .id)+${APP_SLUG}[bot]@users.noreply.github.com"
 
-          # Classify a PR by the version its manifest carries at the PR head:
-          # `X.Y.Z-dev` is a regeneration, `X.Y.Z` is a release. This file must
-          # stay byte-identical across the three SDK repos (autoland-drift-check
-          # enforces it), so the classifier finds its own manifest rather than
-          # being told which one to read.
-          classify() {  # $1 = head sha -> echoes "release" or "regen"
+          # The version a manifest carries at a commit. This file must stay
+          # byte-identical across the three SDK repos (autoland-drift-check
+          # enforces it), so it finds its own manifest rather than being told
+          # which one to read.
+          manifest_version() {  # $1 = commit sha -> echoes the version
             local sha="$1" m body v
             for m in pyproject.toml package.json Cargo.toml; do
               body="$(gh api "repos/${REPO}/contents/${m}?ref=${sha}" --jq .content 2>/dev/null | base64 -d)" || continue
@@ -87,11 +105,47 @@ jobs:
                 v="$(printf '%s' "$body" | sed -n 's/^version[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)"
               fi
               if [[ -z "$v" ]]; then continue; fi
-              case "$v" in
-                *-dev) echo regen ;;
-                *)     echo release ;;
-              esac
+              echo "$v"
               return 0
+            done
+            return 1
+          }
+
+          # A release PR stamps a version main does not carry yet: release-sdks.yml
+          # strips `-dev` from main's `X.Y.Z-dev`. A regeneration either stamps
+          # `X.Y.Z-dev` or, when the spec diff calls for no bump, keeps main's own
+          # version as it stands: hedra-node #142 and #143 regenerated at 8.0.0
+          # with main at 8.0.0. So a PR is a release only when its version has no
+          # `-dev` AND differs from main's. Read at the commit checked out above,
+          # pinned rather than `?ref=main`, which the contents API can serve stale.
+          main_version="$(manifest_version "$(git rev-parse HEAD)")" || {
+            echo "::error::Could not read main's manifest version; refusing to rank anything."
+            exit 1
+          }
+          classify() {  # $1 = head sha -> echoes "release" or "regen"
+            local v
+            v="$(manifest_version "$1")" || return 1
+            if [[ "$v" == *-dev || "$v" == "$main_version" ]]; then
+              echo regen
+            else
+              echo release
+            fi
+          }
+
+          # Turn auto-merge off and confirm it is off. `gh pr merge --disable-auto`
+          # exits non-zero both when auto-merge was never on and when the API call
+          # fails, so its exit status settles nothing; this reads the PR back and
+          # retries until the read says off. Returns 1 when it cannot confirm,
+          # because GitHub may still merge a PR whose auto-merge stayed on.
+          disable_auto() {  # $1 = PR number
+            local pr="$1" attempt on
+            for attempt in 1 2 3 4; do
+              on="$(gh pr view "$pr" --repo "$REPO" --json autoMergeRequest --jq '.autoMergeRequest != null' 2>/dev/null)" || on=""
+              if [[ "$on" == "false" ]]; then return 0; fi
+              if [[ "$on" == "true" ]]; then
+                gh pr merge --disable-auto "$pr" --repo "$REPO" || true
+              fi
+              sleep $((attempt * 5))
             done
             return 1
           }
@@ -136,6 +190,7 @@ jobs:
 
           if [[ "${#releases[@]}" -gt 0 ]]; then
             head_row="${releases[-1]}"
+            head_kind="release"
             head_pr="$(cut -f1 <<<"$head_row")"
             for row in "${queue[@]}"; do
               row_pr="$(cut -f1 <<<"$row")"
@@ -146,6 +201,7 @@ jobs:
             done
           else
             head_row="${regens[-1]}"
+            head_kind="regen"
             head_pr="$(cut -f1 <<<"$head_row")"
             for row in "${regens[@]}"; do
               row_pr="$(cut -f1 <<<"$row")"
@@ -176,6 +232,98 @@ jobs:
           git fetch origin main
           git fetch origin "+refs/heads/${head_ref}:refs/remotes/origin/${head_ref}"
 
+          # Commits that reached main after this PR's generation and change a
+          # file the generator writes (see "Main moving under an open
+          # regeneration" at the top). The merge-base is main as Fern saw it.
+          #
+          # "A file the generator writes" is a path .fernignore does not protect,
+          # matched like Fern's protection matcher: an exact path, or a directory
+          # prefix, with a trailing slash dropped. A pattern carrying glob
+          # characters is not evaluated and protects nothing here. That errs in
+          # the safe direction: treating a generated file as protected loses the
+          # commit, while the opposite only costs a regeneration.
+          exposed="$RUNNER_TEMP/exposed.md"
+          python3 - "$(git merge-base origin/main "origin/${head_ref}")" origin/main > "$exposed" <<'PY'
+          import subprocess
+          import sys
+
+          base, tip = sys.argv[1], sys.argv[2]
+
+
+          def git(*args):
+              return subprocess.run(
+                  ["git", *args], check=True, capture_output=True, text=True
+              ).stdout
+
+
+          try:
+              lines = git("show", f"{tip}:.fernignore").splitlines()
+          except subprocess.CalledProcessError:
+              lines = []
+          # Fern adds these to every .fernignore it manages.
+          patterns = [".fern/replay.lock", ".fern/replay.yml", ".gitattributes"]
+          for line in lines:
+              line = line.strip()
+              if line and not line.startswith("#"):
+                  patterns.append(line[:-1] if line.endswith("/") else line)
+
+
+          def protected(path):
+              for p in patterns:
+                  if any(c in p for c in "*?[]{}"):
+                      continue
+                  if path == p or path.startswith(p + "/"):
+                      return True
+              return False
+
+
+          for sha in git("rev-list", "--no-merges", "--reverse", f"{base}..{tip}").split():
+              files = git("diff-tree", "--no-commit-id", "--name-only", "-r", "--root", sha)
+              hits = [f for f in files.splitlines() if f and not protected(f)]
+              if not hits:
+                  continue
+              short, _, subject = git("log", "-1", "--format=%h %s", sha).strip().partition(" ")
+              shown = ", ".join(f"`{f}`" for f in hits[:10])
+              more = f" and {len(hits) - 10} more" if len(hits) > 10 else ""
+              print(f"- `{short}` {subject}: {shown}{more}")
+          PY
+
+          if [[ -s "$exposed" ]]; then
+            echo "Main gained commits after #${pr} was generated that change generated files:"
+            cat "$exposed"
+            # Detach auto-merge before anything else: with its checks already
+            # green, GitHub could land the PR while the steps below run. Neither
+            # the hold nor a replacement is safe while auto-merge may still be on.
+            if ! disable_auto "$pr"; then
+              echo "::error::Could not confirm auto-merge is off on #${pr}; not holding or replacing it while GitHub may still merge it."
+              exit 1
+            fi
+            if [[ "$head_kind" == "release" ]]; then
+              # A release is not regenerated from here; a human decides. Comment
+              # once, not on every push to main.
+              echo "::warning::Release PR #${pr} would bury main commits that change generated files; not landing it."
+              marker="<!-- autoland:exposed-commits -->"
+              if ! gh api "repos/${REPO}/issues/${pr}/comments" --paginate --jq '.[].body' | grep -qF "$marker"; then
+                {
+                  echo "$marker"
+                  echo "Autoland is not landing this release. These commits reached \`main\` after it was generated and change files the generator writes:"
+                  echo
+                  cat "$exposed"
+                  echo
+                  echo "Landing it would put them below the \`[fern-replay]\` landing commit, which Fern Replay takes as the next generation boundary, so the next regeneration would revert them."
+                } > "$RUNNER_TEMP/comment.md"
+                gh pr comment "$pr" --repo "$REPO" --body-file "$RUNNER_TEMP/comment.md"
+              fi
+              exit 0
+            fi
+            echo "regenerate=true" >> "$GITHUB_OUTPUT"
+            echo "pr=${pr}" >> "$GITHUB_OUTPUT"
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          # Main's new commits, if any, change only files .fernignore protects,
+          # which a regeneration never touches, so merging them in loses nothing.
           if ! git merge-base --is-ancestor origin/main "origin/${head_ref}"; then
             echo "#${pr} is behind main; merging main in."
             git checkout -B "$head_ref" "origin/${head_ref}"
@@ -290,3 +438,68 @@ jobs:
           fi
 
           echo "::endgroup::"
+
+      # Minted only when a regeneration has to be redone, and scoped to
+      # fern-config's Actions alone: the other token in this job never reaches
+      # beyond this repo. Needs hedra-sdk-ci-app installed on
+      # hedra-labs/fern-config with `actions: write`. Until it is, this step
+      # fails, and the next one closes the PR with the command to run by hand.
+      - name: Mint a fern-config token
+        id: fern-config-token
+        if: steps.queue.outputs.regenerate == 'true'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.SDK_BOT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.SDK_BOT_APP_PRIVATE_KEY }}
+          owner: hedra-labs
+          repositories: fern-config
+          permission-actions: write
+
+      # Dispatch before closing, so a failed dispatch still leaves its command in
+      # the closing comment. The new run cuts its branch from current main, and
+      # its PR re-enters this queue like any other.
+      - name: Retire the regeneration and dispatch a fresh one
+        if: steps.queue.outputs.regenerate == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          FERN_CONFIG_TOKEN: ${{ steps.fern-config-token.outputs.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ steps.queue.outputs.pr }}
+        run: |
+          set -euo pipefail
+
+          # generate-sdks.yml's group for each SDK repo.
+          case "$REPO" in
+            hedra-labs/hedra-cli)    group=cli ;;
+            hedra-labs/hedra-python) group=python ;;
+            hedra-labs/hedra-node)   group=ts ;;
+            *) echo "::error::No generate-sdks.yml group is known for ${REPO}."; exit 1 ;;
+          esac
+          dispatch=(gh workflow run generate-sdks.yml --repo hedra-labs/fern-config -f "group=${group}")
+
+          body="$RUNNER_TEMP/close.md"
+          {
+            echo "Autoland closed this regeneration. These commits reached \`main\` after it was generated and change files the generator writes:"
+            echo
+            cat "$RUNNER_TEMP/exposed.md"
+            echo
+            echo "Landing it would put them below the \`[fern-replay]\` landing commit, which Fern Replay takes as the next generation boundary, so Replay would never record them and the next regeneration would revert them. A regeneration cut from current \`main\` records them."
+            echo
+          } > "$body"
+
+          if [[ -n "$FERN_CONFIG_TOKEN" ]] && GH_TOKEN="$FERN_CONFIG_TOKEN" "${dispatch[@]}"; then
+            echo "Dispatched generate-sdks.yml with group ${group} on hedra-labs/fern-config."
+            echo "Dispatched a fresh regeneration (\`generate-sdks.yml\`, group \`${group}\`); its PR replaces this one." >> "$body"
+          else
+            echo "::warning::Could not dispatch generate-sdks.yml on hedra-labs/fern-config; closing #${PR} with the command to run by hand."
+            {
+              echo "Autoland could not start the regeneration itself. To start it:"
+              echo
+              echo '```'
+              echo "${dispatch[*]}"
+              echo '```'
+            } >> "$body"
+          fi
+
+          gh pr close "$PR" --repo "$REPO" --comment "$(cat "$body")"
